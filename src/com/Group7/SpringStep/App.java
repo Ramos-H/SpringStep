@@ -12,7 +12,7 @@ public class App
     public static void main(String[] args) 
     {
         JFrame frame;
-        // frame = new LoginWindow();
+        frame = new LoginWindow();
         // frame = new SignUpWindow();
         // frame = new MainWindow();
         // frame = new AddTaskWindow();

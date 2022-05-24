@@ -24,8 +24,17 @@ public class LoginWindow extends JFrame
         setLocation(x, y);
         {
             // Put nested components here
+            JPanel mainPanel = new JPanel();
+            mainPanel.setBackground(Color.RED);
+            {
+                JLabel label = new JLabel("Hello!");
+                label.setForeground(Color.WHITE);
+
+                mainPanel.add(label);
+            }
 
             //Put the call to add the nested components here
+            add(mainPanel);
         }
     }
 }
