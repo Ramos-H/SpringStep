@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
-import javax.swing.plaf.FontUIResource;
 
 public class SignUpWindow extends JFrame
 {
@@ -25,19 +24,8 @@ public class SignUpWindow extends JFrame
         setLocation(x, y);
         {
             // Initialize nested components here
-            JPanel mainPanel = new JPanel(new FlowLayout());
-            mainPanel.setBackground(Color.red);
-            {
-                // Initialize nested components here
-                JLabel label = new JLabel("Hello");
-                label.setForeground(Color.WHITE);
-
-                // Put the call to add the nested components here
-                mainPanel.add(label);
-            }
 
             // Put the call to add the nested components here
-            add(mainPanel);
         }
     }
 }
