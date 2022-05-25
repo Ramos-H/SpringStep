@@ -3,19 +3,33 @@ package com.Group7.SpringStep.UI;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.time.*;
+
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 
-public class MainWindow extends JFrame
+public class MainWindow extends JFrame implements ActionListener
 {
+    private Timer timer;
+    private boolean workMode = true;
+    private LocalTime remainingTime;
+
     private ListPanel toDoPanel;
     private ListPanel doingPanel;
     private ListPanel donePanel;
+    private JLabel timerLabel;
+    private JButton startStopTimerButton;
 
     public MainWindow()
     {
-        // Set window parameters first
+        // Set timer
+        remainingTime = LocalTime.of(0, 2);
+        timer = new Timer(1000, this);
+        timerLabel = new JLabel(remainingTime.toString());
+        timer.start();
+
+        // Set window parameters
         setTitle("SpringStep");
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
@@ -100,12 +114,13 @@ public class MainWindow extends JFrame
 
                 JPanel timerPanel = new JPanel(new GridBagLayout());
                 {
-                    JLabel timerLabel = new JLabel("00:00:00", SwingConstants.CENTER);
+                    timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
                     timerLabel.setFont(new Font(timerLabel.getFont().getFontName(), Font.PLAIN, 21));
                     timerLabel.setForeground(Color.RED);
                     timerLabel.setOpaque(false);
 
-                    JButton startStopTimerButton = new JButton("Start");
+                    startStopTimerButton = new JButton("Start");
+                    startStopTimerButton.addActionListener(this);
                     JButton resetTimerButton = new JButton("Reset");
 
                     GridBagConstraints timerPanelConstraints = new GridBagConstraints();
@@ -168,6 +183,41 @@ public class MainWindow extends JFrame
             add(titleBar, BorderLayout.PAGE_START);
             add(contentPanel, BorderLayout.CENTER);
             add(shortcutsPanel, BorderLayout.PAGE_END);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        Object eventSource = e.getSource();
+        if(eventSource == timer)
+        {
+            if (!remainingTime.equals(LocalTime.MIN)) {
+                remainingTime = remainingTime.minusSeconds(10);
+            } else {
+                if (workMode) {
+                    timerLabel.setForeground(Color.GREEN);
+                    remainingTime = remainingTime.plusMinutes(1);
+                } else {
+                    timerLabel.setForeground(Color.RED);
+                    remainingTime = remainingTime.plusMinutes(2);
+                }
+                workMode = !workMode;
+            }
+            timerLabel.setText(remainingTime.toString());
+        }
+        else if(eventSource == startStopTimerButton)
+        {
+            if(timer.isRunning())
+            {
+                timer.stop();
+                startStopTimerButton.setText("Start");
+            }
+            else
+            {
+                timer.start();
+                startStopTimerButton.setText("Stop");
+            }
         }
     }
 }
