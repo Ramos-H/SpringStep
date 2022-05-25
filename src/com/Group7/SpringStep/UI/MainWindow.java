@@ -9,6 +9,10 @@ import com.Group7.SpringStep.*;
 
 public class MainWindow extends JFrame
 {
+    private ListPanel toDoPanel;
+    private ListPanel doingPanel;
+    private ListPanel donePanel;
+
     public MainWindow()
     {
         // Set window parameters first
@@ -122,14 +126,14 @@ public class MainWindow extends JFrame
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
                 {
-                    JPanel toDoPanel = new JPanel();
-                    toDoPanel.setBackground(Color.RED);
-
-                    JPanel doingPanel = new JPanel();
-                    doingPanel.setBackground(Color.YELLOW);
-
-                    JPanel donePanel = new JPanel();
-                    donePanel.setBackground(Color.BLUE);
+                    toDoPanel = new ListPanel("To Do", Color.RED);
+                    Utils.padJComponent(toDoPanel, 5, 5, 5, 5);
+                    
+                    doingPanel = new ListPanel("Doing", Color.BLUE);
+                    Utils.padJComponent(doingPanel, 5, 5, 5, 5);
+                    
+                    donePanel = new ListPanel("Done", Color.YELLOW);
+                    Utils.padJComponent(donePanel,  5,  5,  5,  5);
 
                     boardPanel.add(toDoPanel);
                     boardPanel.add(doingPanel);
