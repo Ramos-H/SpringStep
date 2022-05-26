@@ -12,22 +12,26 @@ import com.Group7.SpringStep.*;
 public class MainWindow extends JFrame implements ActionListener
 {
     private Timer timer;
+    private int timerTick = 10;
     private boolean workMode = true;
     private LocalTime remainingTime;
+
+    private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 2);
+    private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 1);
 
     private ListPanel toDoPanel;
     private ListPanel doingPanel;
     private ListPanel donePanel;
     private JLabel timerLabel;
     private JButton startStopTimerButton;
+    private JButton resetTimerButton;
 
     public MainWindow()
     {
         // Set timer
-        remainingTime = LocalTime.of(0, 2);
+        remainingTime = DEFAULT_WORK_DURATION;
         timer = new Timer(1000, this);
-        timerLabel = new JLabel(remainingTime.toString());
-        timer.start();
+        timerLabel = new JLabel(formatTime(remainingTime));
 
         // Set window parameters
         setTitle("SpringStep");
@@ -121,8 +125,9 @@ public class MainWindow extends JFrame implements ActionListener
 
                     startStopTimerButton = new JButton("Start");
                     startStopTimerButton.addActionListener(this);
-                    JButton resetTimerButton = new JButton("Reset");
-
+                    resetTimerButton = new JButton("Reset");
+                    resetTimerButton.addActionListener(this);
+                    
                     GridBagConstraints timerPanelConstraints = new GridBagConstraints();
                     timerPanelConstraints.anchor = GridBagConstraints.CENTER;
                     timerPanelConstraints.gridx = 0;
@@ -190,34 +195,54 @@ public class MainWindow extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if(eventSource == timer)
+        if (eventSource == timer) 
         {
-            if (!remainingTime.equals(LocalTime.MIN)) {
-                remainingTime = remainingTime.minusSeconds(10);
-            } else {
-                if (workMode) {
+            if (!remainingTime.equals(LocalTime.MIN)) 
+            {
+                remainingTime = remainingTime.minusSeconds(timerTick);
+            } else 
+            {
+                if (workMode) 
+                {
                     timerLabel.setForeground(Color.GREEN);
-                    remainingTime = remainingTime.plusMinutes(1);
-                } else {
+                    remainingTime = DEFAULT_BREAK_DURATION;
+                } else 
+                {
                     timerLabel.setForeground(Color.RED);
-                    remainingTime = remainingTime.plusMinutes(2);
+                    remainingTime = DEFAULT_WORK_DURATION;
                 }
                 workMode = !workMode;
             }
-            timerLabel.setText(remainingTime.toString());
+            timerLabel.setText(formatTime(remainingTime));
         }
-        else if(eventSource == startStopTimerButton)
+        
+        if (eventSource == startStopTimerButton) 
         {
-            if(timer.isRunning())
+            if (timer.isRunning()) 
             {
                 timer.stop();
                 startStopTimerButton.setText("Start");
-            }
-            else
+            } else 
             {
                 timer.start();
                 startStopTimerButton.setText("Stop");
             }
+        } else if(eventSource == resetTimerButton)
+        {
+            if(workMode)
+            {
+                remainingTime = DEFAULT_WORK_DURATION;
+            }
+            else
+            {
+                remainingTime = DEFAULT_BREAK_DURATION;
+            }
+            timerLabel.setText(formatTime(remainingTime));
         }
+    }
+    
+    private String formatTime(LocalTime time)
+    {
+        return String.format("%02d:%02d:%02d", time.getHour(), time.getMinute(), time.getSecond());
     }
 }
