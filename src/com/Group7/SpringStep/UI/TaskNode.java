@@ -8,6 +8,8 @@ import com.Group7.SpringStep.*;
 
 public class TaskNode extends JPanel 
 {
+    private JTextArea taskName;
+
     public TaskNode()
     {
         setLayout(new GridBagLayout());
@@ -15,7 +17,7 @@ public class TaskNode extends JPanel
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         {
-            JTextArea taskName = new JTextArea("New Task");
+            taskName = new JTextArea(Integer.toString(this.hashCode()));
             taskName.setLineWrap(true);
 
             JPanel tagPanel = new JPanel(new FlowLayout());
@@ -30,18 +32,23 @@ public class TaskNode extends JPanel
             taskNodeConstraints.fill = GridBagConstraints.BOTH;
             taskNodeConstraints.anchor = GridBagConstraints.CENTER;
             add(taskName, taskNodeConstraints);
-            
+
             taskNodeConstraints.gridy = 1;
             taskNodeConstraints.weighty = 0;
             taskNodeConstraints.gridwidth = 1;
             taskNodeConstraints.fill = GridBagConstraints.HORIZONTAL;
             taskNodeConstraints.anchor = taskNodeConstraints.NORTHWEST;
             add(tagPanel, taskNodeConstraints);
-            
+
             taskNodeConstraints.gridx = 1;
             taskNodeConstraints.weightx = 0;
             taskNodeConstraints.fill = GridBagConstraints.NONE;
             add(new JButton("Edit"), taskNodeConstraints);
         }
+    }
+    
+    public JTextArea getTaskName() 
+    {
+        return taskName;
     }
 }

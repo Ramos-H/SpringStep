@@ -1,5 +1,7 @@
 package com.Group7.SpringStep.UI;
 
+import java.util.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -7,7 +9,7 @@ import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 
-public class ListPanel extends JPanel implements ActionListener
+public class ListPanel extends JPanel
 {
     private JPanel internalListContainer;
     private JScrollPane listScrollPanel;
@@ -40,7 +42,6 @@ public class ListPanel extends JPanel implements ActionListener
                 listScrollPanel.setOpaque(false);
 
                 addTaskButton = new JButton("Add");
-                addTaskButton.addActionListener(this);
 
                 GridBagConstraints outerPanelConstraints = new GridBagConstraints();
                 outerPanelConstraints.weightx = 1;
@@ -70,7 +71,7 @@ public class ListPanel extends JPanel implements ActionListener
                 outerPanelConstraints.fill = GridBagConstraints.BOTH;
                 outerContainer.add(new JLabel("Add a task"), outerPanelConstraints);
             }
-            
+
             GridBagConstraints listPanelConstraints = new GridBagConstraints();
             listPanelConstraints.anchor = GridBagConstraints.NORTH;
             listPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -86,7 +87,7 @@ public class ListPanel extends JPanel implements ActionListener
         return addTaskButton;
     }
     
-    public void AddTask()
+    public void addTaskToList(JPanel taskNode)
     {
         GridBagConstraints taskListConstraints = new GridBagConstraints();
         taskListConstraints.weightx = 1;
@@ -95,19 +96,27 @@ public class ListPanel extends JPanel implements ActionListener
         taskListConstraints.gridy = internalListContainer.getComponentCount() + 1;
         taskListConstraints.insets = new Insets(5, 5, 5, 5);
 
-        JPanel taskNode = new TaskNode();
-
-        if(!listScrollPanel.isVisible())
+        if (!listScrollPanel.isVisible())
             listScrollPanel.setVisible(true);
-            
+
         internalListContainer.add(taskNode, taskListConstraints);
-        
+
         this.revalidate();
     }
     
-    @Override
-    public void actionPerformed(ActionEvent e) 
+    public ArrayList<TaskNode> getTaskNodes()
     {
-        AddTask();
+        ArrayList<TaskNode> taskNodes = new ArrayList<>(internalListContainer.getComponentCount());
+
+        Component[] components = internalListContainer.getComponents();
+        for (Object currentObject : components) 
+        {
+            if (currentObject instanceof TaskNode) 
+            {
+                taskNodes.add((TaskNode) currentObject);
+            }
+        }
+        
+        return taskNodes;
     }
 }

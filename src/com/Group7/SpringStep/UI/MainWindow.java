@@ -2,22 +2,29 @@ package com.Group7.SpringStep.UI;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 
-public class MainWindow extends JFrame
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener
 {
     private ListPanel toDoPanel;
     private ListPanel doingPanel;
     private ListPanel donePanel;
-    
+    private JButton toDoAddTaskButton;
+    private JButton doingAddTaskButton;
+    private JButton doneAddTaskButton;
+
+    private ListPanel hoveredPanel = null;
+    private TaskNode hoverTask = null;
 
     public MainWindow()
     {
         // Set window parameters
         setTitle("SpringStep");
+        getToolkit().addAWTEventListener(this, AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 80f;
@@ -37,7 +44,7 @@ public class MainWindow extends JFrame
             {
                 JLabel windowTitle = new JLabel(getTitle());
                 windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
-                
+
                 JButton boardListButton = new JButton("v");
                 JButton userButton = new JButton("User");
                 JButton minimizeButton = new JButton("_");
@@ -105,13 +112,19 @@ public class MainWindow extends JFrame
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
                 {
                     toDoPanel = new ListPanel("To Do", Color.RED);
+                    toDoAddTaskButton = toDoPanel.getAddTaskButton();
+                    toDoAddTaskButton.addActionListener(this);
                     Utils.padJComponent(toDoPanel, 5, 5, 5, 5);
-                    
+
                     doingPanel = new ListPanel("Doing", Color.BLUE);
+                    doingAddTaskButton = doingPanel.getAddTaskButton();
+                    doingAddTaskButton.addActionListener(this);
                     Utils.padJComponent(doingPanel, 5, 5, 5, 5);
-                    
+
                     donePanel = new ListPanel("Done", Color.YELLOW);
-                    Utils.padJComponent(donePanel,  5,  5,  5,  5);
+                    doneAddTaskButton = donePanel.getAddTaskButton();
+                    doneAddTaskButton.setVisible(false);
+                    Utils.padJComponent(donePanel, 5, 5, 5, 5);
 
                     boardPanel.add(toDoPanel);
                     boardPanel.add(doingPanel);
@@ -147,5 +160,72 @@ public class MainWindow extends JFrame
             add(contentPanel, BorderLayout.CENTER);
             add(shortcutsPanel, BorderLayout.PAGE_END);
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        Object eventSource = e.getSource();
+        TaskNode taskNode = new TaskNode();
+        if(eventSource == toDoAddTaskButton)
+        {
+            toDoPanel.addTaskToList(taskNode);
+        }
+        else if(eventSource == doingAddTaskButton)
+        {
+            doingPanel.addTaskToList(taskNode);
+        }
+    }
+    
+    @Override
+    public void eventDispatched(AWTEvent event) 
+    {
+        Point mouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
+        String currentPanel = "None";
+        if(isMouseOverVisibleRect(mouseScreenPosition, toDoPanel))
+        {
+            currentPanel = "To Do";
+            hoveredPanel = toDoPanel;
+        } else if (isMouseOverVisibleRect(mouseScreenPosition, doingPanel)) 
+        {
+            currentPanel = "Doing";
+            hoveredPanel = doingPanel;
+        } else if (isMouseOverVisibleRect(mouseScreenPosition, donePanel)) 
+        {
+            currentPanel = "Done";
+            hoveredPanel = donePanel;
+        } else 
+        {
+            hoveredPanel = null;
+        }
+
+        setTitle("Panel: " + currentPanel);
+
+        ArrayList<TaskNode> taskNodes = new ArrayList<>();
+        taskNodes.addAll(toDoPanel.getTaskNodes());
+        taskNodes.addAll(doingPanel.getTaskNodes());
+        taskNodes.addAll(donePanel.getTaskNodes());
+
+        for (TaskNode taskNode : taskNodes) 
+        {
+            if(isMouseOverVisibleRect(mouseScreenPosition, taskNode))
+            {
+                setTitle(getTitle() + ", " + taskNode.getTaskName().getText());
+                break;
+            }
+        }
+    }
+
+
+
+    private boolean isMouseOverVisibleRect(Point mouseScreenPosition, JComponent component) 
+    {
+        Rectangle visibleRect = component.getVisibleRect();
+        visibleRect.setLocation(component.getLocationOnScreen());
+        boolean insideX = (mouseScreenPosition.x >= visibleRect.x)
+                && (mouseScreenPosition.x <= visibleRect.x + visibleRect.width);
+        boolean insideY = (mouseScreenPosition.y >= visibleRect.y)
+                && (mouseScreenPosition.y <= visibleRect.y + visibleRect.height);
+        return insideX && insideY;
     }
 }
