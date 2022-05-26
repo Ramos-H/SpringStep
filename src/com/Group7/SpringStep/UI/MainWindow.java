@@ -3,36 +3,19 @@ package com.Group7.SpringStep.UI;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.time.*;
-
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 
-public class MainWindow extends JFrame implements ActionListener
+public class MainWindow extends JFrame
 {
-    private Timer timer;
-    private int timerTick = 10;
-    private boolean workMode = true;
-    private LocalTime remainingTime;
-
-    private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 2);
-    private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 1);
-
     private ListPanel toDoPanel;
     private ListPanel doingPanel;
     private ListPanel donePanel;
-    private JLabel timerLabel;
-    private JButton startStopTimerButton;
-    private JButton resetTimerButton;
+    
 
     public MainWindow()
     {
-        // Set timer
-        remainingTime = DEFAULT_WORK_DURATION;
-        timer = new Timer(1000, this);
-        timerLabel = new JLabel(formatTime(remainingTime));
-
         // Set window parameters
         setTitle("SpringStep");
 
@@ -116,32 +99,7 @@ public class MainWindow extends JFrame implements ActionListener
                     searchBar.add(helpButton, searchBarConstraints);
                 }
 
-                JPanel timerPanel = new JPanel(new GridBagLayout());
-                {
-                    timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                    timerLabel.setFont(new Font(timerLabel.getFont().getFontName(), Font.PLAIN, 21));
-                    timerLabel.setForeground(Color.RED);
-                    timerLabel.setOpaque(false);
-
-                    startStopTimerButton = new JButton("Start");
-                    startStopTimerButton.addActionListener(this);
-                    resetTimerButton = new JButton("Reset");
-                    resetTimerButton.addActionListener(this);
-                    
-                    GridBagConstraints timerPanelConstraints = new GridBagConstraints();
-                    timerPanelConstraints.anchor = GridBagConstraints.CENTER;
-                    timerPanelConstraints.gridx = 0;
-
-                    timerPanelConstraints.gridwidth = 2;
-                    timerPanel.add(timerLabel, timerPanelConstraints);
-
-                    timerPanelConstraints.gridy = 1;
-                    timerPanelConstraints.gridwidth = 1;
-                    timerPanel.add(startStopTimerButton, timerPanelConstraints);
-
-                    timerPanelConstraints.gridx = 1;
-                    timerPanel.add(resetTimerButton, timerPanelConstraints);
-                }
+                JPanel timerPanel = new TimerPanel();
 
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
@@ -189,60 +147,5 @@ public class MainWindow extends JFrame implements ActionListener
             add(contentPanel, BorderLayout.CENTER);
             add(shortcutsPanel, BorderLayout.PAGE_END);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        Object eventSource = e.getSource();
-        if (eventSource == timer) 
-        {
-            if (!remainingTime.equals(LocalTime.MIN)) 
-            {
-                remainingTime = remainingTime.minusSeconds(timerTick);
-            } else 
-            {
-                if (workMode) 
-                {
-                    timerLabel.setForeground(Color.GREEN);
-                    remainingTime = DEFAULT_BREAK_DURATION;
-                } else 
-                {
-                    timerLabel.setForeground(Color.RED);
-                    remainingTime = DEFAULT_WORK_DURATION;
-                }
-                workMode = !workMode;
-            }
-            timerLabel.setText(formatTime(remainingTime));
-        }
-        
-        if (eventSource == startStopTimerButton) 
-        {
-            if (timer.isRunning()) 
-            {
-                timer.stop();
-                startStopTimerButton.setText("Start");
-            } else 
-            {
-                timer.start();
-                startStopTimerButton.setText("Stop");
-            }
-        } else if(eventSource == resetTimerButton)
-        {
-            if(workMode)
-            {
-                remainingTime = DEFAULT_WORK_DURATION;
-            }
-            else
-            {
-                remainingTime = DEFAULT_BREAK_DURATION;
-            }
-            timerLabel.setText(formatTime(remainingTime));
-        }
-    }
-    
-    private String formatTime(LocalTime time)
-    {
-        return String.format("%02d:%02d:%02d", time.getHour(), time.getMinute(), time.getSecond());
     }
 }

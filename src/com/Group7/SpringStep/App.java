@@ -14,7 +14,7 @@ public class App
         JFrame frame;
         // frame = new LoginWindow();
         // frame = new SignUpWindow();
-        frame = new MainWindow();
+        // frame = new MainWindow();
         // frame = new AddTaskWindow();
         // frame = new ProfileWindow();
 
