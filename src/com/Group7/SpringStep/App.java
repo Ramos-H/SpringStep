@@ -16,7 +16,7 @@ public class App
          frame = new SignUpWindow();
         // frame = new MainWindow();
         // frame = new AddTaskWindow();
-        // frame = new ProfileWindow();
+        frame = new ProfileWindow();
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
