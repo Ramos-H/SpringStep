@@ -33,9 +33,10 @@ public class SignUpWindow extends JFrame {
         JTextField userPassword = new JTextField();
         JTextField userBdate = new JTextField();
         JButton btnBack = new JButton("Back");
-        btnBack.setBackground(new Color(215, 204, 195)); // rgb
+        btnBack.setBackground(new Color(215, 204, 195)); 
         JButton btnSignUp = new JButton("Sign Up");
         btnSignUp.setBackground(new Color(135, 195, 193));
+        JLabel iconLogo = new JLabel();
 
         GridBagConstraints signUpC = new GridBagConstraints();
         signUpC.anchor = GridBagConstraints.CENTER;
@@ -45,36 +46,40 @@ public class SignUpWindow extends JFrame {
         signUpC.gridwidth = 2; // to center the label
         mainPanel.add(welcomeLabel, signUpC);
 
+        iconLogo.setIcon(new ImageIcon("C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\SpringStep_Logo_Colored_Circle_200x200.png"));
+        signUpC.gridy = 1;
+        signUpC.fill = GridBagConstraints.NONE;
+        mainPanel.add(iconLogo, signUpC);
+
         signUpC.gridwidth = 1; // para bumalik
         signUpC.anchor = GridBagConstraints.LINE_START;
-        signUpC.fill = GridBagConstraints.NONE;
         signUpC.weightx = 0;
 
-        signUpC.gridy = 1;
+        signUpC.gridy = 2;
         mainPanel.add(new JLabel("Username: "), signUpC);
 
-        signUpC.gridy = 2;
+        signUpC.gridy = 3;
         mainPanel.add(new JLabel("Email: "), signUpC);
 
-        signUpC.gridy = 3;
+        signUpC.gridy = 4;
         mainPanel.add(new JLabel("Password: "), signUpC);
 
-        signUpC.gridy = 4;
+        signUpC.gridy = 5;
         mainPanel.add(new JLabel("Birthday: "), signUpC);
 
         // to make the textfields longer
         signUpC.fill = GridBagConstraints.HORIZONTAL;
-        signUpC.gridy = 1;
+        signUpC.gridy = 2;
         signUpC.weightx = 1;
         mainPanel.add(userName, signUpC);
 
-        signUpC.gridy = 2;
+        signUpC.gridy = 3;
         mainPanel.add(userEmail, signUpC);
 
-        signUpC.gridy = 3;
+        signUpC.gridy = 4;
         mainPanel.add(userPassword, signUpC);
 
-        signUpC.gridy = 4;
+        signUpC.gridy = 5;
         mainPanel.add(userBdate, signUpC);
 
         JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
@@ -82,7 +87,7 @@ public class SignUpWindow extends JFrame {
         btnPanel.add(btnSignUp);
         signUpC.anchor = GridBagConstraints.CENTER;
         signUpC.fill = GridBagConstraints.NONE;
-        signUpC.gridy = 5;
+        signUpC.gridy = 6;
         signUpC.gridwidth = 2;
 
         mainPanel.add(btnPanel, signUpC);
