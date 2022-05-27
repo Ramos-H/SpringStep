@@ -242,7 +242,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
                     Rectangle heldTaskBounds = heldTask.getBounds();
                     Point heldTaskScreenPosition = heldTask.getLocationOnScreen();
-                    Point windowScreenPosition = getLocationOnScreen();
+                    Point windowScreenPosition = getContentPane().getLocationOnScreen();
                     Point heldTaskNewPosition = new Point(heldTaskScreenPosition.x - windowScreenPosition.x,
                             heldTaskScreenPosition.y - windowScreenPosition.y);
 
@@ -335,8 +335,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             currentHeldNode = heldTask.getTaskName().getText();
         }
-        String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s";
+        String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s, Screen Position: %s";
         setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,
-                mouseDelta.toString()));
+                mouseDelta.toString(), getLocationOnScreen().toString()));
     }
 }
