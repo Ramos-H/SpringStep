@@ -94,19 +94,30 @@ public class ListPanel extends JPanel
         return addTaskButton;
     }
     
-    public void addTaskToList(JPanel taskNode)
+    public void addTaskToList(JPanel newTaskNode)
     {
         GridBagConstraints taskListConstraints = new GridBagConstraints();
         taskListConstraints.weightx = 1;
         taskListConstraints.fill = GridBagConstraints.HORIZONTAL;
         taskListConstraints.anchor = GridBagConstraints.CENTER;
-        taskListConstraints.gridy = internalListContainer.getComponentCount() + 1;
         taskListConstraints.insets = new Insets(5, 5, 5, 5);
-
+        
         if (!listScrollPanel.isVisible())
             listScrollPanel.setVisible(true);
+        
+        ArrayList<TaskNode> currentTaskNodes = getTaskNodes();
+        internalListContainer.removeAll();
 
-        internalListContainer.add(taskNode, taskListConstraints);
+        if(currentTaskNodes.size() > 0)
+        {
+            for (TaskNode existingTaskNode : currentTaskNodes) 
+            {
+                internalListContainer.add(existingTaskNode, taskListConstraints);
+                taskListConstraints.gridy = internalListContainer.getComponentCount() + 1;
+            }
+        }
+        
+        internalListContainer.add(newTaskNode, taskListConstraints);
 
         revalidate();
     }
