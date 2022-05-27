@@ -30,4 +30,15 @@ public class Utils
     {
         return String.format("%02d:%02d:%02d", time.getHour(), time.getMinute(), time.getSecond());
     }
+
+    public static boolean isMouseOverVisibleRect(Point mouseScreenPosition, JComponent component) 
+    {
+        Rectangle visibleRect = component.getVisibleRect();
+        visibleRect.setLocation(component.getLocationOnScreen());
+        boolean insideX = (mouseScreenPosition.x >= visibleRect.x)
+                && (mouseScreenPosition.x <= visibleRect.x + visibleRect.width);
+        boolean insideY = (mouseScreenPosition.y >= visibleRect.y)
+                && (mouseScreenPosition.y <= visibleRect.y + visibleRect.height);
+        return insideX && insideY;
+    }
 }

@@ -2,7 +2,8 @@ package com.Group7.SpringStep.UI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+
+import java.util.*;
 
 import javax.swing.*;
 
@@ -17,14 +18,23 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JButton doingAddTaskButton;
     private JButton doneAddTaskButton;
 
+    private ListPanel previousPanel = null;
     private ListPanel hoveredPanel = null;
-    private TaskNode hoverTask = null;
+    private TaskNode hoveredTask = null;
+    private TaskNode heldTask = null;
+
+    private Point oldMouseScreenPosition = new Point();
+    private Point newMouseScreenPosition = new Point();
+    private Point mouseDelta = new Point();
+    private ArrayList<TaskNode> taskNodes;
 
     public MainWindow()
     {
         // Set window parameters
         setTitle("SpringStep");
-        getToolkit().addAWTEventListener(this, AWTEvent.MOUSE_MOTION_EVENT_MASK);
+        long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
+
+        getToolkit().addAWTEventListener(this, eventMask);
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 80f;
@@ -178,54 +188,155 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     }
     
     @Override
-    public void eventDispatched(AWTEvent event) 
+    public void eventDispatched(AWTEvent caughtEvent) 
     {
-        Point mouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
-        String currentPanel = "None";
-        if(isMouseOverVisibleRect(mouseScreenPosition, toDoPanel))
-        {
-            currentPanel = "To Do";
-            hoveredPanel = toDoPanel;
-        } else if (isMouseOverVisibleRect(mouseScreenPosition, doingPanel)) 
-        {
-            currentPanel = "Doing";
-            hoveredPanel = doingPanel;
-        } else if (isMouseOverVisibleRect(mouseScreenPosition, donePanel)) 
-        {
-            currentPanel = "Done";
-            hoveredPanel = donePanel;
-        } else 
-        {
-            hoveredPanel = null;
-        }
+        updateDebugDetails();
 
-        setTitle("Panel: " + currentPanel);
+        int eventId = caughtEvent.getID();
+        newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
+        taskNodes = new ArrayList<>();
 
-        ArrayList<TaskNode> taskNodes = new ArrayList<>();
-        taskNodes.addAll(toDoPanel.getTaskNodes());
-        taskNodes.addAll(doingPanel.getTaskNodes());
-        taskNodes.addAll(donePanel.getTaskNodes());
-
-        for (TaskNode taskNode : taskNodes) 
         {
-            if(isMouseOverVisibleRect(mouseScreenPosition, taskNode))
+            if(Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel))
             {
-                setTitle(getTitle() + ", " + taskNode.getTaskName().getText());
-                break;
+                hoveredPanel = toDoPanel;
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) 
+            {
+                hoveredPanel = doingPanel;
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) 
+            {
+                hoveredPanel = donePanel;
+            } else 
+            {
+                hoveredPanel = null;
             }
         }
+        
+        {
+            taskNodes.addAll(toDoPanel.getTaskNodes());
+            taskNodes.addAll(doingPanel.getTaskNodes());
+            taskNodes.addAll(donePanel.getTaskNodes());
+            
+            hoveredTask = null;
+            for (TaskNode taskNode : taskNodes) 
+            {
+                if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) {
+                    hoveredTask = taskNode;
+                    break;
+                }
+            }
+        }
+
+        if(!(caughtEvent.getSource() instanceof JButton)){
+            switch (eventId) 
+            {
+                case MouseEvent.MOUSE_PRESSED:
+                    if (hoveredTask == null) 
+                    {
+                        break;
+                    }
+
+                    previousPanel = hoveredPanel;
+                    heldTask = hoveredTask;
+                    hoveredTask = null;
+
+                    Rectangle heldTaskBounds = heldTask.getBounds();
+                    Point heldTaskScreenPosition = heldTask.getLocationOnScreen();
+                    Point windowScreenPosition = getLocationOnScreen();
+                    Point heldTaskNewPosition = new Point(heldTaskScreenPosition.x - windowScreenPosition.x,
+                            heldTaskScreenPosition.y - windowScreenPosition.y);
+
+                    heldTaskBounds.setLocation(heldTaskNewPosition);
+
+                    heldTask.getParent().remove(heldTask);
+                    getLayeredPane().add(heldTask);
+
+                    heldTask.setBounds(heldTaskBounds);
+                    break;
+                case MouseEvent.MOUSE_RELEASED:
+                    if (heldTask == null) 
+                    {
+                        break;
+                    }
+
+                    getLayeredPane().remove(heldTask);
+                    if(hoveredPanel == null)
+                    {
+                        previousPanel.addTaskToList(heldTask);
+                    }
+                    else
+                    {
+                        hoveredPanel.addTaskToList(heldTask);
+                    }
+                    previousPanel = null;
+
+                    heldTask = null;
+                    hoveredTask = null;
+                    break;
+            }
+        }
+        
+        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED)
+        {
+            revalidate();
+            repaint();
+        }
+
+        if (heldTask != null)
+        {
+            Point currentLocation = heldTask.getLocation();
+            heldTask.setLocation(new Point(currentLocation.x + mouseDelta.x, currentLocation.y + mouseDelta.y));
+        }
+
+        mouseDelta = new Point(newMouseScreenPosition.x - oldMouseScreenPosition.x,
+                newMouseScreenPosition.y - oldMouseScreenPosition.y);
+
+        oldMouseScreenPosition = newMouseScreenPosition;
+
+        updateDebugDetails();
     }
 
-
-
-    private boolean isMouseOverVisibleRect(Point mouseScreenPosition, JComponent component) 
+    private void updateDebugDetails() 
     {
-        Rectangle visibleRect = component.getVisibleRect();
-        visibleRect.setLocation(component.getLocationOnScreen());
-        boolean insideX = (mouseScreenPosition.x >= visibleRect.x)
-                && (mouseScreenPosition.x <= visibleRect.x + visibleRect.width);
-        boolean insideY = (mouseScreenPosition.y >= visibleRect.y)
-                && (mouseScreenPosition.y <= visibleRect.y + visibleRect.height);
-        return insideX && insideY;
+        // Title details
+        String currentHoveredPanel = "NONE";
+        if (hoveredPanel == toDoPanel)
+        {
+            currentHoveredPanel = "To Do";
+        }
+        else if (hoveredPanel == doingPanel) 
+        {
+            currentHoveredPanel = "Doing";
+        }
+        else if (hoveredPanel == donePanel)
+        {
+            currentHoveredPanel = "Done";
+        }
+        String currentPreviousPanel = "NONE";
+        if (previousPanel == toDoPanel)
+        {
+            currentPreviousPanel = "To Do";
+        }
+        else if (previousPanel == doingPanel) 
+        {
+            currentPreviousPanel = "Doing";
+        }
+        else if (previousPanel == donePanel)
+        {
+            currentPreviousPanel = "Done";
+        }
+        String currentHoveredNode = "NONE";
+        if (hoveredTask != null)
+        {
+            currentHoveredNode = hoveredTask.getTaskName().getText();
+        }
+        String currentHeldNode = "NONE";
+        if (heldTask != null)
+        {
+            currentHeldNode = heldTask.getTaskName().getText();
+        }
+        String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s";
+        setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,
+                mouseDelta.toString()));
     }
 }

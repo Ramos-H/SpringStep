@@ -14,12 +14,13 @@ public class ListPanel extends JPanel
     private JPanel internalListContainer;
     private JScrollPane listScrollPanel;
     private JButton addTaskButton;
+    private JPanel outerContainer;
     
     public ListPanel(String title, Color color)
     {
         setLayout(new GridBagLayout());
         {
-            JPanel outerContainer = new JPanel(new GridBagLayout());
+            outerContainer = new JPanel(new GridBagLayout());
             {
                 outerContainer.setBackground(color);
                 JPanel listTitleBar = new JPanel(new BorderLayout());
@@ -81,6 +82,12 @@ public class ListPanel extends JPanel
             add(outerContainer, listPanelConstraints);
         }
     }
+
+    @Override
+    public Rectangle getVisibleRect() 
+    {
+        return outerContainer.getVisibleRect();
+    }
     
     public JButton getAddTaskButton() 
     {
@@ -101,7 +108,7 @@ public class ListPanel extends JPanel
 
         internalListContainer.add(taskNode, taskListConstraints);
 
-        this.revalidate();
+        revalidate();
     }
     
     public ArrayList<TaskNode> getTaskNodes()
