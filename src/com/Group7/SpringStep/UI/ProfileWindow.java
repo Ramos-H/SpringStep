@@ -5,15 +5,17 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class ProfileWindow extends JFrame implements ActionListener {
-    JButton btnEditProf;
-    JButton btnBack;
-    JButton btnEditProfile;
-    JButton btnEditUser;
-    JButton btnEditEmail;
-    JButton btnEditPass;
+public class ProfileWindow extends JFrame implements ActionListener 
+{
+    private JButton btnEditProf;
+    private JButton btnBack;
+    private JButton btnEditProfile;
+    private JButton btnEditUser;
+    private JButton btnEditEmail;
+    private JButton btnEditPass;
 
-    public ProfileWindow() {
+    public ProfileWindow() 
+    {
         // Set window parameters first
         setTitle("SpringStep - My Profile");
 
@@ -28,16 +30,15 @@ public class ProfileWindow extends JFrame implements ActionListener {
         int y = Math.round(screenSize.height / 2 - getHeight() / 2);
         setLocation(x, y);
         setLayout(new GridLayout(1, 1));
-
-        // JButton btnEditProf;
         {
             // Put nested components here
             JPanel mainPanel = new JPanel(new GridBagLayout());
             mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
-
             {
                 JLabel profileLabel = new JLabel("User Profile");
                 JLabel iconProfile = new JLabel();
+                iconProfile.setIcon(
+                        new ImageIcon("C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\profileIcon.png"));
 
                 JTextField userName = new JTextField();
                 JTextField userEmail = new JTextField();
@@ -57,116 +58,124 @@ public class ProfileWindow extends JFrame implements ActionListener {
                 btnEditEmail = new JButton();
                 btnEditPass = new JButton();
 
-                GridBagConstraints pw = new GridBagConstraints(); // pw stands for profileWindow
-                pw.anchor = GridBagConstraints.CENTER;
-                pw.insets = new Insets(5, 5, 0, 5);
-                pw.weighty = 0;
-
-                pw.gridwidth = 2; // to center the label
-                mainPanel.add(profileLabel, pw);
-
-                iconProfile.setIcon(
-                        new ImageIcon("C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\profileIcon.png"));
-                pw.gridy = 1;
-                pw.fill = GridBagConstraints.NONE;
-                mainPanel.add(iconProfile, pw);
                 // for the edit buttons
-                Icon iconEditProf = new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png");
-                btnEditProfile = new JButton(iconEditProf);
+                btnEditProfile = new JButton();
                 btnEditProfile.setBackground(Color.WHITE);
-                pw.anchor = GridBagConstraints.FIRST_LINE_END;
-                pw.gridx = 1;
-                pw.gridy = 1;
-                btnEditProfile.setVisible(false);
                 btnEditProfile.setEnabled(false);
-                mainPanel.add(btnEditProfile, pw);
+                btnEditProfile.setVisible(false);
+                btnEditProfile.setIcon(new ImageIcon(
+                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
 
-                Icon iconEditUser = new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png");
-                btnEditUser = new JButton(iconEditUser);
-                btnEditUser.setBackground(Color.WHITE);
-                pw.anchor = GridBagConstraints.FIRST_LINE_START;
-                pw.gridx = 2;
-                pw.gridy = 2;
-                btnEditUser.setVisible(false);
+                btnEditUser = new JButton();
                 btnEditUser.setEnabled(false);
-                mainPanel.add(btnEditUser, pw);
+                btnEditUser.setVisible(false);
+                btnEditUser.setBackground(Color.WHITE);
+                btnEditUser.setIcon(new ImageIcon(
+                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
 
-                Icon iconEditEmail = new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png");
-                btnEditEmail = new JButton(iconEditEmail);
-                btnEditEmail.setBackground(Color.WHITE);
-                pw.anchor = GridBagConstraints.FIRST_LINE_START;
-                pw.gridy = 3;
-                btnEditEmail.setVisible(false);
+                btnEditEmail = new JButton();
                 btnEditEmail.setEnabled(false);
-                mainPanel.add(btnEditEmail, pw);
+                btnEditEmail.setVisible(false);
+                btnEditEmail.setBackground(Color.WHITE);
+                btnEditEmail.setIcon(new ImageIcon(
+                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
 
-                Icon iconEditPass = new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png");
-                btnEditPass = new JButton(iconEditPass);
-                btnEditPass.setBackground(Color.WHITE);
-                pw.anchor = GridBagConstraints.FIRST_LINE_START;
-                pw.gridy = 4;
-                btnEditPass.setVisible(false);
+                btnEditPass = new JButton();
                 btnEditPass.setEnabled(false);
-                mainPanel.add(btnEditPass, pw);
+                btnEditPass.setVisible(false);
+                btnEditPass.setBackground(Color.WHITE);
+                btnEditPass.setIcon(new ImageIcon(
+                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
+
+                JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
+                {
+                    btnPanel.add(btnBack);
+                    btnPanel.add(btnEditProf);
+                }
+
+                GridBagConstraints profileWindowConstraints = new GridBagConstraints();
+                profileWindowConstraints.weighty = 0;
+                profileWindowConstraints.anchor = GridBagConstraints.CENTER;
+                profileWindowConstraints.insets = new Insets(5, 5, 0, 5);
+
+                profileWindowConstraints.gridwidth = 2; // to center the label
+                mainPanel.add(profileLabel, profileWindowConstraints);
+
+                profileWindowConstraints.gridy = 1;
+                profileWindowConstraints.fill = GridBagConstraints.NONE;
+                mainPanel.add(iconProfile, profileWindowConstraints);
+
+                // for the edit buttons
+                profileWindowConstraints.gridx = 1;
+                profileWindowConstraints.gridy = 1;
+                profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
+                mainPanel.add(btnEditProfile, profileWindowConstraints);
+
+                profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+                profileWindowConstraints.gridx = 2;
+                profileWindowConstraints.gridy = 2;
+                mainPanel.add(btnEditUser, profileWindowConstraints);
+
+                profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+                profileWindowConstraints.gridy = 3;
+                mainPanel.add(btnEditEmail, profileWindowConstraints);
+
+                profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
+                profileWindowConstraints.gridy = 4;
+                mainPanel.add(btnEditPass, profileWindowConstraints);
 
                 // jlabels
-                pw.gridwidth = 1; // para bumalik
-                pw.anchor = GridBagConstraints.LINE_START;
-                pw.weightx = 0;
+                profileWindowConstraints.weightx = 0;
+                profileWindowConstraints.gridwidth = 1; // para bumalik
+                profileWindowConstraints.anchor = GridBagConstraints.LINE_START;
 
-                pw.gridx = 0;// para bumalik din
-                pw.gridy = 2;
-                mainPanel.add(new JLabel("Username: "), pw);
+                profileWindowConstraints.gridx = 0;// para bumalik din
+                profileWindowConstraints.gridy = 2;
+                mainPanel.add(new JLabel("Username: "), profileWindowConstraints);
 
-                pw.gridy = 3;
-                mainPanel.add(new JLabel("Email: "), pw);
+                profileWindowConstraints.gridy = 3;
+                mainPanel.add(new JLabel("Email: "), profileWindowConstraints);
 
-                pw.gridy = 4;
-                mainPanel.add(new JLabel("Password: "), pw);
+                profileWindowConstraints.gridy = 4;
+                mainPanel.add(new JLabel("Password: "), profileWindowConstraints);
 
-                pw.gridy = 5;
-                mainPanel.add(new JLabel("Birthday: "), pw);
+                profileWindowConstraints.gridy = 5;
+                mainPanel.add(new JLabel("Birthday: "), profileWindowConstraints);
 
                 // to make the textfields longer
-                pw.fill = GridBagConstraints.HORIZONTAL;
-                pw.gridx = 1;
-                pw.gridy = 2;
-                pw.weightx = 1;
-                mainPanel.add(userName, pw);
+                profileWindowConstraints.gridx = 1;
+                profileWindowConstraints.gridy = 2;
+                profileWindowConstraints.weightx = 1;
+                profileWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
+                mainPanel.add(userName, profileWindowConstraints);
 
-                pw.gridy = 3;
-                mainPanel.add(userEmail, pw);
+                profileWindowConstraints.gridy = 3;
+                mainPanel.add(userEmail, profileWindowConstraints);
 
-                pw.gridy = 4;
-                mainPanel.add(userPassword, pw);
+                profileWindowConstraints.gridy = 4;
+                mainPanel.add(userPassword, profileWindowConstraints);
 
-                pw.gridy = 5;
-                mainPanel.add(userBdate, pw);
+                profileWindowConstraints.gridy = 5;
+                mainPanel.add(userBdate, profileWindowConstraints);
+
                 // buttons
-                pw.gridx = 0;
-                JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
-                btnPanel.add(btnBack);
-                btnPanel.add(btnEditProf);
-                pw.anchor = GridBagConstraints.CENTER;
-                pw.fill = GridBagConstraints.NONE;
-                pw.gridy = 6;
-                pw.gridwidth = 3;
-
-                mainPanel.add(btnPanel, pw);
-
-                // Put the call to add the nested components here
+                profileWindowConstraints.gridx = 0;
+                profileWindowConstraints.gridy = 6;
+                profileWindowConstraints.gridwidth = 3;
+                profileWindowConstraints.fill = GridBagConstraints.NONE;
+                profileWindowConstraints.anchor = GridBagConstraints.CENTER;
+                mainPanel.add(btnPanel, profileWindowConstraints);
             }
+            // Put the call to add the nested components here
             add(mainPanel);
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == btnEditProf) {
+    public void actionPerformed(ActionEvent e) 
+    {
+        if (e.getSource() == btnEditProf) 
+        {
             btnEditProfile.setVisible(true);
             btnEditProfile.setEnabled(true);
 
@@ -179,8 +188,5 @@ public class ProfileWindow extends JFrame implements ActionListener {
             btnEditPass.setVisible(true);
             btnEditPass.setEnabled(true);
         }
-
-        
-
     }
 }
