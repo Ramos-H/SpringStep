@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import com.Group7.SpringStep.App;
+
 public class SignUpWindow extends JFrame 
 {
     public SignUpWindow() 
@@ -41,9 +43,9 @@ public class SignUpWindow extends JFrame
                 btnSignUp.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
-                iconLogo.setIcon(new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\SpringStep_Logo_Colored_Circle_200x200.png"));
-                        
+                iconLogo.setIcon(
+                        new ImageIcon(App.resources.get("SpringStep_Logo_Colored_Circle_200x200.png")));
+                
                 JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
                 {
                     btnPanel.add(btnBack);
