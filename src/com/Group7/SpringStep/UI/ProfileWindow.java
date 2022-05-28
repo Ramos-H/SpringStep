@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import com.Group7.SpringStep.App;
+
 public class ProfileWindow extends JFrame implements ActionListener 
 {
     private JButton btnEditProf;
@@ -13,6 +15,7 @@ public class ProfileWindow extends JFrame implements ActionListener
     private JButton btnEditUser;
     private JButton btnEditEmail;
     private JButton btnEditPass;
+    private ImageIcon editButtonIcon = new ImageIcon(App.resources.get("editIcon.png"));
 
     public ProfileWindow() 
     {
@@ -63,29 +66,25 @@ public class ProfileWindow extends JFrame implements ActionListener
                 btnEditProfile.setBackground(Color.WHITE);
                 btnEditProfile.setEnabled(false);
                 btnEditProfile.setVisible(false);
-                btnEditProfile.setIcon(new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
+                btnEditProfile.setIcon(editButtonIcon);
 
                 btnEditUser = new JButton();
                 btnEditUser.setEnabled(false);
                 btnEditUser.setVisible(false);
                 btnEditUser.setBackground(Color.WHITE);
-                btnEditUser.setIcon(new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
+                btnEditUser.setIcon(editButtonIcon);
 
                 btnEditEmail = new JButton();
                 btnEditEmail.setEnabled(false);
                 btnEditEmail.setVisible(false);
                 btnEditEmail.setBackground(Color.WHITE);
-                btnEditEmail.setIcon(new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
+                btnEditEmail.setIcon(editButtonIcon);
 
                 btnEditPass = new JButton();
                 btnEditPass.setEnabled(false);
                 btnEditPass.setVisible(false);
                 btnEditPass.setBackground(Color.WHITE);
-                btnEditPass.setIcon(new ImageIcon(
-                        "C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\editIcon.png"));
+                btnEditPass.setIcon(editButtonIcon);
 
                 JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
                 {
