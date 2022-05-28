@@ -40,8 +40,7 @@ public class ProfileWindow extends JFrame implements ActionListener
             {
                 JLabel profileLabel = new JLabel("User Profile");
                 JLabel iconProfile = new JLabel();
-                iconProfile.setIcon(
-                        new ImageIcon("C:\\Users\\Nicole\\Desktop\\programs\\SpringStep\\res\\profileIcon.png"));
+                iconProfile.setIcon(new ImageIcon(App.resources.get("profileIcon.png")));
 
                 JTextField userName = new JTextField();
                 JTextField userEmail = new JTextField();
