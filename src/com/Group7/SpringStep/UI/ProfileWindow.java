@@ -16,6 +16,7 @@ public class ProfileWindow extends JFrame implements ActionListener
     private JButton btnEditEmail;
     private JButton btnEditPass;
     private ImageIcon editButtonIcon = new ImageIcon(App.resources.get("editIcon.png"));
+    private boolean editMode = false;
 
     public ProfileWindow() 
     {
@@ -174,17 +175,18 @@ public class ProfileWindow extends JFrame implements ActionListener
     {
         if (e.getSource() == btnEditProf) 
         {
-            btnEditProfile.setVisible(true);
-            btnEditProfile.setEnabled(true);
+            editMode = !editMode;
+            btnEditProfile.setVisible(editMode);
+            btnEditProfile.setEnabled(editMode);
 
-            btnEditUser.setVisible(true);
-            btnEditUser.setEnabled(true);
+            btnEditUser.setVisible(editMode);
+            btnEditUser.setEnabled(editMode);
 
-            btnEditEmail.setVisible(true);
-            btnEditEmail.setEnabled(true);
+            btnEditEmail.setVisible(editMode);
+            btnEditEmail.setEnabled(editMode);
 
-            btnEditPass.setVisible(true);
-            btnEditPass.setEnabled(true);
+            btnEditPass.setVisible(editMode);
+            btnEditPass.setEnabled(editMode);
         }
     }
 }
