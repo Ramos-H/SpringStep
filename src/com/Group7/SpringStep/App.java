@@ -9,8 +9,11 @@ import com.Group7.SpringStep.UI.*;
 
 public class App 
 {
+    public static Resources resources;
     public static void main(String[] args) 
     {
+        resources = new Resources();
+
         JFrame frame;
         // frame = new LoginWindow();
         // frame = new SignUpWindow();
