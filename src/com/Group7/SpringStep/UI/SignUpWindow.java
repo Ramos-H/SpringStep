@@ -3,9 +3,13 @@ package com.Group7.SpringStep.ui;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.io.*;
+import java.nio.file.*;
+
 import javax.swing.*;
 
 import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.data.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
 {
@@ -126,7 +130,6 @@ public class SignUpWindow extends JFrame implements ActionListener
         }
         else if(eventSource == signUpButton)
         {
-            
             String enteredUsername = userNameField.getText();
             String enteredEmail = emailField.getText();
             String enteredPassword = passwordField.getText();
@@ -177,7 +180,50 @@ public class SignUpWindow extends JFrame implements ActionListener
                 return;
             }
             
+            User newUser = new User();
+            newUser.setUserName(enteredUsername);
+            newUser.setEmail(enteredEmail);
+            newUser.setPassword(enteredPassword);
+
+            // Dynamically construct the output file path
+            String userHome = System.getProperty("user.home");
+            Path accountSavePath = Paths.get(userHome, "Documents", "SpringStep", "users");
+            String completeFileName =  enteredUsername + ".csv";
+            Path filePath = accountSavePath.resolve(completeFileName);
             
+            // Try writing the output to the file
+            // If writing fails for whatever reason, display the exception
+            try
+            {
+                boolean folderExists = Files.exists(accountSavePath);
+                boolean folderDoesntExist = Files.notExists(accountSavePath);
+                boolean folderUnverifiable = !folderExists && !folderDoesntExist;
+                boolean folderSurelyDoesntExists = !folderExists && folderDoesntExist;
+                if(folderSurelyDoesntExists)
+                {
+                    Files.createDirectories(accountSavePath);
+                }
+
+                boolean fileExists = Files.exists(filePath);
+                boolean fileDoesntExist = Files.notExists(filePath);
+                boolean fileUnverifiable = !fileExists && !fileDoesntExist;
+                boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
+                if(fileSurelyDoesntExists)
+                {
+                    Files.createFile(filePath);
+                }
+
+                PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
+                printWriter.println(newUser.getCsvFormattedInfo());
+                JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(), "Save Record Successful",
+                        JOptionPane.INFORMATION_MESSAGE);
+                printWriter.close();
+            } catch (Exception e1) 
+            {
+                String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
+                JOptionPane.showMessageDialog(this, e1.getMessage(),"Save Record Unsuccessful", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
     }
 }
