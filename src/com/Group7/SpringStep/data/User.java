@@ -6,6 +6,17 @@ public class User
     private String email;
     private String password;
 
+    // Constructors
+    public User() { }
+
+    public User(String csvInput)
+    {
+        String[] split = csvInput.split(",");
+        userName = split[0];
+        email = split[1];
+        password = split[2];
+    }
+
     // Setters
     /**
      * @param userName the userName to set

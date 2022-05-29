@@ -3,9 +3,13 @@ package com.Group7.SpringStep.ui;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.io.*;
+import java.nio.file.*;
+
 import javax.swing.*;
 
 import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.data.User;
 
 public class LoginWindow extends JFrame implements ActionListener
 {
@@ -126,8 +130,57 @@ public class LoginWindow extends JFrame implements ActionListener
                 noInputErrorMessage = "No password has been entered. \nPlease enter your password and try again.";
             }
 
-            if (hasInputErrors) {
+            if (hasInputErrors) 
+            {
                 JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Dynamically construct the output file path
+            String userHome = System.getProperty("user.home");
+            String completeFileName =  enteredUsername + ".csv";
+            Path filePath = Paths.get(userHome, "Documents", "SpringStep", "users", completeFileName);
+            
+            // Try writing the output to the file
+            // If writing fails for whatever reason, display the exception
+            try
+            {
+                boolean fileExists = Files.exists(filePath);
+                boolean fileDoesntExist = Files.notExists(filePath);
+                boolean fileUnverifiable = !fileExists && !fileDoesntExist;
+                boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
+                if(fileSurelyDoesntExists)
+                {
+                    String message = String.format(
+                            "There is no account found with the username \"%s\". \nCheck the username entered and try again.",
+                            enteredUsername);
+                    String title = String.format("Error: No accounts found with the username \"%s\"", enteredUsername);
+                    JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
+                User currentUser = new User(bufferedReader.readLine());
+                bufferedReader.close();
+
+                if(!currentUser.getPassword().equals(enteredPassword))
+                {
+                    String message = "The password you entered is incorrect. Please re-enter your password and try again.";
+                    String title = "Error: Incorrect password";
+                    JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                JOptionPane.showMessageDialog(this, "Logged in successfully", "Successful log in", JOptionPane.INFORMATION_MESSAGE);
+                // PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
+                // printWriter.println(newUser.getCsvFormattedInfo());
+                // JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(), "Save Record Successful",
+                //         JOptionPane.INFORMATION_MESSAGE);
+                // printWriter.close();
+            } catch (Exception e1) 
+            {
+                String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
+                JOptionPane.showMessageDialog(this, e1.getMessage(),"Save Record Unsuccessful", JOptionPane.ERROR_MESSAGE);
                 return;
             }
         }
