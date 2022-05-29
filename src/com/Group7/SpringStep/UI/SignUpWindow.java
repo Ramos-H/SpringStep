@@ -7,7 +7,7 @@ import javax.swing.*;
 
 import com.Group7.SpringStep.App;
 
-public class SignUpWindow extends JFrame 
+public class SignUpWindow extends JFrame implements ActionListener 
 {
     private JButton backButton;
     private JButton signUpButton;
@@ -40,9 +40,11 @@ public class SignUpWindow extends JFrame
                 JTextField userBdate = new JTextField();
 
                 backButton = new JButton("Back");
+                backButton.addActionListener(this);
                 backButton.setBackground(new Color(215, 204, 195));
 
                 signUpButton = new JButton("Sign Up");
+                signUpButton.addActionListener(this);
                 signUpButton.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
@@ -106,6 +108,17 @@ public class SignUpWindow extends JFrame
             }
             // Put the call to add the nested components here
             add(mainPanel);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        Object eventSource = e.getSource();
+        if(eventSource == backButton)
+        {
+            new LoginWindow().setVisible(true);
+            dispose();
         }
     }
 }
