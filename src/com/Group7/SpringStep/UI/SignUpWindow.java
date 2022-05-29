@@ -2,12 +2,10 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 
 import javax.swing.*;
 
 import com.Group7.SpringStep.App;
-import com.github.lgooddatepicker.components.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
 {
@@ -16,7 +14,7 @@ public class SignUpWindow extends JFrame implements ActionListener
     private JTextField userNameField;
     private JTextField emailField;
     private JTextField passwordField;
-    private DatePicker birthDateField;
+    private JTextField confirmPasswordField;
 
     public SignUpWindow() 
     {
@@ -43,7 +41,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 userNameField = new JTextField();
                 emailField = new JTextField();
                 passwordField = new JTextField();
-                birthDateField = new DatePicker();
+                confirmPasswordField = new JTextField();
 
                 backButton = new JButton("Back");
                 backButton.addActionListener(this);
@@ -89,7 +87,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 mainPanel.add(new JLabel("Password: "), signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 5;
-                mainPanel.add(new JLabel("Birthday: "), signUpWindowConstraints);
+                mainPanel.add(new JLabel("Confirm password: "), signUpWindowConstraints);
 
                 // to make the textfields longer
                 signUpWindowConstraints.gridy = 2;
@@ -104,7 +102,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 mainPanel.add(passwordField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 5;
-                mainPanel.add(birthDateField, signUpWindowConstraints);
+                mainPanel.add(confirmPasswordField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 6;
                 signUpWindowConstraints.gridwidth = 2;
@@ -135,7 +133,7 @@ public class SignUpWindow extends JFrame implements ActionListener
             String enteredUsername = userNameField.getText();
             String enteredEmail = emailField.getText();
             String enteredPassword = passwordField.getText();
-            LocalDate enteredDate = birthDateField.getDate();
+            String enteredConfirmPassword = confirmPasswordField.getText();
 
             if (enteredUsername == null || enteredUsername.equals("")) 
             {
@@ -155,11 +153,11 @@ public class SignUpWindow extends JFrame implements ActionListener
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
             }
-            else if (enteredDate == null) 
+            else if (enteredConfirmPassword == null || enteredConfirmPassword.equals("")) 
             {
                 hasInputErrors = true;
-                noInputErrorTitle = "Error: No birth date entered";
-                noInputErrorMessage = "No birth date has been entered. Please enter your birth date and try again.";
+                noInputErrorTitle = "Error: Password not confirmed";
+                noInputErrorMessage = "You haven't confirmed your password. Please enter your password again in the confirm password field and try again.";
             }
 
             if (hasInputErrors) 
