@@ -9,6 +9,9 @@ import com.Group7.SpringStep.App;
 
 public class SignUpWindow extends JFrame 
 {
+    private JButton backButton;
+    private JButton signUpButton;
+
     public SignUpWindow() 
     {
         // Set window parameters first
@@ -36,70 +39,70 @@ public class SignUpWindow extends JFrame
                 JTextField userPassword = new JTextField();
                 JTextField userBdate = new JTextField();
 
-                JButton btnBack = new JButton("Back");
-                btnBack.setBackground(new Color(215, 204, 195));
+                backButton = new JButton("Back");
+                backButton.setBackground(new Color(215, 204, 195));
 
-                JButton btnSignUp = new JButton("Sign Up");
-                btnSignUp.setBackground(new Color(135, 195, 193));
+                signUpButton = new JButton("Sign Up");
+                signUpButton.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
                 iconLogo.setIcon(
                         new ImageIcon(App.resources.get("SpringStep_Logo_Colored_Circle_200x200.png")));
                 
-                JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
+                JPanel buttonPanel = new JPanel(new FlowLayout()); // pinasok buttons here
                 {
-                    btnPanel.add(btnBack);
-                    btnPanel.add(btnSignUp);
+                    buttonPanel.add(backButton);
+                    buttonPanel.add(signUpButton);
                 }
 
-                GridBagConstraints signUpC = new GridBagConstraints();
-                signUpC.weighty = 0;
-                signUpC.anchor = GridBagConstraints.CENTER;
-                signUpC.insets = new Insets(5, 5, 0, 5);
+                GridBagConstraints signUpWindowConstraints = new GridBagConstraints();
+                signUpWindowConstraints.weighty = 0;
+                signUpWindowConstraints.anchor = GridBagConstraints.CENTER;
+                signUpWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
-                signUpC.gridwidth = 2; // to center the label
-                mainPanel.add(welcomeLabel, signUpC);
+                signUpWindowConstraints.gridwidth = 2; // to center the label
+                mainPanel.add(welcomeLabel, signUpWindowConstraints);
 
-                signUpC.gridy = 1;
-                signUpC.fill = GridBagConstraints.NONE;
-                mainPanel.add(iconLogo, signUpC);
+                signUpWindowConstraints.gridy = 1;
+                signUpWindowConstraints.fill = GridBagConstraints.NONE;
+                mainPanel.add(iconLogo, signUpWindowConstraints);
 
-                signUpC.weightx = 0;
-                signUpC.gridwidth = 1; // para bumalik
-                signUpC.anchor = GridBagConstraints.LINE_START;
+                signUpWindowConstraints.weightx = 0;
+                signUpWindowConstraints.gridwidth = 1; // para bumalik
+                signUpWindowConstraints.anchor = GridBagConstraints.LINE_START;
 
-                signUpC.gridy = 2;
-                mainPanel.add(new JLabel("Username: "), signUpC);
+                signUpWindowConstraints.gridy = 2;
+                mainPanel.add(new JLabel("Username: "), signUpWindowConstraints);
 
-                signUpC.gridy = 3;
-                mainPanel.add(new JLabel("Email: "), signUpC);
+                signUpWindowConstraints.gridy = 3;
+                mainPanel.add(new JLabel("Email: "), signUpWindowConstraints);
 
-                signUpC.gridy = 4;
-                mainPanel.add(new JLabel("Password: "), signUpC);
+                signUpWindowConstraints.gridy = 4;
+                mainPanel.add(new JLabel("Password: "), signUpWindowConstraints);
 
-                signUpC.gridy = 5;
-                mainPanel.add(new JLabel("Birthday: "), signUpC);
+                signUpWindowConstraints.gridy = 5;
+                mainPanel.add(new JLabel("Birthday: "), signUpWindowConstraints);
 
                 // to make the textfields longer
-                signUpC.gridy = 2;
-                signUpC.weightx = 1;
-                signUpC.fill = GridBagConstraints.HORIZONTAL;
-                mainPanel.add(userName, signUpC);
+                signUpWindowConstraints.gridy = 2;
+                signUpWindowConstraints.weightx = 1;
+                signUpWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
+                mainPanel.add(userName, signUpWindowConstraints);
 
-                signUpC.gridy = 3;
-                mainPanel.add(userEmail, signUpC);
+                signUpWindowConstraints.gridy = 3;
+                mainPanel.add(userEmail, signUpWindowConstraints);
 
-                signUpC.gridy = 4;
-                mainPanel.add(userPassword, signUpC);
+                signUpWindowConstraints.gridy = 4;
+                mainPanel.add(userPassword, signUpWindowConstraints);
 
-                signUpC.gridy = 5;
-                mainPanel.add(userBdate, signUpC);
+                signUpWindowConstraints.gridy = 5;
+                mainPanel.add(userBdate, signUpWindowConstraints);
 
-                signUpC.gridy = 6;
-                signUpC.gridwidth = 2;
-                signUpC.fill = GridBagConstraints.NONE;
-                signUpC.anchor = GridBagConstraints.CENTER;
-                mainPanel.add(btnPanel, signUpC);
+                signUpWindowConstraints.gridy = 6;
+                signUpWindowConstraints.gridwidth = 2;
+                signUpWindowConstraints.fill = GridBagConstraints.NONE;
+                signUpWindowConstraints.anchor = GridBagConstraints.CENTER;
+                mainPanel.add(buttonPanel, signUpWindowConstraints);
             }
             // Put the call to add the nested components here
             add(mainPanel);
