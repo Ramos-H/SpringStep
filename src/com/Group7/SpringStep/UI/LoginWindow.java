@@ -7,8 +7,14 @@ import javax.swing.*;
 
 import com.Group7.SpringStep.App;
 
-public class LoginWindow extends JFrame
+public class LoginWindow extends JFrame implements ActionListener
 {
+    private JTextField userNameField;
+    private JTextField passwordField;
+    private JCheckBox rememberPasswordCheckBox;
+    private JButton signUpButton;
+    private JButton logInButton;
+
     public LoginWindow()
     {
         // Set window parameters first
@@ -30,14 +36,16 @@ public class LoginWindow extends JFrame
             mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
             {
                 JLabel welcomeLabel = new JLabel("Log in to SpringStep!");
-                JTextField userNameField = new JTextField();
-                JTextField passwordField = new JTextField();
-                JCheckBox rememberPasswordCheckBox = new JCheckBox("Remember password");
+                userNameField = new JTextField();
+                passwordField = new JTextField();
+                rememberPasswordCheckBox = new JCheckBox("Remember password");
 
-                JButton signUpButton = new JButton("Sign Up");
+                signUpButton = new JButton("Sign Up");
+                signUpButton.addActionListener(this);
                 signUpButton.setBackground(new Color(215, 204, 195));
 
-                JButton logInButton = new JButton("Log In");
+                logInButton = new JButton("Log In");
+                logInButton.addActionListener(this);
                 logInButton.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
@@ -93,6 +101,39 @@ public class LoginWindow extends JFrame
             }
             // Put the call to add the nested components here
             add(mainPanel);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        Object eventSource = e.getSource();
+        if(eventSource == logInButton)
+        {
+            boolean hasInputErrors = false;
+            String noInputErrorTitle = "Error: No Input";
+            String noInputErrorMessage = "One of the fields in this window isn't filled!";
+            
+            String enteredUsername = userNameField.getText();
+            String enteredPassword = passwordField.getText();
+            if(enteredUsername == null || enteredUsername.equals(""))
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No username entered";
+                noInputErrorMessage = "No username has been entered. Please enter your username and try again.";
+            }
+            else if(enteredPassword == null || enteredPassword.equals(""))
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No password entered";
+                noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
+            }
+
+            if(hasInputErrors)
+            {
+                JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
     }
 }
