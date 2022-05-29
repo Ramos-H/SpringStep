@@ -116,11 +116,11 @@ public class LoginWindow extends JFrame implements ActionListener
 
             String enteredUsername = userNameField.getText();
             String enteredPassword = passwordField.getText();
-            if (enteredUsername == null || enteredUsername.equals("")) {
+            if (enteredUsername == null || enteredUsername.trim().equals("")) {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No username entered";
                 noInputErrorMessage = "No username has been entered. \nPlease enter your username and try again.";
-            } else if (enteredPassword == null || enteredPassword.equals("")) {
+            } else if (enteredPassword == null || enteredPassword.trim().equals("")) {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. \nPlease enter your password and try again.";
