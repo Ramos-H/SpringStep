@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.UI.*;
+import com.Group7.SpringStep.ui.*;
 
 public class App 
 {

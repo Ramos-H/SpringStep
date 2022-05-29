@@ -1,4 +1,4 @@
-package com.Group7.SpringStep.UI;
+package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 
