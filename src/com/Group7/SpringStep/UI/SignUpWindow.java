@@ -141,25 +141,25 @@ public class SignUpWindow extends JFrame implements ActionListener
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No username entered";
-                noInputErrorMessage = "No username has been entered. Please enter your username and try again.";
+                noInputErrorMessage = "No username has been entered. \nPlease enter your username and try again.";
             } 
             else if (enteredEmail == null || enteredEmail.trim().equals("")) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No email entered";
-                noInputErrorMessage = "No email address has been entered. Please enter your email address and try again.";
+                noInputErrorMessage = "No email address has been entered. \nPlease enter your email address and try again.";
             }
             else if (enteredPassword == null || enteredPassword.trim().equals("")) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No password entered";
-                noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
+                noInputErrorMessage = "No password has been entered. \nPlease enter your password and try again.";
             }
             else if (enteredConfirmPassword == null || enteredConfirmPassword.trim().equals("")) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: Password not confirmed";
-                noInputErrorMessage = "You haven't confirmed your password. Please enter your password again in the confirm password field and try again.";
+                noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your password again in the \"Confirm Cassword\" field and try again.";
             }
 
             if (hasMissingInput) 
@@ -171,10 +171,13 @@ public class SignUpWindow extends JFrame implements ActionListener
             // If the password and confirm password inputs don't match
             if(!enteredPassword.equals(enteredConfirmPassword))
             {
-                String message = "The text you entered in the \"Confirm Password\" field doesn't match what you entered for your password. Please enter your password again in the confirm password field and try again.";
-                JOptionPane.showMessageDialog(this, message, "Error: Password not confirmed", JOptionPane.ERROR_MESSAGE);
+                String message = "The text you entered in the \"Confirm Password\" field doesn't match what you entered for your password. \nPlease enter your password again in the confirm password field and try again.";
+                JOptionPane.showMessageDialog(this, message, "Error: Password not confirmed",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
+            
         }
     }
 }
