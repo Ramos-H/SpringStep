@@ -113,27 +113,28 @@ public class LoginWindow extends JFrame implements ActionListener
             boolean hasInputErrors = false;
             String noInputErrorTitle = "Error: No Input";
             String noInputErrorMessage = "One of the fields in this window isn't filled!";
-            
+
             String enteredUsername = userNameField.getText();
             String enteredPassword = passwordField.getText();
-            if(enteredUsername == null || enteredUsername.equals(""))
-            {
+            if (enteredUsername == null || enteredUsername.equals("")) {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No username entered";
                 noInputErrorMessage = "No username has been entered. Please enter your username and try again.";
-            }
-            else if(enteredPassword == null || enteredPassword.equals(""))
-            {
+            } else if (enteredPassword == null || enteredPassword.equals("")) {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
             }
 
-            if(hasInputErrors)
-            {
+            if (hasInputErrors) {
                 JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
                 return;
             }
+        }
+        else if(eventSource == signUpButton)
+        {
+            new SignUpWindow().setVisible(true);
+            dispose();
         }
     }
 }
