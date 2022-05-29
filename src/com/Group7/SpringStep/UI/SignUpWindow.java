@@ -2,10 +2,12 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 
 import javax.swing.*;
 
 import com.Group7.SpringStep.App;
+import com.github.lgooddatepicker.components.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
 {
@@ -14,7 +16,7 @@ public class SignUpWindow extends JFrame implements ActionListener
     private JTextField userNameField;
     private JTextField emailField;
     private JTextField passwordField;
-    private JTextField birthDateField;
+    private DatePicker birthDateField;
 
     public SignUpWindow() 
     {
@@ -41,7 +43,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 userNameField = new JTextField();
                 emailField = new JTextField();
                 passwordField = new JTextField();
-                birthDateField = new JTextField();
+                birthDateField = new DatePicker();
 
                 backButton = new JButton("Back");
                 backButton.addActionListener(this);
@@ -133,13 +135,15 @@ public class SignUpWindow extends JFrame implements ActionListener
             String enteredUsername = userNameField.getText();
             String enteredEmail = emailField.getText();
             String enteredPassword = passwordField.getText();
+            LocalDate enteredDate = birthDateField.getDate();
 
             if (enteredUsername == null || enteredUsername.equals("")) 
             {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No username entered";
                 noInputErrorMessage = "No username has been entered. Please enter your username and try again.";
-            } else if (enteredEmail == null || enteredEmail.equals("")) 
+            } 
+            else if (enteredEmail == null || enteredEmail.equals("")) 
             {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No email entered";
@@ -150,6 +154,12 @@ public class SignUpWindow extends JFrame implements ActionListener
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
+            }
+            else if (enteredDate == null) 
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No birth date entered";
+                noInputErrorMessage = "No birth date has been entered. Please enter your birth date and try again.";
             }
 
             if (hasInputErrors) 
