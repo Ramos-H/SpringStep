@@ -11,6 +11,10 @@ public class SignUpWindow extends JFrame implements ActionListener
 {
     private JButton backButton;
     private JButton signUpButton;
+    private JTextField userNameField;
+    private JTextField emailField;
+    private JTextField passwordField;
+    private JTextField birthDateField;
 
     public SignUpWindow() 
     {
@@ -34,10 +38,10 @@ public class SignUpWindow extends JFrame implements ActionListener
             mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
             {
                 JLabel welcomeLabel = new JLabel("Welcome to SpringStep!");
-                JTextField userName = new JTextField();
-                JTextField userEmail = new JTextField();
-                JTextField userPassword = new JTextField();
-                JTextField userBdate = new JTextField();
+                userNameField = new JTextField();
+                emailField = new JTextField();
+                passwordField = new JTextField();
+                birthDateField = new JTextField();
 
                 backButton = new JButton("Back");
                 backButton.addActionListener(this);
@@ -89,16 +93,16 @@ public class SignUpWindow extends JFrame implements ActionListener
                 signUpWindowConstraints.gridy = 2;
                 signUpWindowConstraints.weightx = 1;
                 signUpWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-                mainPanel.add(userName, signUpWindowConstraints);
+                mainPanel.add(userNameField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 3;
-                mainPanel.add(userEmail, signUpWindowConstraints);
+                mainPanel.add(emailField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 4;
-                mainPanel.add(userPassword, signUpWindowConstraints);
+                mainPanel.add(passwordField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 5;
-                mainPanel.add(userBdate, signUpWindowConstraints);
+                mainPanel.add(birthDateField, signUpWindowConstraints);
 
                 signUpWindowConstraints.gridy = 6;
                 signUpWindowConstraints.gridwidth = 2;
@@ -119,6 +123,40 @@ public class SignUpWindow extends JFrame implements ActionListener
         {
             new LoginWindow().setVisible(true);
             dispose();
+        }
+        else if(eventSource == signUpButton)
+        {
+            boolean hasInputErrors = false;
+            String noInputErrorTitle = "Error: No Input";
+            String noInputErrorMessage = "One of the fields in this window isn't filled!";
+
+            String enteredUsername = userNameField.getText();
+            String enteredEmail = emailField.getText();
+            String enteredPassword = passwordField.getText();
+
+            if (enteredUsername == null || enteredUsername.equals("")) 
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No username entered";
+                noInputErrorMessage = "No username has been entered. Please enter your username and try again.";
+            } else if (enteredEmail == null || enteredEmail.equals("")) 
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No email entered";
+                noInputErrorMessage = "No email address has been entered. Please enter your email address and try again.";
+            }
+            else if (enteredPassword == null || enteredPassword.equals("")) 
+            {
+                hasInputErrors = true;
+                noInputErrorTitle = "Error: No password entered";
+                noInputErrorMessage = "No password has been entered. Please enter your password and try again.";
+            }
+
+            if (hasInputErrors) 
+            {
+                JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
     }
 }
