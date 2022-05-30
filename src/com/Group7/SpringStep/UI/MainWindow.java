@@ -110,17 +110,17 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
                 {
-                    toDoPanel = new ListPanel("To Do", Color.RED);
+                    toDoPanel = new ListPanel("To Do", "Add a task", Color.RED);
                     toDoAddTaskButton = toDoPanel.getAddTaskButton();
                     toDoAddTaskButton.addActionListener(this);
                     Utils.padJComponent(toDoPanel, 5, 5, 5, 5);
 
-                    doingPanel = new ListPanel("Doing", Color.BLUE);
+                    doingPanel = new ListPanel("Doing", "Add a task or drag one from \"To Do\"", Color.BLUE);
                     doingAddTaskButton = doingPanel.getAddTaskButton();
                     doingAddTaskButton.addActionListener(this);
                     Utils.padJComponent(doingPanel, 5, 5, 5, 5);
 
-                    donePanel = new ListPanel("Done", Color.YELLOW);
+                    donePanel = new ListPanel("Done", "Drag a task from \"To Do\" or \"Doing\"", Color.YELLOW);
                     doneAddTaskButton = donePanel.getAddTaskButton();
                     doneAddTaskButton.setVisible(false);
                     Utils.padJComponent(donePanel, 5, 5, 5, 5);

@@ -16,7 +16,7 @@ public class ListPanel extends JPanel
     private JButton addTaskButton;
     private JPanel outerContainer;
     
-    public ListPanel(String title, Color color)
+    public ListPanel(String title, String addButtonMessage, Color color)
     {
         setLayout(new GridBagLayout());
         {
@@ -70,7 +70,7 @@ public class ListPanel extends JPanel
                 outerPanelConstraints.gridx = 1;
                 outerPanelConstraints.gridy = 2;
                 outerPanelConstraints.fill = GridBagConstraints.BOTH;
-                outerContainer.add(new JLabel("Add a task"), outerPanelConstraints);
+                outerContainer.add(new JLabel(addButtonMessage), outerPanelConstraints);
             }
 
             GridBagConstraints listPanelConstraints = new GridBagConstraints();
