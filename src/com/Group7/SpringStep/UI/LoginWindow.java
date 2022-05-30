@@ -8,7 +8,7 @@ import java.nio.file.*;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.User;
 
 public class LoginWindow extends JFrame implements ActionListener
@@ -174,11 +174,7 @@ public class LoginWindow extends JFrame implements ActionListener
                 JOptionPane.showMessageDialog(this, "Logged in successfully", "Successful log in",
                         JOptionPane.INFORMATION_MESSAGE);
                 
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                mainWindow.setVisible(true);
-                setVisible(false);
-                dispose();
+                Utils.moveToNewWindow(this, new MainWindow());
             } catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
@@ -188,8 +184,7 @@ public class LoginWindow extends JFrame implements ActionListener
         }
         else if(eventSource == signUpButton)
         {
-            new SignUpWindow().setVisible(true);
-            dispose();
+            Utils.moveToNewWindow(this, new SignUpWindow());
         }
     }
 }

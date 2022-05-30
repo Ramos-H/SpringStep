@@ -8,7 +8,7 @@ import java.nio.file.*;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
@@ -125,8 +125,7 @@ public class SignUpWindow extends JFrame implements ActionListener
         Object eventSource = e.getSource();
         if(eventSource == backButton)
         {
-            new LoginWindow().setVisible(true);
-            dispose();
+            Utils.moveToNewWindow(this, new LoginWindow());
         }
         else if(eventSource == signUpButton)
         {

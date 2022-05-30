@@ -41,4 +41,12 @@ public class Utils
                 && (mouseScreenPosition.y <= visibleRect.y + visibleRect.height);
         return insideX && insideY;
     }
+
+    public static void moveToNewWindow(JFrame oldWindow, JFrame newWindow) 
+    {
+        newWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        newWindow.setVisible(true);
+        oldWindow.setVisible(false);
+        oldWindow.dispose();
+    }
 }
