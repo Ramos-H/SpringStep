@@ -207,15 +207,22 @@ public class SignUpWindow extends JFrame implements ActionListener
                 boolean fileExists = Files.exists(filePath);
                 boolean fileDoesntExist = Files.notExists(filePath);
                 boolean fileUnverifiable = !fileExists && !fileDoesntExist;
+                boolean fileSurelyExists = fileExists && !fileDoesntExist;
                 boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
-                if(fileSurelyDoesntExists)
+                if(fileSurelyExists)
                 {
-                    Files.createFile(filePath);
+                    JOptionPane.showMessageDialog(null,
+                            "There's already another account with that username. Please pick a different username and try again.",
+                            "Account already exists",
+                            JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
-
+                
+                Files.createFile(filePath);
                 PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
                 printWriter.println(newUser.getCsvFormattedInfo());
-                JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(), "Save Record Successful",
+                JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(),
+                        "Save Record Successful",
                         JOptionPane.INFORMATION_MESSAGE);
                 printWriter.close();
             } catch (Exception e1) 
