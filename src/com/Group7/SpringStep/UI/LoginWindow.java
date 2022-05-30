@@ -171,7 +171,14 @@ public class LoginWindow extends JFrame implements ActionListener
                     return;
                 }
 
-                JOptionPane.showMessageDialog(this, "Logged in successfully", "Successful log in", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Logged in successfully", "Successful log in",
+                        JOptionPane.INFORMATION_MESSAGE);
+                
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                mainWindow.setVisible(true);
+                setVisible(false);
+                dispose();
             } catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
