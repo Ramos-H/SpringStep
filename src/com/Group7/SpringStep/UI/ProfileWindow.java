@@ -5,18 +5,21 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.*;
 
 public class ProfileWindow extends JFrame implements ActionListener 
 {
     private JButton editProfileButton;
-    private JButton btnBack;
+    private JButton backButton;
     private JButton editProfilePictureButton;
     private JButton editUsernameButton;
     private JButton editEmailButton;
     private JButton editPasswordButton;
     private ImageIcon editButtonIcon = new ImageIcon(App.resources.get("editIcon.png"));
     private boolean editMode = false;
+    private JTextField usernameField;
+    private JTextField emailField;
+    private JTextField passwordField;
 
     public ProfileWindow() 
     {
@@ -43,13 +46,13 @@ public class ProfileWindow extends JFrame implements ActionListener
                 JLabel iconProfile = new JLabel();
                 iconProfile.setIcon(new ImageIcon(App.resources.get("profileIcon.png")));
 
-                JTextField nameField = new JTextField();
-                JTextField emailField = new JTextField();
-                JTextField passwordField = new JTextField();
+                usernameField = new JTextField();
+                emailField = new JTextField();
+                passwordField = new JTextField();
 
-                btnBack = new JButton("Back");
-                btnBack.setBackground(new Color(215, 204, 195));
-                btnBack.addActionListener(this);
+                backButton = new JButton("Back");
+                backButton.setBackground(new Color(215, 204, 195));
+                backButton.addActionListener(this);
 
                 editProfileButton = new JButton("Edit Profile");
                 editProfileButton.setBackground(new Color(135, 195, 193));
@@ -58,31 +61,27 @@ public class ProfileWindow extends JFrame implements ActionListener
                 // for the edit buttons
                 editProfilePictureButton = new JButton();
                 editProfilePictureButton.setBackground(Color.WHITE);
-                editProfilePictureButton.setEnabled(false);
                 editProfilePictureButton.setVisible(false);
                 editProfilePictureButton.setIcon(editButtonIcon);
 
                 editUsernameButton = new JButton();
-                editUsernameButton.setEnabled(false);
                 editUsernameButton.setVisible(false);
                 editUsernameButton.setBackground(Color.WHITE);
                 editUsernameButton.setIcon(editButtonIcon);
 
                 editEmailButton = new JButton();
-                editEmailButton.setEnabled(false);
                 editEmailButton.setVisible(false);
                 editEmailButton.setBackground(Color.WHITE);
                 editEmailButton.setIcon(editButtonIcon);
 
                 editPasswordButton = new JButton();
-                editPasswordButton.setEnabled(false);
                 editPasswordButton.setVisible(false);
                 editPasswordButton.setBackground(Color.WHITE);
                 editPasswordButton.setIcon(editButtonIcon);
 
                 JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
                 {
-                    btnPanel.add(btnBack);
+                    btnPanel.add(backButton);
                     btnPanel.add(editProfileButton);
                 }
 
@@ -137,7 +136,7 @@ public class ProfileWindow extends JFrame implements ActionListener
                 profileWindowConstraints.gridy = 2;
                 profileWindowConstraints.weightx = 1;
                 profileWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-                mainPanel.add(nameField, profileWindowConstraints);
+                mainPanel.add(usernameField, profileWindowConstraints);
 
                 profileWindowConstraints.gridy = 3;
                 mainPanel.add(emailField, profileWindowConstraints);
@@ -161,20 +160,25 @@ public class ProfileWindow extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        if (e.getSource() == editProfileButton) 
-        {
-            editMode = !editMode;
-            editProfilePictureButton.setVisible(editMode);
-            editProfilePictureButton.setEnabled(editMode);
-
-            editUsernameButton.setVisible(editMode);
-            editUsernameButton.setEnabled(editMode);
-
-            editEmailButton.setVisible(editMode);
-            editEmailButton.setEnabled(editMode);
-
-            editPasswordButton.setVisible(editMode);
-            editPasswordButton.setEnabled(editMode);
+        Object eventSource = e.getSource();
+        if (eventSource == editProfileButton) {
+            editMode = true;
+            setEditButtonVisibility(true);
+            editProfileButton.setText("Save changes");
+            backButton.setText("Cancel edit");
+        } else if (eventSource == backButton) {
+            editMode = false;
+            setEditButtonVisibility(false);
+            editProfileButton.setText("Edit Profile");
+            backButton.setText("Back");
         }
+    }
+
+    private void setEditButtonVisibility(boolean isVisible) 
+    {
+        editProfilePictureButton.setVisible(isVisible);
+        editUsernameButton.setVisible(isVisible);
+        editEmailButton.setVisible(isVisible);
+        editPasswordButton.setVisible(isVisible);
     }
 }
