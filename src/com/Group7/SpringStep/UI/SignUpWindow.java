@@ -139,25 +139,25 @@ public class SignUpWindow extends JFrame implements ActionListener
             String noInputErrorTitle = "Error: No Input";
             String noInputErrorMessage = "One of the fields in this window isn't filled!";
 
-            if (enteredUsername == null || enteredUsername.trim().equals("")) 
+            if (Utils.isTextEmpty(enteredUsername)) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No username entered";
                 noInputErrorMessage = "No username has been entered. \nPlease enter your username and try again.";
             } 
-            else if (enteredEmail == null || enteredEmail.trim().equals("")) 
+            else if (Utils.isTextEmpty(enteredEmail)) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No email entered";
                 noInputErrorMessage = "No email address has been entered. \nPlease enter your email address and try again.";
             }
-            else if (enteredPassword == null || enteredPassword.trim().equals("")) 
+            else if (Utils.isTextEmpty(enteredPassword)) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. \nPlease enter your password and try again.";
             }
-            else if (enteredConfirmPassword == null || enteredConfirmPassword.trim().equals("")) 
+            else if (Utils.isTextEmpty(enteredConfirmPassword)) 
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: Password not confirmed";

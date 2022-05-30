@@ -49,4 +49,9 @@ public class Utils
         oldWindow.setVisible(false);
         oldWindow.dispose();
     }
+
+    public static boolean isTextEmpty(String text) 
+    {
+        return text == null || text.trim().equals("");
+    }
 }
