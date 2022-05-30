@@ -184,54 +184,29 @@ public class SignUpWindow extends JFrame implements ActionListener
             newUser.setEmail(enteredEmail);
             newUser.setPassword(enteredPassword);
 
-            // Dynamically construct the output file path
-            String userHome = System.getProperty("user.home");
-            Path accountSavePath = Paths.get(userHome, "Documents", "SpringStep", "users");
-            String completeFileName =  enteredUsername + ".csv";
-            Path filePath = accountSavePath.resolve(completeFileName);
-            
-            // Try writing the output to the file
-            // If writing fails for whatever reason, display the exception
-            try
+            DataWriter dataWriter = new DataWriter();
+            try 
             {
-                boolean folderExists = Files.exists(accountSavePath);
-                boolean folderDoesntExist = Files.notExists(accountSavePath);
-                boolean folderUnverifiable = !folderExists && !folderDoesntExist;
-                boolean folderSurelyDoesntExists = !folderExists && folderDoesntExist;
-                if(folderSurelyDoesntExists)
-                {
-                    Files.createDirectories(accountSavePath);
-                }
-
-                boolean fileExists = Files.exists(filePath);
-                boolean fileDoesntExist = Files.notExists(filePath);
-                boolean fileUnverifiable = !fileExists && !fileDoesntExist;
-                boolean fileSurelyExists = fileExists && !fileDoesntExist;
-                boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
-                if(fileSurelyExists)
+                if (dataWriter.saveUserData(newUser, false) == DataWriter.USER_ALREADY_EXISTS) 
                 {
                     JOptionPane.showMessageDialog(null,
-                            "There's already another account with that username. Please pick a different username and try again.",
-                            "Account already exists",
+                        "There's already another account with that username. \nPlease pick a different username and try again.",
+                        "Account already exists",
                             JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                
-                Files.createFile(filePath);
-                PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
-                printWriter.println(newUser.getCsvFormattedInfo());
-                JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(),
-                        "Save Record Successful",
-                        JOptionPane.INFORMATION_MESSAGE);
-                printWriter.close();
 
-                Utils.moveToNewWindow(this, new LoginWindow());
-            } catch (Exception e1) 
+                JOptionPane.showMessageDialog(null, "Account has been successfully created. \nPlease log in with your account now.", "Account has been created",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } 
+            catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
-                JOptionPane.showMessageDialog(this, e1.getMessage(),"Save Record Unsuccessful", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, e1.getMessage(),"Save Record Unsuccessful", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            Utils.moveToNewWindow(this, new LoginWindow());
         }
     }
 }
