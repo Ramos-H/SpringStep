@@ -32,14 +32,13 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JButton userButton;
     private PopupContainer popupContainer;
     private ProfilePopup profilePopup;
+    private AddTaskPopup addTaskPopup;
 
     private User currentUser;
 
     public MainWindow()
     {
         popupContainer = new PopupContainer();
-        profilePopup = new ProfilePopup(popupContainer, this);
-        popupContainer.setPopup(profilePopup);
         setGlassPane(popupContainer);
 
         // Set window parameters
@@ -180,11 +179,21 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         TaskNode taskNode = new TaskNode();
         if(eventSource == toDoAddTaskButton)
         {
-            toDoPanel.addTaskToList(taskNode);
+            if (addTaskPopup == null)
+            {
+                addTaskPopup = new AddTaskPopup(popupContainer, this);
+            }
+            popupContainer.setPopup(addTaskPopup);
+            // toDoPanel.addTaskToList(taskNode);
         }
         else if(eventSource == doingAddTaskButton)
         {
-            doingPanel.addTaskToList(taskNode);
+            if (addTaskPopup == null)
+            {
+                addTaskPopup = new AddTaskPopup(popupContainer, this);
+            }
+            popupContainer.setPopup(addTaskPopup);
+            // doingPanel.addTaskToList(taskNode);
         }
         UpdateTimerBasedOnDoingList();
 
