@@ -6,7 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
-import com.Group7.SpringStep.data.DataWriter;
+import com.Group7.SpringStep.data.DataManager;
 import com.Group7.SpringStep.data.User;
 
 public class ProfilePopup extends JPanel implements ActionListener 
@@ -190,7 +190,7 @@ public class ProfilePopup extends JPanel implements ActionListener
                         editedUser.setEmail(currentEmail);
                         editedUser.setPassword(currentPassword);
 
-                        DataWriter dataWriter = new DataWriter();
+                        DataManager dataWriter = new DataManager();
                         try 
                         {
                             dataWriter.saveUserData(editedUser, true);

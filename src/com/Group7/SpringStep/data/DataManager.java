@@ -5,7 +5,7 @@ import java.nio.file.*;
 
 import javax.swing.*;
 
-public class DataWriter 
+public class DataManager 
 {
     public static final int USER_SAVE_SUCCESSFUL = 0;
     public static final int USER_ALREADY_EXISTS = 1;

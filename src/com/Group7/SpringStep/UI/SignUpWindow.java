@@ -184,10 +184,10 @@ public class SignUpWindow extends JFrame implements ActionListener
             newUser.setEmail(enteredEmail);
             newUser.setPassword(enteredPassword);
 
-            DataWriter dataWriter = new DataWriter();
+            DataManager dataWriter = new DataManager();
             try 
             {
-                if (dataWriter.saveUserData(newUser, false) == DataWriter.USER_ALREADY_EXISTS) 
+                if (dataWriter.saveUserData(newUser, false) == DataManager.USER_ALREADY_EXISTS) 
                 {
                     JOptionPane.showMessageDialog(null,
                         "There's already another account with that username. \nPlease pick a different username and try again.",
