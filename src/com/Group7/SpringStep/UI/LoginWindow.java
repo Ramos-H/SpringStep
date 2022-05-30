@@ -9,6 +9,7 @@ import java.nio.file.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.DataManager;
 import com.Group7.SpringStep.data.User;
 
 public class LoginWindow extends JFrame implements ActionListener
@@ -159,9 +160,8 @@ public class LoginWindow extends JFrame implements ActionListener
                     return;
                 }
 
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
-                User currentUser = new User(bufferedReader.readLine());
-                bufferedReader.close();
+                DataManager dataManager = new DataManager();
+                User currentUser = dataManager.readUser(filePath);
 
                 if(!currentUser.getPassword().equals(enteredPassword))
                 {

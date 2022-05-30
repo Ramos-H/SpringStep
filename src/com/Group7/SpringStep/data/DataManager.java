@@ -10,6 +10,14 @@ public class DataManager
     public static final int USER_SAVE_SUCCESSFUL = 0;
     public static final int USER_ALREADY_EXISTS = 1;
 
+    public User readUser(Path filePath) throws Exception
+    {
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
+        User currentUser = new User(bufferedReader.readLine());
+        bufferedReader.close();
+        return currentUser;
+    }
+
     public int saveUserData(User newUser, boolean overwrite) throws Exception
     {
         // Dynamically construct the output file path
