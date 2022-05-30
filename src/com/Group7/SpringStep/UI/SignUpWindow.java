@@ -161,7 +161,7 @@ public class SignUpWindow extends JFrame implements ActionListener
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: Password not confirmed";
-                noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your password again in the \"Confirm Cassword\" field and try again.";
+                noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your password again in the \"Confirm Password\" field and try again.";
             }
 
             if (hasMissingInput) 
