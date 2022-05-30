@@ -13,7 +13,7 @@ public class DataManager
     public User readUser(Path filePath) throws Exception
     {
         BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
-        User currentUser = new User(bufferedReader.readLine());
+        User currentUser = User.reconstructFromCsv(bufferedReader.readLine());
         bufferedReader.close();
         return currentUser;
     }
@@ -46,7 +46,7 @@ public class DataManager
             Files.createFile(filePath);
         }
 
-        if(!overwrite)
+        if(!overwrite && (readUser(filePath) != null))
         {
             return USER_ALREADY_EXISTS;
         }

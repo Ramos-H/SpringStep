@@ -1,5 +1,7 @@
 package com.Group7.SpringStep.data;
 
+import com.Group7.SpringStep.Utils;
+
 public class User 
 {
     private String userName;
@@ -9,13 +11,20 @@ public class User
     // Constructors
     public User() { }
 
-    public User(String csvInput)
+    public static User reconstructFromCsv(String csvInput)
     {
+        if (Utils.isTextEmpty(csvInput))
+            return null;
+
+        User user = new User();
         String[] split = csvInput.split(",");
-        userName = split[0];
-        email = split[1];
-        password = split[2];
+        user.userName = split[0];
+        user.email = split[1];
+        user.password = split[2];
+        
+        return user;
     }
+    
 
     // Setters
     /**
