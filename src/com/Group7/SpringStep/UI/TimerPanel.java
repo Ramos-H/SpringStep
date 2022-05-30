@@ -28,7 +28,7 @@ public class TimerPanel extends JPanel implements ActionListener
         // Set timer
         remainingTime = DEFAULT_WORK_DURATION;
         timer = new Timer(1000, this);
-        
+
         setLayout(new GridBagLayout());
         {
             timerLabel = new JLabel(Utils.formatTime(remainingTime));
@@ -56,6 +56,31 @@ public class TimerPanel extends JPanel implements ActionListener
             timerPanelConstraints.gridx = 1;
             add(resetTimerButton, timerPanelConstraints);
         }
+    }
+    
+    public void startTimer()
+    {
+        timer.start();
+        startStopTimerButton.setText("Stop");
+    }
+
+    public void stopTimer()
+    {
+        timer.stop();
+        startStopTimerButton.setText("Start");
+    }
+
+    public void resetTimer()
+    {
+        if(workMode)
+        {
+            remainingTime = DEFAULT_WORK_DURATION;
+        }
+        else
+        {
+            remainingTime = DEFAULT_BREAK_DURATION;
+        }
+        timerLabel.setText(Utils.formatTime(remainingTime));
     }
     
     @Override
@@ -87,24 +112,14 @@ public class TimerPanel extends JPanel implements ActionListener
         {
             if (timer.isRunning()) 
             {
-                timer.stop();
-                startStopTimerButton.setText("Start");
+                stopTimer();
             } else 
             {
-                timer.start();
-                startStopTimerButton.setText("Stop");
+                startTimer();
             }
         } else if(eventSource == resetTimerButton)
         {
-            if(workMode)
-            {
-                remainingTime = DEFAULT_WORK_DURATION;
-            }
-            else
-            {
-                remainingTime = DEFAULT_BREAK_DURATION;
-            }
-            timerLabel.setText(Utils.formatTime(remainingTime));
+            resetTimer();
         }
     }
 }
