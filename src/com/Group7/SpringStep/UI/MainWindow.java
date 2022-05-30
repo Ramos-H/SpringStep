@@ -38,7 +38,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public MainWindow()
     {
         popupContainer = new PopupContainer();
-        profilePopup = new ProfilePopup(popupContainer);
+        profilePopup = new ProfilePopup(popupContainer, this);
         popupContainer.setPopup(profilePopup);
         setGlassPane(popupContainer);
 
@@ -192,7 +192,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             if (profilePopup == null)
             {
-                profilePopup = new ProfilePopup(popupContainer);
+                profilePopup = new ProfilePopup(popupContainer, this);
             }
             popupContainer.setPopup(profilePopup);
         }

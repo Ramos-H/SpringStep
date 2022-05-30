@@ -33,12 +33,16 @@ public class DataWriter
         boolean fileUnverifiable = !fileExists && !fileDoesntExist;
         boolean fileSurelyExists = fileExists && !fileDoesntExist;
         boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
-        if(fileSurelyExists && !overwrite)
+        if(!fileSurelyExists)
+        {
+            Files.createFile(filePath);
+        }
+
+        if(!overwrite)
         {
             return USER_ALREADY_EXISTS;
         }
         
-        Files.createFile(filePath);
         PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
         printWriter.println(newUser.getCsvFormattedInfo());
         printWriter.close();

@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.DataWriter;
 import com.Group7.SpringStep.data.User;
 
 public class ProfilePopup extends JPanel implements ActionListener 
@@ -22,9 +23,14 @@ public class ProfilePopup extends JPanel implements ActionListener
     private JTextField emailField;
     private JTextField passwordField;
     private PopupContainer popupHandler;
+    private String oldUsername;
+    private String oldEmail;
+    private String oldPassword;
+    private MainWindow mainWindow;
 
-    public ProfilePopup(PopupContainer popupContainer) 
+    public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
     {
+        mainWindow = window;
         popupHandler = popupContainer;
         setLayout(new GridBagLayout());
         setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
@@ -52,16 +58,19 @@ public class ProfilePopup extends JPanel implements ActionListener
             editProfilePictureButton.setIcon(editButtonIcon);
 
             editUsernameButton = new JButton();
+            editUsernameButton.addActionListener(this);
             editUsernameButton.setVisible(false);
             editUsernameButton.setBackground(Color.WHITE);
             editUsernameButton.setIcon(editButtonIcon);
-
+            
             editEmailButton = new JButton();
+            editEmailButton.addActionListener(this);
             editEmailButton.setVisible(false);
             editEmailButton.setBackground(Color.WHITE);
             editEmailButton.setIcon(editButtonIcon);
-
+            
             editPasswordButton = new JButton();
+            editPasswordButton.addActionListener(this);
             editPasswordButton.setVisible(false);
             editPasswordButton.setBackground(Color.WHITE);
             editPasswordButton.setIcon(editButtonIcon);
@@ -145,20 +154,87 @@ public class ProfilePopup extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == editProfileButton) {
-            editMode = true;
-            setEditButtonVisibility(true);
-            editProfileButton.setText("Save changes");
-            backButton.setText("Cancel edit");
-        } else if (eventSource == backButton) {
-            editMode = false;
-            setEditButtonVisibility(false);
-            editProfileButton.setText("Edit Profile");
-            backButton.setText("Back");
-            if(!editMode)
+        if (eventSource == backButton) 
+        {
+            if (!editMode) 
             {
                 popupHandler.hidePopup();
             }
+            setEditMode(false);
+        } else if (eventSource == editUsernameButton) {
+            JDialog dialog = new EditProfilePropertyDialog("username", usernameField, usernameField.getText());
+            dialog.setVisible(true);
+        } else if (eventSource == editEmailButton) {
+            JDialog dialog = new EditProfilePropertyDialog("email", emailField, emailField.getText());
+            dialog.setVisible(true);
+        } else if (eventSource == editPasswordButton) {
+            JDialog dialog = new EditProfilePropertyDialog("password", passwordField);
+            dialog.setVisible(true);
+        } else if (eventSource == editProfileButton) 
+        {
+            if (editMode)
+            {
+                String currentUsername = usernameField.getText();
+                String currentEmail = emailField.getText();
+                String currentPassword = passwordField.getText();
+
+                if(!currentUsername.equals(oldUsername) || !currentEmail.equals(oldEmail) || !currentPassword.equals(oldPassword))
+                {
+                    int response = JOptionPane.showConfirmDialog(this,
+                            "Are you really sure you want to save these changes?", "Save profile edits?",
+                            JOptionPane.YES_NO_OPTION);
+                    if(response == JOptionPane.YES_OPTION)
+                    {
+                        User editedUser = new User();
+                        editedUser.setUserName(currentUsername);
+                        editedUser.setEmail(currentEmail);
+                        editedUser.setPassword(currentPassword);
+
+                        DataWriter dataWriter = new DataWriter();
+                        try 
+                        {
+                            dataWriter.saveUserData(editedUser, true);
+                            JOptionPane.showMessageDialog(null, "Your account has been successfully edited.", "Account has been successfully edited.",
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            setEditMode(false);
+                            mainWindow.setUser(editedUser);
+                        } catch (Exception e1) 
+                        {
+                            String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
+                            JOptionPane.showMessageDialog(null, e1.getMessage(), "Save Record Unsuccessful",
+                                    JOptionPane.ERROR_MESSAGE);
+                            e1.printStackTrace();
+                            return;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                setEditMode(true);
+            }
+        }
+    }
+    
+    /**
+     * @param newMode the editMode to set
+     */
+    public void setEditMode(boolean newMode) 
+    {
+        editMode = newMode;
+        editProfilePictureButton.setVisible(editMode);
+        editUsernameButton.setVisible(editMode);
+        editEmailButton.setVisible(editMode);
+        editPasswordButton.setVisible(editMode);
+        if(editMode)
+        {
+            editProfileButton.setText("Save changes");
+            backButton.setText("Cancel edit");
+        }
+        else 
+        {
+            editProfileButton.setText("Edit Profile");
+            backButton.setText("Back");
         }
     }
 
@@ -172,8 +248,16 @@ public class ProfilePopup extends JPanel implements ActionListener
 
     public void setUser(User currentUser)
     {
-        usernameField.setText(currentUser.getUserName());
-        emailField.setText(currentUser.getEmail());
-        passwordField.setText(currentUser.getPassword());
+        String userName = currentUser.getUserName();
+        usernameField.setText(userName);
+        oldUsername = userName;
+
+        String email = currentUser.getEmail();
+        emailField.setText(email);
+        oldEmail = email;
+
+        String password = currentUser.getPassword();
+        passwordField.setText(password);
+        oldPassword = password;
     }
 }
