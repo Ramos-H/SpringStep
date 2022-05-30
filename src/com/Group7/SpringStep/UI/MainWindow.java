@@ -27,6 +27,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private Point newMouseScreenPosition = new Point();
     private Point mouseDelta = new Point();
     private ArrayList<TaskNode> taskNodes;
+    private TimerPanel timerPanel;
 
     public MainWindow()
     {
@@ -116,7 +117,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     searchBar.add(helpButton, searchBarConstraints);
                 }
 
-                JPanel timerPanel = new TimerPanel();
+                timerPanel = new TimerPanel();
 
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
@@ -185,6 +186,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             doingPanel.addTaskToList(taskNode);
         }
+        UpdateTimerBasedOnDoingList();
     }
     
     @Override
@@ -195,7 +197,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         int eventId = caughtEvent.getID();
         newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
         taskNodes = new ArrayList<>();
-
         {
             if(Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel))
             {
@@ -227,7 +228,9 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
         }
 
-        if(!(caughtEvent.getSource() instanceof JButton)){
+        boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
+        if (eventIsntFromButton) 
+        {
             switch (eventId) 
             {
                 case MouseEvent.MOUSE_PRESSED:
@@ -267,6 +270,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     else
                     {
                         hoveredPanel.addTaskToList(heldTask);
+                        UpdateTimerBasedOnDoingList();
                     }
                     previousPanel = null;
 
@@ -294,6 +298,29 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         oldMouseScreenPosition = newMouseScreenPosition;
 
         updateDebugDetails();
+    }
+
+    private void UpdateTimerBasedOnDoingList() {
+        boolean doingListHasNoTasks = doingPanel.getTaskNodes().size() == 0;
+        if (hoveredPanel == toDoPanel)
+        {
+            if(doingListHasNoTasks)
+            {
+                timerPanel.stopTimer();
+            }
+        }
+        else if(hoveredPanel == doingPanel)
+        {
+            timerPanel.startTimer();
+        }
+        else if(hoveredPanel == donePanel)
+        {
+            if(doingListHasNoTasks)
+            {
+                timerPanel.stopTimer();
+                timerPanel.resetTimer();
+            }
+        }
     }
 
     private void updateDebugDetails() 
