@@ -224,6 +224,8 @@ public class SignUpWindow extends JFrame implements ActionListener
                         "Save Record Successful",
                         JOptionPane.INFORMATION_MESSAGE);
                 printWriter.close();
+
+                Utils.moveToNewWindow(this, new LoginWindow());
             } catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
