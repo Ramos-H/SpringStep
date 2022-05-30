@@ -51,41 +51,29 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         setLayout(new BorderLayout());
         {
             // Put nested components here
-            JPanel titleBar = new JPanel(new GridBagLayout());
+            JPanel topBar = new JPanel(new GridBagLayout());
             {
                 JLabel windowTitle = new JLabel(getTitle());
                 windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
                 JButton boardListButton = new JButton("v");
                 JButton userButton = new JButton("User");
-                JButton minimizeButton = new JButton("_");
-                JButton maxmimizeButton = new JButton("[ ]");
-                JButton closeButton = new JButton("X");
 
                 GridBagConstraints titleBarConstraints = new GridBagConstraints();
                 titleBarConstraints.weightx = 1;
 
                 titleBarConstraints.gridx = 0;
                 titleBarConstraints.anchor = GridBagConstraints.EAST;
-                titleBar.add(windowTitle, titleBarConstraints);
+                topBar.add(windowTitle, titleBarConstraints);
 
                 titleBarConstraints.anchor = GridBagConstraints.WEST;
                 titleBarConstraints.gridx = 1;
-                titleBar.add(boardListButton, titleBarConstraints);
+                topBar.add(boardListButton, titleBarConstraints);
 
                 titleBarConstraints.weightx = 0;
 
                 titleBarConstraints.gridx = 2;
-                titleBar.add(userButton, titleBarConstraints);
-
-                titleBarConstraints.gridx = 3;
-                titleBar.add(minimizeButton, titleBarConstraints);
-
-                titleBarConstraints.gridx = 4;
-                titleBar.add(maxmimizeButton, titleBarConstraints);
-
-                titleBarConstraints.gridx = 5;
-                titleBar.add(closeButton, titleBarConstraints);
+                topBar.add(userButton, titleBarConstraints);
             }
 
             JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -167,7 +155,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             Utils.setDebugVisible(shortcutsPanel, Color.BLACK);
 
             //Put the call to add the nested components here
-            add(titleBar, BorderLayout.PAGE_START);
+            add(topBar, BorderLayout.PAGE_START);
             add(contentPanel, BorderLayout.CENTER);
             add(shortcutsPanel, BorderLayout.PAGE_END);
         }
