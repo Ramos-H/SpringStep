@@ -17,8 +17,8 @@ public class SignUpWindow extends JFrame implements ActionListener
     private JButton signUpButton;
     private JTextField userNameField;
     private JTextField emailField;
-    private JTextField passwordField;
-    private JTextField confirmPasswordField;
+    private PasswordTextField passwordField;
+    private PasswordTextField confirmPasswordField;
 
     public SignUpWindow() 
     {
@@ -44,8 +44,8 @@ public class SignUpWindow extends JFrame implements ActionListener
                 JLabel welcomeLabel = new JLabel("Welcome to SpringStep!");
                 userNameField = new JTextField();
                 emailField = new JTextField();
-                passwordField = new JTextField();
-                confirmPasswordField = new JTextField();
+                passwordField = new PasswordTextField();
+                confirmPasswordField = new PasswordTextField();
 
                 backButton = new JButton("Back");
                 backButton.addActionListener(this);

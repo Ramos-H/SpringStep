@@ -14,7 +14,7 @@ import com.Group7.SpringStep.data.User;
 public class LoginWindow extends JFrame implements ActionListener
 {
     private JTextField userNameField;
-    private JTextField passwordField;
+    private PasswordTextField passwordField;
     private JCheckBox rememberPasswordCheckBox;
     private JButton signUpButton;
     private JButton logInButton;
@@ -41,7 +41,7 @@ public class LoginWindow extends JFrame implements ActionListener
             {
                 JLabel welcomeLabel = new JLabel("Log in to SpringStep!");
                 userNameField = new JTextField();
-                passwordField = new JTextField();
+                passwordField = new PasswordTextField();
                 rememberPasswordCheckBox = new JCheckBox("Remember password");
 
                 signUpButton = new JButton("Sign Up");
