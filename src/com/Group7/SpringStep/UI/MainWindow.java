@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.User;
 
 public class MainWindow extends JFrame implements ActionListener, AWTEventListener
 {
@@ -28,13 +29,23 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private Point mouseDelta = new Point();
     private ArrayList<TaskNode> taskNodes;
     private TimerPanel timerPanel;
+    private JButton userButton;
+    private PopupContainer popupContainer;
+    private ProfilePopup profilePopup;
+
+    private User currentUser;
 
     public MainWindow()
     {
+        popupContainer = new PopupContainer();
+        profilePopup = new ProfilePopup(popupContainer);
+        popupContainer.setPopup(profilePopup);
+        setGlassPane(popupContainer);
+
         // Set window parameters
         setTitle("SpringStep");
+        
         long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
-
         getToolkit().addAWTEventListener(this, eventMask);
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
@@ -57,7 +68,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
                 JButton boardListButton = new JButton("v");
-                JButton userButton = new JButton("User");
+                userButton = new JButton("User");
+                userButton.addActionListener(this);
 
                 GridBagConstraints titleBarConstraints = new GridBagConstraints();
                 titleBarConstraints.weightx = 1;
@@ -175,8 +187,17 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             doingPanel.addTaskToList(taskNode);
         }
         UpdateTimerBasedOnDoingList();
+
+        if(eventSource == userButton)
+        {
+            if (profilePopup == null)
+            {
+                profilePopup = new ProfilePopup(popupContainer);
+            }
+            popupContainer.setPopup(profilePopup);
+        }
     }
-    
+
     @Override
     public void eventDispatched(AWTEvent caughtEvent) 
     {
@@ -288,7 +309,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         updateDebugDetails();
     }
 
-    private void UpdateTimerBasedOnDoingList() {
+    private void UpdateTimerBasedOnDoingList() 
+    {
         boolean doingListHasNoTasks = doingPanel.getTaskNodes().size() == 0;
         if (hoveredPanel == toDoPanel)
         {
@@ -315,43 +337,37 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     {
         // Title details
         String currentHoveredPanel = "NONE";
-        if (hoveredPanel == toDoPanel)
-        {
+        if (hoveredPanel == toDoPanel) {
             currentHoveredPanel = "To Do";
-        }
-        else if (hoveredPanel == doingPanel) 
-        {
+        } else if (hoveredPanel == doingPanel) {
             currentHoveredPanel = "Doing";
-        }
-        else if (hoveredPanel == donePanel)
-        {
+        } else if (hoveredPanel == donePanel) {
             currentHoveredPanel = "Done";
         }
         String currentPreviousPanel = "NONE";
-        if (previousPanel == toDoPanel)
-        {
+        if (previousPanel == toDoPanel) {
             currentPreviousPanel = "To Do";
-        }
-        else if (previousPanel == doingPanel) 
-        {
+        } else if (previousPanel == doingPanel) {
             currentPreviousPanel = "Doing";
-        }
-        else if (previousPanel == donePanel)
-        {
+        } else if (previousPanel == donePanel) {
             currentPreviousPanel = "Done";
         }
         String currentHoveredNode = "NONE";
-        if (hoveredTask != null)
-        {
+        if (hoveredTask != null) {
             currentHoveredNode = hoveredTask.getTaskName().getText();
         }
         String currentHeldNode = "NONE";
-        if (heldTask != null)
-        {
+        if (heldTask != null) {
             currentHeldNode = heldTask.getTaskName().getText();
         }
         String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s, Screen Position: %s";
         setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,
                 mouseDelta.toString(), getLocationOnScreen().toString()));
+    }
+    
+    public void setUser(User newUser)
+    {
+        currentUser = newUser;
+        profilePopup.setUser(currentUser);
     }
 }
