@@ -5,11 +5,15 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class AddTaskWindow extends JFrame implements ActionListener{
+import com.Group7.SpringStep.Utils;
+
+public class AddTaskWindow extends JFrame implements ActionListener 
+{
     private JButton btnSave;
     private JTextField titleField;
 
-    public AddTaskWindow() {
+    public AddTaskWindow() 
+    {
         // Set window parameters first
         setTitle("Add Task");
 
@@ -23,10 +27,10 @@ public class AddTaskWindow extends JFrame implements ActionListener{
         int x = Math.round(screenSize.width / 2 - getWidth() / 2);
         int y = Math.round(screenSize.height / 2 - getHeight() / 2);
         setLocation(x, y);
-        setLayout(new GridLayout(1, 1));
+        setLayout(new GridLayout(1,1));
         {
             JPanel mainPanel = new JPanel(new GridBagLayout());
-            mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+            Utils.padJComponent(mainPanel, 0, 150, 0, 150);
             {
                 // Put nested components here
                 JLabel taskLabel = new JLabel("Task Details");
@@ -37,7 +41,8 @@ public class AddTaskWindow extends JFrame implements ActionListener{
                 JLabel expectedDurationLabel = new JLabel("Expected Duration");
 
                 titleField = new JTextField();
-                JTextField descriptionField = new JTextField();
+                JTextArea descriptionArea = new JTextArea();
+                descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
 
                 JButton btnTag = new JButton("+ TAG");
                 btnTag.setBackground(new Color(217, 217, 217));
@@ -64,13 +69,16 @@ public class AddTaskWindow extends JFrame implements ActionListener{
                     btnPanel.add(btnDelete, btnPanelConstraints);
                     btnPanelConstraints.gridx = 2;
                     btnPanel.add(btnSave, btnPanelConstraints);
+
                     btnPanelConstraints.gridx = 1;
-                    btnPanelConstraints.fill = GridBagConstraints.BOTH; 
-                    btnPanel.add(new JPanel(),btnPanelConstraints);
+                    btnPanelConstraints.weightx = 1;
+                    btnPanelConstraints.fill = GridBagConstraints.BOTH;
+                    btnPanel.add(new JPanel(), btnPanelConstraints);
                 }
 
                 GridBagConstraints addTaskWindowConstraints = new GridBagConstraints();
-                addTaskWindowConstraints.weighty = 0;
+                addTaskWindowConstraints.weightx = 1;
+                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
                 addTaskWindowConstraints.anchor = GridBagConstraints.LAST_LINE_START;
                 addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
@@ -79,7 +87,6 @@ public class AddTaskWindow extends JFrame implements ActionListener{
                 addTaskWindowConstraints.gridy = 1;
                 mainPanel.add(titleLabel, addTaskWindowConstraints);
 
-                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
                 addTaskWindowConstraints.gridy = 2;
                 mainPanel.add(titleField, addTaskWindowConstraints);
 
@@ -87,7 +94,7 @@ public class AddTaskWindow extends JFrame implements ActionListener{
                 mainPanel.add(descriptionLabel, addTaskWindowConstraints);
 
                 addTaskWindowConstraints.gridy = 4;
-                mainPanel.add(descriptionField, addTaskWindowConstraints);
+                mainPanel.add(descriptionArea, addTaskWindowConstraints);
 
                 addTaskWindowConstraints.gridy = 5;
                 mainPanel.add(tagLabel, addTaskWindowConstraints);
@@ -108,21 +115,21 @@ public class AddTaskWindow extends JFrame implements ActionListener{
                 mainPanel.add(btnDuration, addTaskWindowConstraints);
 
                 addTaskWindowConstraints.gridy = 11;
-                addTaskWindowConstraints.fill = GridBagConstraints.NONE;
+                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
                 addTaskWindowConstraints.anchor = GridBagConstraints.CENTER;
                 mainPanel.add(btnPanel, addTaskWindowConstraints);
-
             }
-            // Put the call to add the nested components here
             add(mainPanel);
-
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==btnSave){
-            if(titleField.getText().trim().equals("")){
+    public void actionPerformed(ActionEvent e) 
+    {
+        if (e.getSource() == btnSave) 
+        {
+            if (titleField.getText().trim().equals("")) 
+            {
                 JOptionPane.showMessageDialog(null, "Please add a name for the task", "Error: No name for task", JOptionPane.ERROR_MESSAGE);
             }
         }
