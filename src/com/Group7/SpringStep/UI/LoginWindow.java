@@ -172,11 +172,6 @@ public class LoginWindow extends JFrame implements ActionListener
                 }
 
                 JOptionPane.showMessageDialog(this, "Logged in successfully", "Successful log in", JOptionPane.INFORMATION_MESSAGE);
-                // PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
-                // printWriter.println(newUser.getCsvFormattedInfo());
-                // JOptionPane.showMessageDialog(null, "Successfully saved record at: " + accountSavePath.toString(), "Save Record Successful",
-                //         JOptionPane.INFORMATION_MESSAGE);
-                // printWriter.close();
             } catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
