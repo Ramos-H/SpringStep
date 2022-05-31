@@ -1,26 +1,30 @@
 package com.Group7.SpringStep.ui;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.*;
 
 public class TaskNode extends JPanel 
 {
-    private JTextArea taskName;
+    private JTextArea taskNameArea;
+    private TaskDetails taskDetails;
+    private JPanel tagPanel;
 
-    public TaskNode()
+    public TaskNode(TaskDetails newDetails)
     {
         setLayout(new GridBagLayout());
         setOpaque(true);
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         {
-            taskName = new JTextArea(Integer.toString(this.hashCode()));
-            taskName.setLineWrap(true);
+            taskNameArea = new JTextArea(Integer.toString(this.hashCode()));
+            taskNameArea.setLineWrap(true);
 
-            JPanel tagPanel = new JPanel(new FlowLayout());
+            tagPanel = new JPanel(new FlowLayout());
             Utils.setDebugVisible(tagPanel, Color.PINK);
 
             GridBagConstraints taskNodeConstraints = new GridBagConstraints();
@@ -31,7 +35,7 @@ public class TaskNode extends JPanel
             taskNodeConstraints.gridwidth = 2;
             taskNodeConstraints.fill = GridBagConstraints.BOTH;
             taskNodeConstraints.anchor = GridBagConstraints.CENTER;
-            add(taskName, taskNodeConstraints);
+            add(taskNameArea, taskNodeConstraints);
 
             taskNodeConstraints.gridy = 1;
             taskNodeConstraints.weighty = 0;
@@ -45,10 +49,41 @@ public class TaskNode extends JPanel
             taskNodeConstraints.fill = GridBagConstraints.NONE;
             add(new JButton("Edit"), taskNodeConstraints);
         }
+        setTaskDetails(newDetails);
+    }
+
+    
+    /**
+     * @return the taskNameArea
+     */
+    public JTextArea getTaskNameArea() { return taskNameArea; }
+
+    /**
+     * @param newTaskDetails the taskDetails to set
+     */
+    public void setTaskDetails(TaskDetails newTaskDetails) 
+    {
+        taskDetails = newTaskDetails;
+
+        taskNameArea.setText(taskDetails.getName());
+
+        if(taskDetails.getDeadline() != null)
+            tagPanel.add(createTagDisplay("DL: " + taskDetails.getDeadline().toString(), Color.RED));
+        
+        // ArrayList<TagDetails> tags = taskDetails.getTags();
+        // for (TagDetails tag : tags) 
+        // {
+        //     tagPanel.add(createTagDisplay(tag.getName(), tag.getColor()));
+        // }
+        
+        // tagPanel.add(createTagDisplay(taskDetails.getExpectedDuration().toString(), Color.BLUE));
     }
     
-    public JTextArea getTaskName() 
+    public JPanel createTagDisplay(String text, Color bgColor)
     {
-        return taskName;
+        JPanel newTagDisplay = new JPanel(new FlowLayout());
+        newTagDisplay.setBackground(bgColor);
+        newTagDisplay.add(new JLabel(text));
+        return newTagDisplay;
     }
 }
