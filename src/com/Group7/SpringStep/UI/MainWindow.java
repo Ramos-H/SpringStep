@@ -237,7 +237,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
 
         boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
-        if (eventIsntFromButton) 
+        if (eventIsntFromButton && !popupContainer.isVisible()) 
         {
             switch (eventId) 
             {

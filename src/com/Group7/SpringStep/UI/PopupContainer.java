@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class PopupContainer extends JPanel implements ComponentListener
+public class PopupContainer extends JPanel implements ComponentListener, MouseListener
 {
     Container contentPane;
     JPanel currentPopup;
@@ -17,6 +17,7 @@ public class PopupContainer extends JPanel implements ComponentListener
         setOpaque(false);
         setBackground(new Color(64, 64, 64, 64));
         setLayout(null);
+        addMouseListener(this);
     }
     
     public void setPopup(JPanel panel)
@@ -91,6 +92,35 @@ public class PopupContainer extends JPanel implements ComponentListener
 
     @Override
     public void componentHidden(ComponentEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
         // TODO Auto-generated method stub
         
     }
