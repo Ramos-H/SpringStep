@@ -179,10 +179,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 return;
             }
             
-            User newUser = new User();
-            newUser.setUserName(enteredUsername);
-            newUser.setEmail(enteredEmail);
-            newUser.setPassword(enteredPassword);
+            User newUser = new User(enteredUsername, enteredEmail, enteredPassword);
 
             DataManager dataWriter = new DataManager();
             try 
@@ -202,7 +199,9 @@ public class SignUpWindow extends JFrame implements ActionListener
             catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
-                JOptionPane.showMessageDialog(null, e1.getMessage(),"Save Record Unsuccessful", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, e1.getMessage(), "Save Record Unsuccessful",
+                        JOptionPane.ERROR_MESSAGE);
+                e1.printStackTrace();
                 return;
             }
 

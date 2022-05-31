@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.BoardDetails;
 import com.Group7.SpringStep.data.TaskDetails;
 import com.Group7.SpringStep.data.User;
 
@@ -35,6 +36,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private ProfilePopup profilePopup;
 
     private User currentUser;
+    private BoardDetails currentBoard;
+    private JLabel windowTitle;
 
     public MainWindow()
     {
@@ -64,7 +67,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             // Put nested components here
             JPanel topBar = new JPanel(new GridBagLayout());
             {
-                JLabel windowTitle = new JLabel(getTitle());
+                windowTitle = new JLabel();
                 windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
                 JButton boardListButton = new JButton("v");
@@ -185,7 +188,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), doingPanel));
         }
-        UpdateTimerBasedOnDoingList();
 
         if(eventSource == userButton)
         {
@@ -200,8 +202,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     @Override
     public void eventDispatched(AWTEvent caughtEvent) 
     {
-        updateDebugDetails();
-
         int eventId = caughtEvent.getID();
         newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
         taskNodes = new ArrayList<>();
@@ -278,7 +278,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     else
                     {
                         hoveredPanel.addTaskToList(heldTask);
-                        UpdateTimerBasedOnDoingList();
+                        updateTimerBasedOnDoingList();
                     }
                     previousPanel = null;
 
@@ -305,10 +305,10 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         oldMouseScreenPosition = newMouseScreenPosition;
 
-        updateDebugDetails();
+        // updateDebugDetails();
     }
 
-    private void UpdateTimerBasedOnDoingList() 
+    public void updateTimerBasedOnDoingList() 
     {
         boolean doingListHasNoTasks = doingPanel.getTaskNodes().size() == 0;
         if (hoveredPanel == toDoPanel)
@@ -367,6 +367,24 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void setUser(User newUser)
     {
         currentUser = newUser;
+        setCurrentBoard(currentUser.getBoards().get(0));
         profilePopup.setUser(currentUser);
+    }
+
+    public void setCurrentBoard(BoardDetails newBoard)
+    {
+        currentBoard = newBoard;
+        windowTitle.setText(currentBoard.getName());
+        ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
+        for (TaskDetails task : todoList) 
+        {
+            toDoPanel.addTaskToList(new TaskNode(task));
+        }
+
+        ArrayList<TaskDetails> doneList = currentBoard.getDoneList();
+        for (TaskDetails task : doneList) 
+        {
+            donePanel.addTaskToList(new TaskNode(task));
+        }
     }
 }

@@ -185,10 +185,7 @@ public class ProfilePopup extends JPanel implements ActionListener
                             JOptionPane.YES_NO_OPTION);
                     if(response == JOptionPane.YES_OPTION)
                     {
-                        User editedUser = new User();
-                        editedUser.setUserName(currentUsername);
-                        editedUser.setEmail(currentEmail);
-                        editedUser.setPassword(currentPassword);
+                        User editedUser = new User(currentUsername, currentEmail, currentPassword);
 
                         DataManager dataWriter = new DataManager();
                         try 

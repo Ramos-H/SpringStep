@@ -1,5 +1,8 @@
 package com.Group7.SpringStep.data;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.Group7.SpringStep.Utils;
 
 public class User 
@@ -7,24 +10,27 @@ public class User
     private String userName;
     private String email;
     private String password;
+    private ArrayList<BoardDetails> boards;
 
     // Constructors
-    public User() { }
+    public User(String newUsername, String newEmail, String newPassword) 
+    {
+        setUserName(newUsername);
+        setEmail(newEmail);
+        setPassword(newPassword);
+        boards = new ArrayList<>();
+        boards.add(new BoardDetails("New Board"));
+    }
 
     public static User reconstructFromCsv(String csvInput)
     {
-        if (Utils.isTextEmpty(csvInput))
-            return null;
+        if (Utils.isTextEmpty(csvInput)) { return null; }
 
-        User user = new User();
         String[] split = csvInput.split(",");
-        user.userName = split[0];
-        user.email = split[1];
-        user.password = split[2];
-        
+        User user = new User(split[0], split[1], split[2]);
+
         return user;
     }
-    
 
     // Setters
     /**
@@ -59,7 +65,20 @@ public class User
     public String getPassword() { return password; }
 
     /**
+     * @return the boards
+     */
+    public ArrayList<BoardDetails> getBoards() { return boards; }
+
+    /**
      * @return The user info formatted into the CSV format for easy writing to file
      */
-    public String getCsvFormattedInfo() { return String.format("%s,%s,%s", userName, email, password); }
+    public String getCsvFormattedInfo() 
+    {
+        String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
+        for (BoardDetails board : boards) 
+        {
+            output += board.getCsvFormattedValues();
+        }
+        return output;
+    }
 }
