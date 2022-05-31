@@ -8,6 +8,7 @@ import java.util.*;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.TaskDetails;
 import com.Group7.SpringStep.data.User;
 
 public class MainWindow extends JFrame implements ActionListener, AWTEventListener
@@ -32,14 +33,14 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JButton userButton;
     private PopupContainer popupContainer;
     private ProfilePopup profilePopup;
-    private AddTaskPopup addTaskPopup;
 
     private User currentUser;
 
     public MainWindow()
     {
-        popupContainer = new PopupContainer();
+        popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
+        profilePopup = new ProfilePopup(popupContainer, this);
 
         // Set window parameters
         setTitle("SpringStep");
@@ -176,24 +177,13 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        TaskNode taskNode = new TaskNode();
         if(eventSource == toDoAddTaskButton)
         {
-            if (addTaskPopup == null)
-            {
-                addTaskPopup = new AddTaskPopup(popupContainer, this);
-            }
-            popupContainer.setPopup(addTaskPopup);
-            // toDoPanel.addTaskToList(taskNode);
+            popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), toDoPanel));
         }
         else if(eventSource == doingAddTaskButton)
         {
-            if (addTaskPopup == null)
-            {
-                addTaskPopup = new AddTaskPopup(popupContainer, this);
-            }
-            popupContainer.setPopup(addTaskPopup);
-            // doingPanel.addTaskToList(taskNode);
+            popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), doingPanel));
         }
         UpdateTimerBasedOnDoingList();
 
@@ -363,11 +353,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
         String currentHoveredNode = "NONE";
         if (hoveredTask != null) {
-            currentHoveredNode = hoveredTask.getTaskName().getText();
+            currentHoveredNode = hoveredTask.getTaskNameArea().getText();
         }
         String currentHeldNode = "NONE";
         if (heldTask != null) {
-            currentHeldNode = heldTask.getTaskName().getText();
+            currentHeldNode = heldTask.getTaskNameArea().getText();
         }
         String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s, Screen Position: %s";
         setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,

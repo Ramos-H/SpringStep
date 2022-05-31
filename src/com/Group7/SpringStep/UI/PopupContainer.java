@@ -5,29 +5,18 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class PopupContainer extends JPanel
+public class PopupContainer extends JPanel implements ComponentListener
 {
     Container contentPane;
     JPanel currentPopup;
 
-    public PopupContainer()
+    public PopupContainer(Container contentPane)
     {
+        this.contentPane = contentPane;
+        contentPane.addComponentListener(this);
         setOpaque(false);
         setBackground(new Color(64, 64, 64, 64));
-        setLayout(new GridBagLayout());
-        GridBagConstraints initialPopupConstraints = new GridBagConstraints();
-        initialPopupConstraints.fill = GridBagConstraints.BOTH;
-        initialPopupConstraints.weightx = 1;
-        initialPopupConstraints.weighty = 0.3;
-        JPanel comp = new JPanel();
-        comp.setOpaque(false);
-        add(comp, initialPopupConstraints);
-
-        initialPopupConstraints.gridx = 2;
-        initialPopupConstraints.gridy = 2;
-        JPanel comp2 = new JPanel();
-        comp2.setOpaque(false);
-        add(comp2, initialPopupConstraints);
+        setLayout(null);
     }
     
     public void setPopup(JPanel panel)
@@ -42,17 +31,19 @@ public class PopupContainer extends JPanel
         }
 
         currentPopup = panel;
-        GridBagConstraints popupConstraints = new GridBagConstraints();
-        popupConstraints.fill = GridBagConstraints.BOTH;
-        popupConstraints.weightx = 0.7;
-        popupConstraints.weighty = 1;
-        popupConstraints.gridx = 1;
-        popupConstraints.gridy = 1;
-
-        add(currentPopup, popupConstraints);
+        add(currentPopup);
+        resizeCurrentPopup();
+        positionCurrentPopup();
         setVisible(true);
     }
     
+    private void positionCurrentPopup() 
+    {
+        int x = Math.round(contentPane.getWidth() / 2 - currentPopup.getWidth() / 2);
+        int y = Math.round(contentPane.getHeight() / 2 - currentPopup.getHeight() / 2);
+        currentPopup.setLocation(x, y);
+    }
+
     public void hidePopup()
     {
         setVisible(false);
@@ -65,5 +56,42 @@ public class PopupContainer extends JPanel
         Rectangle clipBounds = g.getClipBounds();
         g.fillRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
         super.paintComponent(g);
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) 
+    {
+        resizeCurrentPopup();
+        positionCurrentPopup();
+    }
+
+    private void resizeCurrentPopup() 
+    {
+        if(currentPopup != null)
+        {
+            float widthScale = 40f;
+            float heightScale = 80f;
+            int width = Math.round(contentPane.getWidth() * (widthScale / 100f));
+            int height = Math.round(contentPane.getHeight() * (heightScale / 100f));
+            currentPopup.setSize(width, height);
+        }
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+        // TODO Auto-generated method stub
+        
     }
 }
