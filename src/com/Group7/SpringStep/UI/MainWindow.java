@@ -6,9 +6,11 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.BoardDetails;
+import com.Group7.SpringStep.data.DataManager;
 import com.Group7.SpringStep.data.TaskDetails;
 import com.Group7.SpringStep.data.User;
 
@@ -39,11 +41,16 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private BoardDetails currentBoard;
     private JLabel windowTitle;
 
+    private Timer autosaveTimer;
+
     public MainWindow()
     {
         popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
         profilePopup = new ProfilePopup(popupContainer, this);
+
+        autosaveTimer = new Timer(1000 * 10, this);
+        autosaveTimer.start();
 
         // Set window parameters
         setTitle("SpringStep");
@@ -191,11 +198,15 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         if(eventSource == userButton)
         {
-            if (profilePopup == null)
-            {
+            if (profilePopup == null) {
                 profilePopup = new ProfilePopup(popupContainer, this);
             }
             popupContainer.setPopup(profilePopup);
+        }
+        
+        if(eventSource == autosaveTimer)
+        {
+            saveUserData();
         }
     }
 
@@ -385,6 +396,55 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         for (TaskDetails task : doneList) 
         {
             donePanel.addTaskToList(new TaskNode(task));
+        }
+    }
+
+    public void saveTasksToBoard()
+    {
+        ArrayList<TaskNode> toDoNodes = toDoPanel.getTaskNodes();
+        ArrayList<TaskNode> doingNodes = doingPanel.getTaskNodes();
+        ArrayList<TaskNode> doneNodes = donePanel.getTaskNodes();
+        ArrayList<TaskDetails> todoListSave = new ArrayList<>();
+
+        // Store to do tasks
+        if (toDoNodes.size() > 0) {
+            for (TaskNode taskDisplay : toDoNodes) {
+                todoListSave.add(taskDisplay.getTaskDetails());
+            }
+        }
+
+        /* Store doing tasks. If the user closes the app while doing a task, it safe to assume
+           they aren't done with those tasks. Hence, why we store these incomplete tasks to "To Do" for later.
+        */
+        if (doingNodes.size() > 0) {
+            for (TaskNode taskDisplay : doingNodes) {
+                todoListSave.add(taskDisplay.getTaskDetails());
+            }
+        }
+
+        currentBoard.setTodoList(todoListSave);
+
+        // Store done tasks
+        if (doneNodes.size() > 0) {
+            ArrayList<TaskDetails> doneListSave = new ArrayList<>();
+            for (TaskNode taskDisplay : doneNodes) {
+                doneListSave.add(taskDisplay.getTaskDetails());
+            }
+            currentBoard.setDoneList(doneListSave);
+        }
+
+        System.out.println();
+    }
+
+    public void saveUserData()
+    {
+        saveTasksToBoard();
+        DataManager dataManager = new DataManager();
+        try {
+            dataManager.saveUserData(currentUser, true);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 }

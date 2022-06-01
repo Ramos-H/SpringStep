@@ -1,7 +1,10 @@
 package com.Group7.SpringStep.data;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 import com.Group7.SpringStep.Utils;
 
@@ -22,13 +25,75 @@ public class User
         boards.add(new BoardDetails("New Board"));
     }
 
-    public static User reconstructFromCsv(String csvInput)
+    public static User reconstructFromCsv(List<String> csvInput)
     {
-        if (Utils.isTextEmpty(csvInput)) { return null; }
+        if (csvInput.size() < 1) { return null; }
 
-        String[] split = csvInput.split(",");
-        User user = new User(split[0], split[1], split[2]);
+        String[] userData = csvInput.get(0).split(",");
+        User user = new User(userData[0], userData[1], userData[2]);
 
+        int boardCount = Integer.parseInt(userData[3]);
+        ArrayList<BoardDetails> newBoardList = new ArrayList<>();
+        int readOffset = 1;
+        for (int boardIndex = 0; boardIndex < boardCount; boardIndex++, readOffset++)
+        {
+            String[] currentBoardData = csvInput.get(readOffset).split(",");
+            readOffset++;
+            BoardDetails newBoard = new BoardDetails(currentBoardData[0]);
+
+            // Read TO DO tasks
+            int toDoCount = Integer.parseInt(currentBoardData[1]);
+            ArrayList<TaskDetails> newTodoList = new ArrayList<>(toDoCount);
+            for (int toDoIndex = 0; toDoIndex < toDoCount; toDoIndex++, readOffset++) {
+                TaskDetails newTask = new TaskDetails();
+                String[] currentTaskData = csvInput.get(readOffset).split(",");
+
+                // Name
+                newTask.setName(currentTaskData[0]);
+
+                // Description
+                if (!currentTaskData[1].equals("NULL")) {
+                    newTask.setDescription(currentTaskData[1]);
+                }
+
+                // Deadline
+                if (!currentTaskData[2].equals("NULL")) {
+                    newTask.setDeadline(LocalDate.parse(currentTaskData[2]));
+                }
+                
+                newTodoList.add(newTask);
+            }
+            newBoard.setTodoList(newTodoList);
+
+            // Read DONE tasks
+            int doneCount = Integer.parseInt(currentBoardData[2]);
+            ArrayList<TaskDetails> newDoneList = new ArrayList<>(doneCount);
+            for (int doneIndex = 0; doneIndex < doneCount; doneIndex++, readOffset++) {
+                TaskDetails newTask = new TaskDetails();
+                String[] currentTaskData = csvInput.get(readOffset).split(",");
+
+                // Name
+                newTask.setName(currentTaskData[0]);
+
+                // Description
+                if (!currentTaskData[1].equals("NULL")) {
+                    newTask.setDescription(currentTaskData[1]);
+                }
+
+                // Deadline
+                if (!currentTaskData[2].equals("NULL")) {
+                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
+                    newTask.setDeadline(LocalDate.parse(currentTaskData[2], dateFormatter));
+                }
+
+                newDoneList.add(newTask);
+            }
+            newBoard.setDoneList(newDoneList);
+
+            newBoardList.add(newBoard);
+        }
+
+        user.setBoards(newBoardList);
         return user;
     }
 
@@ -47,6 +112,11 @@ public class User
      * @param password the password to set
      */
     public void setPassword(String password) { this.password = password; }
+
+    /**
+     * @param boards the boards to set
+     */
+    public void setBoards(ArrayList<BoardDetails> boards) { this.boards = boards; }
 
     // Getters
     /**

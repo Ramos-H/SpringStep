@@ -2,6 +2,7 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 
 import javax.swing.*;
 
@@ -62,7 +63,9 @@ public class AddTaskPopup extends JPanel implements ActionListener
                     tagPanel.add(addTagButton);
                 }
 
-                deadlinePicker = new DatePicker();
+                DatePickerSettings settings = new DatePickerSettings();
+                settings.setAllowEmptyDates(true);
+                deadlinePicker = new DatePicker(settings);
                 deadlinePicker.setBackground(new Color(217, 217, 217));
 
                 JButton btnDuration = new JButton("+");
@@ -153,14 +156,12 @@ public class AddTaskPopup extends JPanel implements ActionListener
 
             currentTask.setDescription(descriptionArea.getText().trim());
 
-            if(deadlinePicker.getDate() != null)
-            {
-                currentTask.setDeadline(deadlinePicker.getDate());
-            }
+            currentTask.setDeadline(deadlinePicker.getDate());
 
             TaskNode newTaskNode = new TaskNode(currentTask);
             listPanel.addTaskToList(newTaskNode);
             popupHandler.hidePopup();
+            mainWindow.updateTimerBasedOnDoingList();
         }
     }
 }

@@ -12,9 +12,7 @@ public class DataManager
 
     public User readUser(Path filePath) throws Exception
     {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath.toString()));
-        User currentUser = User.reconstructFromCsv(bufferedReader.readLine());
-        bufferedReader.close();
+        User currentUser = User.reconstructFromCsv(Files.readAllLines(filePath));
         return currentUser;
     }
 
@@ -23,16 +21,15 @@ public class DataManager
         // Dynamically construct the output file path
         String userHome = System.getProperty("user.home");
         Path accountSavePath = Paths.get(userHome, "Documents", "SpringStep", "users");
-        String completeFileName =  newUser.getUserName() + ".csv";
+        String completeFileName = newUser.getUserName() + ".csv";
         Path filePath = accountSavePath.resolve(completeFileName);
-        
+
         // Try writing the output to the file
         boolean folderExists = Files.exists(accountSavePath);
         boolean folderDoesntExist = Files.notExists(accountSavePath);
         boolean folderUnverifiable = !folderExists && !folderDoesntExist;
         boolean folderSurelyDoesntExists = !folderExists && folderDoesntExist;
-        if(folderSurelyDoesntExists)
-        {
+        if (folderSurelyDoesntExists) {
             Files.createDirectories(accountSavePath);
         }
 
@@ -41,16 +38,14 @@ public class DataManager
         boolean fileUnverifiable = !fileExists && !fileDoesntExist;
         boolean fileSurelyExists = fileExists && !fileDoesntExist;
         boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
-        if(!fileSurelyExists)
-        {
+        if (!fileSurelyExists) {
             Files.createFile(filePath);
         }
 
-        if(!overwrite && (readUser(filePath) != null))
-        {
+        if (!overwrite && (readUser(filePath) != null)) {
             return USER_ALREADY_EXISTS;
         }
-        
+
         PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
         printWriter.println(newUser.getCsvFormattedInfo());
         printWriter.close();

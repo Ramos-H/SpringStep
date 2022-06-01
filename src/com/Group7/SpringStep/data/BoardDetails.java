@@ -6,14 +6,12 @@ public class BoardDetails
 {
     private String name;
     ArrayList<TaskDetails> todoList;
-    ArrayList<TaskDetails> doingList;
     ArrayList<TaskDetails> doneList;
 
     public BoardDetails(String newName)
     {
         setName(newName);
         todoList = new ArrayList<>();
-        doingList = new ArrayList<>();
         doneList = new ArrayList<>();
     }
 
@@ -40,14 +38,6 @@ public class BoardDetails
     }
 
     /**
-     * @return the doingList
-     */
-    public ArrayList<TaskDetails> getDoingList() 
-    {
-        return doingList;
-    }
-
-    /**
      * @return the doneList
      */
     public ArrayList<TaskDetails> getDoneList() 
@@ -64,14 +54,6 @@ public class BoardDetails
     }
 
     /**
-     * @param doingList the doingList to set
-     */
-    public void setDoingList(ArrayList<TaskDetails> doingList) 
-    {
-        this.doingList = doingList;
-    }
-
-    /**
      * @param doneList the doneList to set
      */
     public void setDoneList(ArrayList<TaskDetails> doneList) 
@@ -79,26 +61,34 @@ public class BoardDetails
         this.doneList = doneList;
     }
 
-    public void setLists(ArrayList<TaskDetails> newTodoList, ArrayList<TaskDetails> newDoingList, ArrayList<TaskDetails> newDoneList)
+    public void setLists(ArrayList<TaskDetails> newTodoList, ArrayList<TaskDetails> newDoneList)
     {
         todoList = newTodoList;
-        doingList = newDoingList;
         doneList = newDoneList;
     }
 
     public String getCsvFormattedValues()
     {
-        String boardOutput = String.format("%s,%d,%d\n", getName(), todoList.size(), doneList.size());
-        for (TaskDetails taskDetails : todoList) 
+        int todoCount = todoList.size();
+        int doneCount = doneList.size();
+
+        String boardOutput = String.format("%s,%d,%d\n", getName(), todoCount, doneCount);
+        if(todoCount > 0)
         {
-            boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+            for (TaskDetails taskDetails : todoList) 
+            {
+                boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+            }
         }
 
-        for (TaskDetails taskDetails : doneList) 
+        if (doneCount > 0)
         {
-            boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+            for (TaskDetails taskDetails : doneList) 
+            {
+                boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+            }
         }
-
+        
         return boardOutput;
     }
 }

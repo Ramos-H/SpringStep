@@ -1,6 +1,7 @@
 package com.Group7.SpringStep.data;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class TaskDetails 
@@ -65,4 +66,30 @@ public class TaskDetails
     public void removeTag(TagDetails tag) { tags.remove(tag); }
 
     public void removeTagByIndex(int index) { tags.remove(index); }
+
+    public String getCsvFormattedInfo() 
+    {
+        
+        final String DEFAULT_VALUE = "NULL";
+        
+        String formattedName = DEFAULT_VALUE;
+        if(name != null)
+        {
+            formattedName = String.format("%s", name);
+        }
+
+        String formattedDescription = DEFAULT_VALUE;
+        if(description != null)
+        {
+            formattedDescription = String.format("%s", description);
+        }
+
+        String formattedDeadline = DEFAULT_VALUE;
+        if(deadline != null)
+        {
+            formattedDeadline = deadline.toString();
+        }
+
+        return String.format("%s,%s,%s", formattedName, formattedDescription, formattedDeadline);
+    }
 }

@@ -67,16 +67,23 @@ public class TaskNode extends JPanel
 
         taskNameArea.setText(taskDetails.getName());
 
-        if(taskDetails.getDeadline() != null)
+        if (taskDetails.getDeadline() != null)
             tagPanel.add(createTagDisplay("DL: " + taskDetails.getDeadline().toString(), Color.RED));
-        
+
         // ArrayList<TagDetails> tags = taskDetails.getTags();
         // for (TagDetails tag : tags) 
         // {
         //     tagPanel.add(createTagDisplay(tag.getName(), tag.getColor()));
         // }
-        
+
         // tagPanel.add(createTagDisplay(taskDetails.getExpectedDuration().toString(), Color.BLUE));
+    }
+    
+    /**
+     * @return the taskDetails
+     */
+    public TaskDetails getTaskDetails() {
+        return taskDetails;
     }
     
     public JPanel createTagDisplay(String text, Color bgColor)
