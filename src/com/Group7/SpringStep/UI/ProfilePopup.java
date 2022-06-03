@@ -27,6 +27,7 @@ public class ProfilePopup extends JPanel implements ActionListener
     private String oldEmail;
     private String oldPassword;
     private MainWindow mainWindow;
+    private JButton logOutButton;
 
     public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
     {
@@ -74,12 +75,15 @@ public class ProfilePopup extends JPanel implements ActionListener
             editPasswordButton.setVisible(false);
             editPasswordButton.setBackground(Color.WHITE);
             editPasswordButton.setIcon(editButtonIcon);
-
+            
             JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
             {
                 btnPanel.add(backButton);
                 btnPanel.add(editProfileButton);
             }
+            
+            logOutButton = new JButton("Log out");
+            logOutButton.addActionListener(this);
 
             GridBagConstraints profileWindowConstraints = new GridBagConstraints();
             profileWindowConstraints.weighty = 0;
@@ -147,6 +151,10 @@ public class ProfilePopup extends JPanel implements ActionListener
             profileWindowConstraints.fill = GridBagConstraints.NONE;
             profileWindowConstraints.anchor = GridBagConstraints.CENTER;
             add(btnPanel, profileWindowConstraints);
+
+            profileWindowConstraints.gridy = 6;
+            profileWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
+            add(logOutButton, profileWindowConstraints);
         }
     }
 
@@ -156,21 +164,36 @@ public class ProfilePopup extends JPanel implements ActionListener
         Object eventSource = e.getSource();
         if (eventSource == backButton) 
         {
-            if (!editMode) 
-            {
+            if (!editMode) {
                 popupHandler.hidePopup();
             }
             setEditMode(false);
-        } else if (eventSource == editUsernameButton) {
+        }
+        else if (eventSource == logOutButton) 
+        {
+            int response = JOptionPane.showConfirmDialog(this, "Are you really sure you want to log out?", "Log out?",
+                    JOptionPane.YES_NO_OPTION);
+            if(response == JOptionPane.YES_OPTION)
+            {
+                Utils.moveToNewWindow(mainWindow, new LoginWindow());
+            }
+        }
+        else if (eventSource == editUsernameButton) 
+        {
             JDialog dialog = new EditProfilePropertyDialog("username", usernameField, usernameField.getText());
             dialog.setVisible(true);
-        } else if (eventSource == editEmailButton) {
+        } 
+        else if (eventSource == editEmailButton) 
+        {
             JDialog dialog = new EditProfilePropertyDialog("email", emailField, emailField.getText());
             dialog.setVisible(true);
-        } else if (eventSource == editPasswordButton) {
+        } 
+        else if (eventSource == editPasswordButton) 
+        {
             JDialog dialog = new EditProfilePropertyDialog("password", passwordField);
             dialog.setVisible(true);
-        } else if (eventSource == editProfileButton) 
+        } 
+        else if (eventSource == editProfileButton) 
         {
             if (editMode)
             {
@@ -219,10 +242,7 @@ public class ProfilePopup extends JPanel implements ActionListener
     public void setEditMode(boolean newMode) 
     {
         editMode = newMode;
-        editProfilePictureButton.setVisible(editMode);
-        editUsernameButton.setVisible(editMode);
-        editEmailButton.setVisible(editMode);
-        editPasswordButton.setVisible(editMode);
+        setEditButtonVisibility(editMode);
         if(editMode)
         {
             editProfileButton.setText("Save changes");
