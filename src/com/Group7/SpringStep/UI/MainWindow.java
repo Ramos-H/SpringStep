@@ -9,12 +9,9 @@ import javax.swing.*;
 import javax.swing.Timer;
 
 import com.Group7.SpringStep.*;
-import com.Group7.SpringStep.data.BoardDetails;
-import com.Group7.SpringStep.data.DataManager;
-import com.Group7.SpringStep.data.TaskDetails;
-import com.Group7.SpringStep.data.User;
+import com.Group7.SpringStep.data.*;
 
-public class MainWindow extends JFrame implements ActionListener, AWTEventListener
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener
 {
     private ListPanel toDoPanel;
     private ListPanel doingPanel;
@@ -54,6 +51,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         // Set window parameters
         setTitle("SpringStep");
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(this);
         
         long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
         getToolkit().addAWTEventListener(this, eventMask);
@@ -447,4 +446,28 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void windowClosed(WindowEvent e) 
+    {
+        getToolkit().removeAWTEventListener(this);
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) { }
+
+    @Override
+    public void windowOpened(WindowEvent e) { }
+
+    @Override
+    public void windowIconified(WindowEvent e) { }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) { }
+
+    @Override
+    public void windowActivated(WindowEvent e) { }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) { }
 }
