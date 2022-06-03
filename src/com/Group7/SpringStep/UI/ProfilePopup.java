@@ -21,7 +21,7 @@ public class ProfilePopup extends JPanel implements ActionListener
     private boolean editMode = false;
     private JTextField usernameField;
     private JTextField emailField;
-    private JTextField passwordField;
+    private PasswordTextField passwordField;
     private PopupContainer popupHandler;
     private String oldUsername;
     private String oldEmail;
@@ -42,7 +42,7 @@ public class ProfilePopup extends JPanel implements ActionListener
 
             usernameField = new JTextField();
             emailField = new JTextField();
-            passwordField = new JTextField();
+            passwordField = new PasswordTextField();
 
             backButton = new JButton("Back");
             backButton.setBackground(new Color(215, 204, 195));
@@ -190,7 +190,7 @@ public class ProfilePopup extends JPanel implements ActionListener
         } 
         else if (eventSource == editPasswordButton) 
         {
-            JDialog dialog = new EditProfilePropertyDialog("password", passwordField);
+            JDialog dialog = new EditPasswordDialog(passwordField);
             dialog.setVisible(true);
         } 
         else if (eventSource == editProfileButton) 
