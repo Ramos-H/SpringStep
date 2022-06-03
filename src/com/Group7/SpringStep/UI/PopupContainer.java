@@ -45,6 +45,8 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
             int x = Math.round(contentPane.getWidth() / 2 - currentPopup.getWidth() / 2);
             int y = Math.round(contentPane.getHeight() / 2 - currentPopup.getHeight() / 2);
             currentPopup.setLocation(x, y);
+            revalidate();
+            repaint();
         }
     }
 
@@ -78,6 +80,8 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
             int width = Math.round(contentPane.getWidth() * (widthScale / 100f));
             int height = Math.round(contentPane.getHeight() * (heightScale / 100f));
             currentPopup.setSize(width, height);
+            revalidate();
+            repaint();
         }
     }
 
