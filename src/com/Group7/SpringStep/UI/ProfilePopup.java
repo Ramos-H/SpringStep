@@ -28,6 +28,7 @@ public class ProfilePopup extends JPanel implements ActionListener
     private String oldPassword;
     private MainWindow mainWindow;
     private JButton logOutButton;
+    private boolean passVerified = false;
 
     public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
     {
@@ -231,6 +232,24 @@ public class ProfilePopup extends JPanel implements ActionListener
             }
             else
             {
+                String message = "To make sure it really is you, please enter your password before you make changes.\n";
+                message += "We'll only ask you this once for this session.";
+                while (!passVerified)
+                {
+                    String response = JOptionPane.showInputDialog(this, message);
+                    if (Utils.isTextEmpty(response)) {
+                        JOptionPane.showMessageDialog(null, "Please enter your password",
+                                "Password confirmation unsuccessful",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else if (!response.equals(passwordField.getText())) {
+                        JOptionPane.showMessageDialog(null, "The password you entered is incorrect. \nPlease try again",
+                                "Password confirmation unsuccessful",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        passVerified = true;
+                    }
+                }
+                
                 setEditMode(true);
             }
         }
