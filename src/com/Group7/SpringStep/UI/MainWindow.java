@@ -222,6 +222,19 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 resetMainWindow();
                 setCurrentBoard(newBoard);
             }
+            else if(eventSource == deleteBoardMenuItem)
+            {
+                int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this board?",
+                        "Delete current board?", JOptionPane.YES_NO_OPTION);
+                if (response == JOptionPane.YES_OPTION)
+                {
+                    ArrayList<BoardDetails> boards = currentUser.getBoards();
+                    boards.remove(currentBoard);
+                    setBoards(boards);
+                    resetMainWindow();
+                    setCurrentBoard(boards.get(0));
+                }
+            }
         }
 
         if(eventSource == autosaveTimer)
