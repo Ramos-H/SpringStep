@@ -1,21 +1,26 @@
 package com.Group7.SpringStep.ui;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class TaskNode extends JPanel 
+public class TaskNode extends JPanel implements ActionListener 
 {
     private JTextArea taskNameArea;
     private TaskDetails taskDetails;
     private JPanel tagPanel;
+    private AddTaskPopup taskEditor;
+    private JButton editButton;
 
-    public TaskNode(TaskDetails newDetails)
+    public TaskNode(TaskDetails newDetails, AddTaskPopup editor)
     {
+        taskEditor = editor;
+        
         setLayout(new GridBagLayout());
         setOpaque(true);
         setBackground(Color.WHITE);
@@ -26,6 +31,9 @@ public class TaskNode extends JPanel
 
             tagPanel = new JPanel(new FlowLayout());
             Utils.setDebugVisible(tagPanel, Color.PINK);
+            
+            editButton = new JButton("Edit");
+            editButton.addActionListener(this);
 
             GridBagConstraints taskNodeConstraints = new GridBagConstraints();
             taskNodeConstraints.gridx = 0;
@@ -47,7 +55,7 @@ public class TaskNode extends JPanel
             taskNodeConstraints.gridx = 1;
             taskNodeConstraints.weightx = 0;
             taskNodeConstraints.fill = GridBagConstraints.NONE;
-            add(new JButton("Edit"), taskNodeConstraints);
+            add(editButton, taskNodeConstraints);
         }
         setTaskDetails(newDetails);
     }
@@ -67,6 +75,8 @@ public class TaskNode extends JPanel
 
         taskNameArea.setText(taskDetails.getName());
 
+        tagPanel.removeAll();
+
         if (taskDetails.getDeadline() != null)
             tagPanel.add(createTagDisplay("DL: " + taskDetails.getDeadline().toString(), Color.RED));
 
@@ -77,6 +87,8 @@ public class TaskNode extends JPanel
         // }
 
         // tagPanel.add(createTagDisplay(taskDetails.getExpectedDuration().toString(), Color.BLUE));
+        revalidate();
+        repaint();
     }
     
     /**
@@ -92,5 +104,15 @@ public class TaskNode extends JPanel
         newTagDisplay.setBackground(bgColor);
         newTagDisplay.add(new JLabel(text));
         return newTagDisplay;
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        if(e.getSource() == editButton)
+        {
+            taskEditor.editTask(this);
+        }
     }
 }

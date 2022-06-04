@@ -4,6 +4,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import javax.print.attribute.standard.MediaSize.Other;
+
 public class TaskDetails 
 {
     private String name;
@@ -13,10 +15,12 @@ public class TaskDetails
     private LocalTime expectedDuration;
 
     public TaskDetails() { }
-
-    public TaskDetails(String csv)
+    public TaskDetails(String csv) { parseCsv(csv); }
+    public TaskDetails(TaskDetails source)
     {
-        parseCsv(csv);
+        setName(new String(source.getName()));
+        setDescription(new String(source.getDescription()));
+        setDeadline(source.getDeadline());
     }
 
     // Getters
@@ -73,6 +77,26 @@ public class TaskDetails
     public void removeTag(TagDetails tag) { tags.remove(tag); }
 
     public void removeTagByIndex(int index) { tags.remove(index); }
+
+    @Override
+    public boolean equals(Object obj) 
+    {
+        if(obj == null) { return false; }
+        TaskDetails other = (TaskDetails) obj;
+        boolean nameCheck = getName().equals(other.getName());
+        boolean descriptionCheck = getDescription().equals(other.getDescription());
+        boolean deadlineCheck = false;
+        LocalDate otherDeadline = other.getDeadline();
+        if (otherDeadline != null)
+        {
+            deadlineCheck = getDeadline().equals(other.getDeadline());
+        }
+        else
+        {
+            deadlineCheck = (getDeadline() == otherDeadline);
+        }
+        return nameCheck && descriptionCheck && deadlineCheck;
+    }
 
     public void parseCsv(String csv)
     {

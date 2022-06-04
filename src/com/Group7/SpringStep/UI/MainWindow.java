@@ -25,6 +25,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JButton userButton;
 
     private ProfilePopup profilePopup;
+    private AddTaskPopup taskEditorPopup;
     private PopupContainer popupContainer;
 
     private User currentUser;
@@ -45,6 +46,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
         profilePopup = new ProfilePopup(popupContainer, this);
+        taskEditorPopup = new AddTaskPopup(popupContainer, this);
 
         autosaveTimer = new Timer(1000 * 10, this);
         autosaveTimer.start();
@@ -192,11 +194,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         Object eventSource = e.getSource();
         if(eventSource == toDoAddTaskButton)
         {
-            popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), toDoPanel));
+            taskEditorPopup.addTask(toDoPanel);
         }
         else if(eventSource == doingAddTaskButton)
         {
-            popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), doingPanel));
+            taskEditorPopup.addTask(doingPanel);
         }
 
         if (eventSource == boardListButton)
@@ -206,9 +208,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         if(eventSource == userButton)
         {
-            if (profilePopup == null) {
-                profilePopup = new ProfilePopup(popupContainer, this);
-            }
             popupContainer.setPopup(profilePopup);
         }
 
@@ -489,12 +488,12 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         boardName.setText(currentBoard.getName());
         ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
         for (TaskDetails task : todoList) {
-            toDoPanel.addTaskToList(new TaskNode(task));
+            toDoPanel.addTaskToList(new TaskNode(task, taskEditorPopup));
         }
 
         ArrayList<TaskDetails> doneList = currentBoard.getDoneList();
         for (TaskDetails task : doneList) {
-            donePanel.addTaskToList(new TaskNode(task));
+            donePanel.addTaskToList(new TaskNode(task, taskEditorPopup));
         }
     }
     

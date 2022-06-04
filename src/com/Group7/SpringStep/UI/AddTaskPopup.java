@@ -2,46 +2,51 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.Utils;
-import com.Group7.SpringStep.data.TagDetails;
-import com.Group7.SpringStep.data.TaskDetails;
+import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.*;
 
 import com.github.lgooddatepicker.components.*;
 
 public class AddTaskPopup extends JPanel implements ActionListener 
 {
     private JButton btnSave;
-    private JTextField taskTitleField;
-    private PopupContainer popupHandler;
-    private MainWindow mainWindow;
-    private ListPanel listPanel;
-    private TaskDetails currentTask;
     private JButton addTagButton;
     private JButton btnExit;
     private JButton btnDelete;
-    private JPanel tagPanel;
+
+    private JTextField taskTitleField;
     private JTextArea descriptionArea;
     private DatePicker deadlinePicker;
+    private JPanel tagPanel;
 
-    public AddTaskPopup(PopupContainer popupContainer, MainWindow window, TaskDetails taskToEdit, ListPanel destinationList) 
+    private TaskNode currentTaskNode;
+    private TaskDetails currentTaskDetails;
+    private TaskDetails newTaskDetails;
+    private ListPanel destinationPanel;
+    private boolean editMode;
+
+    private PopupContainer popupHandler;
+    private MainWindow mainWindow;
+
+    public AddTaskPopup(PopupContainer popupContainer, MainWindow window)
     {
-        currentTask = taskToEdit;
         popupHandler = popupContainer;
         mainWindow = window;
-        listPanel = destinationList;
 
         setLayout(new BorderLayout());
         Utils.padJComponent(this, 5, 5, 5, 5);
         {
-            JLabel titleLabel = new JLabel("Task Details");
-            btnExit = new JButton("X");
-            btnExit.setBackground(Color.WHITE);
             JPanel titleBar = new JPanel(new BorderLayout());
             {
+                JLabel titleLabel = new JLabel("Task Details");
+
+                btnExit = new JButton("X");
+                btnExit.addActionListener(this);
+                btnExit.setBackground(Color.WHITE);
+
                 titleBar.add(titleLabel, BorderLayout.CENTER);
                 titleBar.add(btnExit, BorderLayout.LINE_END);
             }
@@ -113,6 +118,7 @@ public class AddTaskPopup extends JPanel implements ActionListener
             JPanel buttonBar = new JPanel(new GridBagLayout());
             {
                 btnDelete = new JButton("Delete");
+                btnDelete.addActionListener(this);
                 btnDelete.setBackground(new Color(215, 204, 195));
                 btnSave = new JButton("Save");
                 btnSave.addActionListener(this);
@@ -133,6 +139,8 @@ public class AddTaskPopup extends JPanel implements ActionListener
             add(titleBar, BorderLayout.PAGE_START);
             add(contentAreaContainer, BorderLayout.CENTER);
             add(buttonBar, BorderLayout.PAGE_END);
+
+            setEditMode(false);
         }
     }
 
@@ -140,28 +148,116 @@ public class AddTaskPopup extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == addTagButton) 
-        {
+        if (eventSource == addTagButton) {
             JDialog newTagDialog = new NewTagDialog(tagPanel);
             newTagDialog.setVisible(true);
-        } else if (eventSource == btnSave) 
-        {
-            if (taskTitleField.getText().trim().equals("")) 
-            {
+        } else if (eventSource == btnSave) {
+            if (taskTitleField.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please add a name for the task", "Error: No name for task",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            currentTask.setName(taskTitleField.getText().trim());
 
-            currentTask.setDescription(descriptionArea.getText().trim());
+            insertChangesIntoNewTaskDetails();
 
-            currentTask.setDeadline(deadlinePicker.getDate());
-
-            TaskNode newTaskNode = new TaskNode(currentTask);
-            listPanel.addTaskToList(newTaskNode);
-            popupHandler.hidePopup();
-            mainWindow.updateTimerBasedOnDoingList();
+            if (editMode) {
+                if (!currentTaskDetails.equals(newTaskDetails)) {
+                    int response = JOptionPane.showConfirmDialog(this,
+                            "Are you sure you want to save your changes?",
+                            "Save changes to task?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (response == JOptionPane.NO_OPTION) {
+                        popupHandler.hidePopup();
+                    } else {
+                        currentTaskNode.setTaskDetails(newTaskDetails);
+                        popupHandler.hidePopup();
+                    }
+                }
+            } else {
+                TaskNode newTaskNode = new TaskNode(newTaskDetails, this);
+                destinationPanel.addTaskToList(newTaskNode);
+                popupHandler.hidePopup();
+                mainWindow.updateTimerBasedOnDoingList();
+            }
+        } else if (eventSource == btnExit) 
+        {
+            insertChangesIntoNewTaskDetails();
+            int response = JOptionPane.YES_OPTION;
+            if (!editMode)
+            {
+                response = JOptionPane.showConfirmDialog(this, "Are you sure you want to discard this new task?",
+                        "Discard new task?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            }
+            else
+            {
+                if (!currentTaskDetails.equals(newTaskDetails)) {
+                    response = JOptionPane.showConfirmDialog(this,
+                            "Are you sure you want to discard your changes to this task?",
+                            "Discard your edits?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                }
+            }
+            
+            if (response == JOptionPane.YES_OPTION)
+            {
+                popupHandler.hidePopup();
+            }
+        } else if (eventSource == btnDelete) 
+        {
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this task?",
+                    "Delete task?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (response == JOptionPane.YES_OPTION)
+            {
+                currentTaskNode.getParent().remove(currentTaskNode);
+                popupHandler.hidePopup();
+            }
         }
+    }
+
+    private void insertChangesIntoNewTaskDetails() {
+        newTaskDetails.setName(taskTitleField.getText().trim());
+        newTaskDetails.setDescription(descriptionArea.getText().trim());
+        newTaskDetails.setDeadline(deadlinePicker.getDate());
+    }
+    
+    public void setEditMode(boolean newValue)
+    {
+        editMode = newValue;
+        btnDelete.setVisible(editMode);
+    }
+    
+    public void addTask(ListPanel destPanel)
+    {
+        clearPopupInput();
+        setEditMode(false);
+        newTaskDetails = new TaskDetails();
+        currentTaskDetails = newTaskDetails;
+        destinationPanel = destPanel;
+        popupHandler.setPopup(this);
+    }
+    
+    public void editTask(TaskNode taskToEdit)
+    {
+        setEditMode(true);
+        currentTaskNode = taskToEdit;
+        currentTaskDetails = currentTaskNode.getTaskDetails();
+        newTaskDetails = new TaskDetails(currentTaskDetails);
+        updatePopupInput();
+        popupHandler.setPopup(this);
+    }
+
+    public void updatePopupInput()
+    {
+        taskTitleField.setText(currentTaskDetails.getName());
+        descriptionArea.setText(currentTaskDetails.getDescription());
+        deadlinePicker.setDate(currentTaskDetails.getDeadline());
+    }
+    
+    public void clearPopupInput()
+    {
+        taskTitleField.setText("");
+        descriptionArea.setText("");
+        deadlinePicker.clear();
+        currentTaskDetails = null;
+        currentTaskNode = null;
+        newTaskDetails = null;
     }
 }
