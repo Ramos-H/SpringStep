@@ -214,8 +214,33 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             if(eventSource == createBoardMenuItem)
             {
-                saveUserData();
-                BoardDetails newBoard = new BoardDetails("Newer board" + currentUser.getBoards().size());
+                String response = null;
+                do
+                {
+                    response = JOptionPane.showInputDialog(this, "Please give a name for the new board",
+                            "New board");
+                    if(response.trim().equals(""))
+                    {
+                        String warningTitle = "Warning: Can't create nameless board";
+                        String warningMessage = "Please enter a name for the new board.";
+                        JOptionPane.showMessageDialog(this, warningMessage, warningTitle, JOptionPane.WARNING_MESSAGE);
+                    }
+
+                    ArrayList<BoardDetails> boards = currentUser.getBoards();
+                    for (BoardDetails boardDetails : boards) 
+                    {
+                        if(boardDetails.getName().equals(response))
+                        {
+                            String warningTitle = "Warning: Board name already taken";
+                            String warningMessage = "That name is already taken. Please enter a different name";
+                            JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
+                                    JOptionPane.WARNING_MESSAGE);
+                            response = null;
+                        }
+                    }
+                } while (Utils.isTextEmpty(response));
+
+                BoardDetails newBoard = new BoardDetails(response);
                 ArrayList<BoardDetails> boards = currentUser.getBoards();
                 boards.add(newBoard);
                 updateBoardList();
@@ -427,6 +452,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     public void setCurrentBoard(BoardDetails newBoard)
     {
+        saveUserData();
         currentBoard = newBoard;
         resetMainWindow();
         boardName.setText(currentBoard.getName());
@@ -439,7 +465,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         for (TaskDetails task : doneList) {
             donePanel.addTaskToList(new TaskNode(task));
         }
-        saveUserData();
     }
     
     public void updateBoardList()
@@ -509,6 +534,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     public void saveUserData()
     {
+        if (currentBoard == null)
+        {
+            return;
+        }
+
         saveTasksToBoard();
         DataManager dataManager = new DataManager();
         try 
