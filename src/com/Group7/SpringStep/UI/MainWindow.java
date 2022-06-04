@@ -2,7 +2,7 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.time.LocalTime;
 import java.util.*;
 
 import javax.swing.*;
@@ -218,7 +218,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 BoardDetails newBoard = new BoardDetails("Newer board" + currentUser.getBoards().size());
                 ArrayList<BoardDetails> boards = currentUser.getBoards();
                 boards.add(newBoard);
-                setBoards(boards);
+                updateBoardList();
                 resetMainWindow();
                 setCurrentBoard(newBoard);
             }
@@ -230,7 +230,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 {
                     ArrayList<BoardDetails> boards = currentUser.getBoards();
                     boards.remove(currentBoard);
-                    setBoards(boards);
+                    updateBoardList();
                     resetMainWindow();
                     setCurrentBoard(boards.get(0));
                 }
@@ -410,7 +410,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         currentUser = newUser;
         ArrayList<BoardDetails> boards = currentUser.getBoards();
         setCurrentBoard(boards.get(0));
-        setBoards(boards);
+        updateBoardList();
 
         profilePopup.setUser(currentUser);
     }
@@ -430,14 +430,15 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
     }
     
-    public void setBoards(ArrayList<BoardDetails> boardList)
+    public void updateBoardList()
     {
         if (boardOptionsMenu.getComponentCount() > 0)
         {
             boardOptionsMenu.removeAll();
         }
 
-        for (BoardDetails boardDetails : boardList) 
+        ArrayList<BoardDetails> boards = currentUser.getBoards();
+        for (BoardDetails boardDetails : boards) 
         {
             JMenuItem newBoardEntry = new JMenuItem(boardDetails.getName());
             newBoardEntry.addActionListener(this);
@@ -492,8 +493,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
             currentBoard.setDoneList(doneListSave);
         }
-
-        System.out.println();
     }
 
     public void saveUserData()
@@ -507,6 +506,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             e.printStackTrace();
         }
+        System.out.println("Saved user data: " + LocalTime.now().toString());
     }
 
     @Override
