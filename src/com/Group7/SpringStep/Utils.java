@@ -52,6 +52,29 @@ public class Utils
         oldWindow.dispose();
     }
 
+    public static void scaleByPercentage(Component comp, Rectangle basis, float widthPercent, float heightPercent)
+    {
+        widthPercent = Math.min(100f, Math.max(widthPercent, 0f));
+        heightPercent = Math.min(100f, Math.max(heightPercent, 0f));
+        int basisWidth = (int) basis.getWidth();
+        int basisHeight = (int) basis.getHeight();
+
+        int width = Math.round(basisWidth * (widthPercent / 100f));
+        int height = Math.round(basisHeight * (heightPercent / 100f));
+        comp.setSize(width, height);
+        comp.revalidate();
+        comp.repaint();
+    }
+
+    public static void centerByRect(Component comp, int basisWidth, int basisHeight) 
+    {
+        int x = Math.round(basisWidth / 2 - comp.getWidth() / 2);
+        int y = Math.round(basisHeight / 2 - comp.getHeight() / 2);
+        comp.setLocation(x, y);
+        comp.revalidate();
+        comp.repaint();
+    }
+
     public static boolean isTextEmpty(String text) 
     {
         return text == null || text.trim().equals("");

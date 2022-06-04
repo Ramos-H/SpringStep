@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import com.Group7.SpringStep.*;
+
 public class PopupContainer extends JPanel implements ComponentListener, MouseListener
 {
     Container contentPane;
@@ -42,9 +44,7 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
     {
         if(currentPopup != null)
         {
-            int x = Math.round(contentPane.getWidth() / 2 - currentPopup.getWidth() / 2);
-            int y = Math.round(contentPane.getHeight() / 2 - currentPopup.getHeight() / 2);
-            currentPopup.setLocation(x, y);
+            Utils.centerByRect(currentPopup, contentPane.getWidth(), contentPane.getHeight());
             revalidate();
             repaint();
         }
@@ -75,11 +75,7 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
     {
         if(currentPopup != null)
         {
-            float widthScale = 40f;
-            float heightScale = 80f;
-            int width = Math.round(contentPane.getWidth() * (widthScale / 100f));
-            int height = Math.round(contentPane.getHeight() * (heightScale / 100f));
-            currentPopup.setSize(width, height);
+            Utils.scaleByPercentage(currentPopup, contentPane.getSize(), 40, 80);
             revalidate();
             repaint();
         }
