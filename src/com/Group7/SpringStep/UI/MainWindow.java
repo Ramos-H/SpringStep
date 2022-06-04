@@ -219,20 +219,30 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 ArrayList<BoardDetails> boards = currentUser.getBoards();
                 boards.add(newBoard);
                 updateBoardList();
-                resetMainWindow();
                 setCurrentBoard(newBoard);
             }
             else if(eventSource == deleteBoardMenuItem)
             {
                 int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this board?",
                         "Delete current board?", JOptionPane.YES_NO_OPTION);
-                if (response == JOptionPane.YES_OPTION)
-                {
+                if (response == JOptionPane.YES_OPTION) {
                     ArrayList<BoardDetails> boards = currentUser.getBoards();
                     boards.remove(currentBoard);
                     updateBoardList();
-                    resetMainWindow();
                     setCurrentBoard(boards.get(0));
+                }
+            }
+            else
+            {
+                JMenuItem selectedBoard = (JMenuItem) eventSource;
+                ArrayList<BoardDetails> boards = currentUser.getBoards();
+                for (BoardDetails boardDetails : boards) 
+                {
+                    if(selectedBoard.getText().equals(boardDetails.getName()))
+                    {
+                        setCurrentBoard(boardDetails);
+                        break;
+                    }
                 }
             }
         }
@@ -418,6 +428,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void setCurrentBoard(BoardDetails newBoard)
     {
         currentBoard = newBoard;
+        resetMainWindow();
         boardName.setText(currentBoard.getName());
         ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
         for (TaskDetails task : todoList) {
@@ -428,6 +439,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         for (TaskDetails task : doneList) {
             donePanel.addTaskToList(new TaskNode(task));
         }
+        saveUserData();
     }
     
     public void updateBoardList()
