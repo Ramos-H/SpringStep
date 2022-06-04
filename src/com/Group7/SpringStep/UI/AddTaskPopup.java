@@ -148,10 +148,11 @@ public class AddTaskPopup extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == addTagButton) {
-            JDialog newTagDialog = new NewTagDialog(tagPanel);
-            newTagDialog.setVisible(true);
-        } else if (eventSource == btnSave) {
+        // if (eventSource == addTagButton) {
+        //     JDialog newTagDialog = new NewTagDialog(tagPanel);
+        //     newTagDialog.setVisible(true);
+        // } 
+        if (eventSource == btnSave) {
             if (taskTitleField.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please add a name for the task", "Error: No name for task",
                         JOptionPane.ERROR_MESSAGE);
