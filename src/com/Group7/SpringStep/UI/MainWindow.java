@@ -558,7 +558,10 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     }
 
     @Override
-    public void windowClosing(WindowEvent e) { }
+    public void windowClosing(WindowEvent e) 
+    {
+        getToolkit().removeAWTEventListener(this);
+    }
     
     @Override
     public void windowOpened(WindowEvent e) { }
@@ -574,4 +577,9 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     
     @Override
     public void windowDeactivated(WindowEvent e) { }
+
+    public void logOut() 
+    {
+        getToolkit().removeAWTEventListener(this);
+    }
 }

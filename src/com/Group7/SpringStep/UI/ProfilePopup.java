@@ -176,7 +176,7 @@ public class ProfilePopup extends JPanel implements ActionListener
                     JOptionPane.YES_NO_OPTION);
             if(response == JOptionPane.YES_OPTION)
             {
-                Utils.moveToNewWindow(mainWindow, new LoginWindow());
+                mainWindow.logOut();
             }
         }
         else if (eventSource == editUsernameButton) 
