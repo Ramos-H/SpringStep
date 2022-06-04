@@ -13,7 +13,6 @@ public class ProfilePopup extends JPanel implements ActionListener
 {
     private JButton editProfileButton;
     private JButton backButton;
-    private JButton editProfilePictureButton;
     private JButton editUsernameButton;
     private JButton editEmailButton;
     private JButton editPasswordButton;
@@ -38,8 +37,6 @@ public class ProfilePopup extends JPanel implements ActionListener
         setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
         {
             JLabel profileLabel = new JLabel("User Profile");
-            JLabel iconProfile = new JLabel();
-            iconProfile.setIcon(new ImageIcon(App.resources.get("profileIcon.png")));
 
             usernameField = new JTextField();
             emailField = new JTextField();
@@ -54,11 +51,6 @@ public class ProfilePopup extends JPanel implements ActionListener
             editProfileButton.addActionListener(this);
 
             // for the edit buttons
-            editProfilePictureButton = new JButton();
-            editProfilePictureButton.setBackground(Color.WHITE);
-            editProfilePictureButton.setVisible(false);
-            editProfilePictureButton.setIcon(editButtonIcon);
-
             editUsernameButton = new JButton();
             editUsernameButton.addActionListener(this);
             editUsernameButton.setVisible(false);
@@ -94,27 +86,18 @@ public class ProfilePopup extends JPanel implements ActionListener
             profileWindowConstraints.gridwidth = 2; // to center the label
             add(profileLabel, profileWindowConstraints);
 
-            profileWindowConstraints.gridy = 1;
-            profileWindowConstraints.fill = GridBagConstraints.NONE;
-            add(iconProfile, profileWindowConstraints);
-
             // for the edit buttons
-            profileWindowConstraints.gridx = 1;
-            profileWindowConstraints.gridy = 1;
-            profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_END;
-            add(editProfilePictureButton, profileWindowConstraints);
-
             profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
             profileWindowConstraints.gridx = 2;
-            profileWindowConstraints.gridy = 2;
+            profileWindowConstraints.gridy = 1;
             add(editUsernameButton, profileWindowConstraints);
 
             profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            profileWindowConstraints.gridy = 3;
+            profileWindowConstraints.gridy = 2;
             add(editEmailButton, profileWindowConstraints);
 
             profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            profileWindowConstraints.gridy = 4;
+            profileWindowConstraints.gridy = 3;
             add(editPasswordButton, profileWindowConstraints);
 
             // jlabels
@@ -276,7 +259,6 @@ public class ProfilePopup extends JPanel implements ActionListener
 
     private void setEditButtonVisibility(boolean isVisible) 
     {
-        editProfilePictureButton.setVisible(isVisible);
         editUsernameButton.setVisible(isVisible);
         editEmailButton.setVisible(isVisible);
         editPasswordButton.setVisible(isVisible);
