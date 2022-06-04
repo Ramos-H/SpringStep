@@ -52,7 +52,7 @@ public class Utils
         oldWindow.dispose();
     }
 
-    public static void scaleByPercentage(Component comp, Rectangle basis, float widthPercent, float heightPercent)
+    public static void scaleByPercentage(Component comp, Dimension basis, float widthPercent, float heightPercent)
     {
         widthPercent = Math.min(100f, Math.max(widthPercent, 0f));
         heightPercent = Math.min(100f, Math.max(heightPercent, 0f));
