@@ -126,20 +126,22 @@ public class ListPanel extends JPanel
     {
         int taskNodeCount = internalListContainer.getComponentCount();
         ArrayList<TaskNode> taskNodes = new ArrayList<>(taskNodeCount);
-        if(taskNodeCount < 1)
-        {
+        if (taskNodeCount < 1) {
             return taskNodes;
         }
-        
+
         Component[] components = internalListContainer.getComponents();
-        for (Object currentObject : components) 
-        {
-            if (currentObject instanceof TaskNode) 
-            {
+        for (Object currentObject : components) {
+            if (currentObject instanceof TaskNode) {
                 taskNodes.add((TaskNode) currentObject);
             }
         }
-        
+
         return taskNodes;
+    }
+    
+    public void clear()
+    {
+        internalListContainer.removeAll();
     }
 }

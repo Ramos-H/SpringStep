@@ -13,35 +13,35 @@ import com.Group7.SpringStep.data.*;
 
 public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener
 {
-    private ListPanel toDoPanel;
-    private ListPanel doingPanel;
-    private ListPanel donePanel;
-    private JButton toDoAddTaskButton;
-    private JButton doingAddTaskButton;
-    private JButton doneAddTaskButton;
-
-    private ListPanel previousPanel = null;
-    private ListPanel hoveredPanel = null;
-    private TaskNode hoveredTask = null;
-    private TaskNode heldTask = null;
-
-    private Point oldMouseScreenPosition = new Point();
-    private Point newMouseScreenPosition = new Point();
+    private ListPanel toDoPanel, doingPanel, donePanel;
+    private JButton toDoAddTaskButton, doingAddTaskButton;
+    
+    private TaskNode heldTask, hoveredTask;
+    private ListPanel hoveredPanel, previousPanel;
     private Point mouseDelta = new Point();
-    private ArrayList<TaskNode> taskNodes;
+    private Point oldMouseScreenPosition = new Point();
+
     private TimerPanel timerPanel;
     private JButton userButton;
-    private PopupContainer popupContainer;
+
     private ProfilePopup profilePopup;
+    private PopupContainer popupContainer;
 
     private User currentUser;
+
+    private JLabel boardName;
     private BoardDetails currentBoard;
-    private JLabel windowTitle;
+    private JButton boardListButton;
+    private JPopupMenu boardOptionsMenu;
 
     private Timer autosaveTimer;
+    private JMenuItem createBoardMenuItem;
+    private JMenuItem renameBoardMenuItem;
+    private JMenuItem deleteBoardMenuItem;
 
     public MainWindow()
     {
+        boardOptionsMenu = new JPopupMenu();
         popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
         profilePopup = new ProfilePopup(popupContainer, this);
@@ -73,10 +73,12 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             // Put nested components here
             JPanel topBar = new JPanel(new GridBagLayout());
             {
-                windowTitle = new JLabel();
-                windowTitle.setHorizontalAlignment(SwingConstants.CENTER);
+                boardName = new JLabel();
+                boardName.setHorizontalAlignment(SwingConstants.CENTER);
 
-                JButton boardListButton = new JButton("v");
+                boardListButton = new JButton("v");
+                boardListButton.addActionListener(this);
+
                 userButton = new JButton("User");
                 userButton.addActionListener(this);
 
@@ -85,7 +87,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
                 titleBarConstraints.gridx = 0;
                 titleBarConstraints.anchor = GridBagConstraints.EAST;
-                topBar.add(windowTitle, titleBarConstraints);
+                topBar.add(boardName, titleBarConstraints);
 
                 titleBarConstraints.anchor = GridBagConstraints.WEST;
                 titleBarConstraints.gridx = 1;
@@ -142,8 +144,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     Utils.padJComponent(doingPanel, 5, 5, 5, 5);
 
                     donePanel = new ListPanel("Done", "Drag a task from \"To Do\" or \"Doing\"", Color.YELLOW);
-                    doneAddTaskButton = donePanel.getAddTaskButton();
-                    doneAddTaskButton.setVisible(false);
+                    donePanel.getAddTaskButton().setVisible(false);
+
                     Utils.padJComponent(donePanel, 5, 5, 5, 5);
 
                     boardPanel.add(toDoPanel);
@@ -195,6 +197,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             popupContainer.setPopup(new AddTaskPopup(popupContainer, this, new TaskDetails(), doingPanel));
         }
 
+        if (eventSource == boardListButton)
+        {
+            boardOptionsMenu.show(boardListButton.getParent(), boardListButton.getX() + boardListButton.getWidth(), boardListButton.getY() + boardListButton.getHeight());
+        }
+
         if(eventSource == userButton)
         {
             if (profilePopup == null) {
@@ -202,7 +209,21 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
             popupContainer.setPopup(profilePopup);
         }
-        
+
+        if (eventSource instanceof JMenuItem)
+        {
+            if(eventSource == createBoardMenuItem)
+            {
+                saveUserData();
+                BoardDetails newBoard = new BoardDetails("Newer board" + currentUser.getBoards().size());
+                ArrayList<BoardDetails> boards = currentUser.getBoards();
+                boards.add(newBoard);
+                setBoards(boards);
+                resetMainWindow();
+                setCurrentBoard(newBoard);
+            }
+        }
+
         if(eventSource == autosaveTimer)
         {
             saveUserData();
@@ -213,32 +234,26 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void eventDispatched(AWTEvent caughtEvent) 
     {
         int eventId = caughtEvent.getID();
-        newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
-        taskNodes = new ArrayList<>();
+        Point newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
+        ArrayList<TaskNode> taskNodes = new ArrayList<>();
         {
-            if(Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel))
-            {
+            if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel)) {
                 hoveredPanel = toDoPanel;
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) 
-            {
+                taskNodes.addAll(toDoPanel.getTaskNodes());
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) {
                 hoveredPanel = doingPanel;
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) 
-            {
+                taskNodes.addAll(doingPanel.getTaskNodes());
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) {
                 hoveredPanel = donePanel;
-            } else 
-            {
+                taskNodes.addAll(donePanel.getTaskNodes());
+            } else {
                 hoveredPanel = null;
             }
         }
-        
+
         {
-            taskNodes.addAll(toDoPanel.getTaskNodes());
-            taskNodes.addAll(doingPanel.getTaskNodes());
-            taskNodes.addAll(donePanel.getTaskNodes());
-            
             hoveredTask = null;
-            for (TaskNode taskNode : taskNodes) 
-            {
+            for (TaskNode taskNode : taskNodes) {
                 if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) {
                     hoveredTask = taskNode;
                     break;
@@ -247,13 +262,10 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
 
         boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
-        if (eventIsntFromButton && !popupContainer.isVisible()) 
-        {
-            switch (eventId) 
-            {
+        if (eventIsntFromButton && !popupContainer.isVisible()) {
+            switch (eventId) {
                 case MouseEvent.MOUSE_PRESSED:
-                    if (hoveredTask == null) 
-                    {
+                    if (hoveredTask == null) {
                         break;
                     }
 
@@ -275,18 +287,14 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     heldTask.setBounds(heldTaskBounds);
                     break;
                 case MouseEvent.MOUSE_RELEASED:
-                    if (heldTask == null) 
-                    {
+                    if (heldTask == null) {
                         break;
                     }
 
                     getLayeredPane().remove(heldTask);
-                    if(hoveredPanel == null)
-                    {
+                    if (hoveredPanel == null) {
                         previousPanel.addTaskToList(heldTask);
-                    }
-                    else
-                    {
+                    } else {
                         hoveredPanel.addTaskToList(heldTask);
                         updateTimerBasedOnDoingList();
                     }
@@ -297,15 +305,13 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     break;
             }
         }
-        
-        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED)
-        {
+
+        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED) {
             revalidate();
             repaint();
         }
 
-        if (heldTask != null)
-        {
+        if (heldTask != null) {
             Point currentLocation = heldTask.getLocation();
             heldTask.setLocation(new Point(currentLocation.x + mouseDelta.x, currentLocation.y + mouseDelta.y));
         }
@@ -316,6 +322,18 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         oldMouseScreenPosition = newMouseScreenPosition;
 
         // updateDebugDetails();
+    }
+    
+    public void resetMainWindow()
+    {
+        // reset timer
+        timerPanel.setWorkMode(true);
+        timerPanel.resetTimer();
+        // clear task lists
+        toDoPanel.clear();
+        doingPanel.clear();
+        donePanel.clear();
+
     }
 
     public void updateTimerBasedOnDoingList() 
@@ -377,25 +395,55 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void setUser(User newUser)
     {
         currentUser = newUser;
-        setCurrentBoard(currentUser.getBoards().get(0));
+        ArrayList<BoardDetails> boards = currentUser.getBoards();
+        setCurrentBoard(boards.get(0));
+        setBoards(boards);
+
         profilePopup.setUser(currentUser);
     }
 
     public void setCurrentBoard(BoardDetails newBoard)
     {
         currentBoard = newBoard;
-        windowTitle.setText(currentBoard.getName());
+        boardName.setText(currentBoard.getName());
         ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
-        for (TaskDetails task : todoList) 
-        {
+        for (TaskDetails task : todoList) {
             toDoPanel.addTaskToList(new TaskNode(task));
         }
 
         ArrayList<TaskDetails> doneList = currentBoard.getDoneList();
-        for (TaskDetails task : doneList) 
-        {
+        for (TaskDetails task : doneList) {
             donePanel.addTaskToList(new TaskNode(task));
         }
+    }
+    
+    public void setBoards(ArrayList<BoardDetails> boardList)
+    {
+        if (boardOptionsMenu.getComponentCount() > 0)
+        {
+            boardOptionsMenu.removeAll();
+        }
+
+        for (BoardDetails boardDetails : boardList) 
+        {
+            JMenuItem newBoardEntry = new JMenuItem(boardDetails.getName());
+            newBoardEntry.addActionListener(this);
+            boardOptionsMenu.add(newBoardEntry);
+        }
+
+        boardOptionsMenu.add(new JPopupMenu.Separator());
+
+        createBoardMenuItem = new JMenuItem("Create board...");
+        createBoardMenuItem.addActionListener(this);
+        boardOptionsMenu.add(createBoardMenuItem);
+
+        renameBoardMenuItem = new JMenuItem("Rename board");
+        renameBoardMenuItem.addActionListener(this);
+        boardOptionsMenu.add(renameBoardMenuItem);
+
+        deleteBoardMenuItem = new JMenuItem("Delete board");
+        deleteBoardMenuItem.addActionListener(this);
+        boardOptionsMenu.add(deleteBoardMenuItem);
     }
 
     public void saveTasksToBoard()
@@ -439,10 +487,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     {
         saveTasksToBoard();
         DataManager dataManager = new DataManager();
-        try {
+        try 
+        {
             dataManager.saveUserData(currentUser, true);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
+        } catch (Exception e) 
+        {
             e.printStackTrace();
         }
     }
@@ -455,19 +504,19 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     @Override
     public void windowClosing(WindowEvent e) { }
-
+    
     @Override
     public void windowOpened(WindowEvent e) { }
 
     @Override
     public void windowIconified(WindowEvent e) { }
-
+    
     @Override
     public void windowDeiconified(WindowEvent e) { }
-
+    
     @Override
     public void windowActivated(WindowEvent e) { }
-
+    
     @Override
     public void windowDeactivated(WindowEvent e) { }
 }

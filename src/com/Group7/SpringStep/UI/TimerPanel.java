@@ -82,6 +82,27 @@ public class TimerPanel extends JPanel implements ActionListener
         }
         timerLabel.setText(Utils.formatTime(remainingTime));
     }
+
+    /**
+     * @param workMode the workMode to set
+     */
+    public void setWorkMode(boolean newWorkMode) 
+    {
+        workMode = newWorkMode;
+        if (workMode) {
+            timerLabel.setForeground(Color.RED);
+            remainingTime = DEFAULT_WORK_DURATION;
+        } else {
+            timerLabel.setForeground(Color.GREEN);
+            remainingTime = DEFAULT_BREAK_DURATION;
+        }
+        timerLabel.setText(Utils.formatTime(remainingTime));
+    }
+
+    public boolean getWorkMode()
+    {
+        return workMode;
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) 
@@ -94,18 +115,8 @@ public class TimerPanel extends JPanel implements ActionListener
                 remainingTime = remainingTime.minusSeconds(timerTick);
             } else 
             {
-                if (workMode) 
-                {
-                    timerLabel.setForeground(Color.GREEN);
-                    remainingTime = DEFAULT_BREAK_DURATION;
-                } else 
-                {
-                    timerLabel.setForeground(Color.RED);
-                    remainingTime = DEFAULT_WORK_DURATION;
-                }
-                workMode = !workMode;
+                setWorkMode(!getWorkMode());
             }
-            timerLabel.setText(Utils.formatTime(remainingTime));
         }
         
         if (eventSource == startStopTimerButton) 
