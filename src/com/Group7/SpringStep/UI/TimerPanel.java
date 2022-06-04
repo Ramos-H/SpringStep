@@ -113,6 +113,7 @@ public class TimerPanel extends JPanel implements ActionListener
             if (!remainingTime.equals(LocalTime.MIN)) 
             {
                 remainingTime = remainingTime.minusSeconds(timerTick);
+                timerLabel.setText(Utils.formatTime(remainingTime));
             } else 
             {
                 setWorkMode(!getWorkMode());
