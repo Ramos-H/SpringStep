@@ -48,7 +48,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         profilePopup = new ProfilePopup(popupContainer, this);
         taskEditorPopup = new AddTaskPopup(popupContainer, this);
 
-        autosaveTimer = new Timer(1000 * 10, this);
+        autosaveTimer = new Timer(500, this);
         autosaveTimer.start();
 
         // Set window parameters
