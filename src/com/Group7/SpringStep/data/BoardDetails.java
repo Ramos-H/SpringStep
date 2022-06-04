@@ -77,7 +77,7 @@ public class BoardDetails
         {
             for (TaskDetails taskDetails : todoList) 
             {
-                boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+                boardOutput += taskDetails.getAsCsv() + "\n";
             }
         }
 
@@ -85,7 +85,7 @@ public class BoardDetails
         {
             for (TaskDetails taskDetails : doneList) 
             {
-                boardOutput += taskDetails.getCsvFormattedInfo() + "\n";
+                boardOutput += taskDetails.getAsCsv() + "\n";
             }
         }
         

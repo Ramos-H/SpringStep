@@ -12,6 +12,13 @@ public class TaskDetails
     private LocalDate deadline;
     private LocalTime expectedDuration;
 
+    public TaskDetails() { }
+
+    public TaskDetails(String csv)
+    {
+        parseCsv(csv);
+    }
+
     // Getters
     /**
      * @return the name
@@ -67,7 +74,27 @@ public class TaskDetails
 
     public void removeTagByIndex(int index) { tags.remove(index); }
 
-    public String getCsvFormattedInfo() 
+    public void parseCsv(String csv)
+    {
+        String[] currentTaskData = csv.split(",");
+
+        // Name
+        setName(currentTaskData[0]);
+
+        // Description
+        if (!currentTaskData[1].equals("NULL")) 
+        {
+            setDescription(currentTaskData[1]);
+        }
+
+        // Deadline
+        if (!currentTaskData[2].equals("NULL")) 
+        {
+            setDeadline(LocalDate.parse(currentTaskData[2]));
+        }
+    }
+
+    public String getAsCsv() 
     {
         
         final String DEFAULT_VALUE = "NULL";

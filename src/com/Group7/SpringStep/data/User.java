@@ -44,23 +44,9 @@ public class User
             // Read TO DO tasks
             int toDoCount = Integer.parseInt(currentBoardData[1]);
             ArrayList<TaskDetails> newTodoList = new ArrayList<>(toDoCount);
-            for (int toDoIndex = 0; toDoIndex < toDoCount; toDoIndex++, readOffset++) {
-                TaskDetails newTask = new TaskDetails();
-                String[] currentTaskData = csvInput.get(readOffset).split(",");
-
-                // Name
-                newTask.setName(currentTaskData[0]);
-
-                // Description
-                if (!currentTaskData[1].equals("NULL")) {
-                    newTask.setDescription(currentTaskData[1]);
-                }
-
-                // Deadline
-                if (!currentTaskData[2].equals("NULL")) {
-                    newTask.setDeadline(LocalDate.parse(currentTaskData[2]));
-                }
-                
+            for (int toDoIndex = 0; toDoIndex < toDoCount; toDoIndex++, readOffset++) 
+            {
+                TaskDetails newTask = new TaskDetails(csvInput.get(readOffset));
                 newTodoList.add(newTask);
             }
             newBoard.setTodoList(newTodoList);
@@ -68,24 +54,9 @@ public class User
             // Read DONE tasks
             int doneCount = Integer.parseInt(currentBoardData[2]);
             ArrayList<TaskDetails> newDoneList = new ArrayList<>(doneCount);
-            for (int doneIndex = 0; doneIndex < doneCount; doneIndex++, readOffset++) {
-                TaskDetails newTask = new TaskDetails();
-                String[] currentTaskData = csvInput.get(readOffset).split(",");
-
-                // Name
-                newTask.setName(currentTaskData[0]);
-
-                // Description
-                if (!currentTaskData[1].equals("NULL")) {
-                    newTask.setDescription(currentTaskData[1]);
-                }
-
-                // Deadline
-                if (!currentTaskData[2].equals("NULL")) {
-                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/YYYY");
-                    newTask.setDeadline(LocalDate.parse(currentTaskData[2], dateFormatter));
-                }
-
+            for (int doneIndex = 0; doneIndex < doneCount; doneIndex++, readOffset++) 
+            {
+                TaskDetails newTask = new TaskDetails(csvInput.get(readOffset));
                 newDoneList.add(newTask);
             }
             newBoard.setDoneList(newDoneList);
