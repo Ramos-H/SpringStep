@@ -1,6 +1,6 @@
 package com.Group7.SpringStep.data;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class BoardDetails 
 {
@@ -67,7 +67,29 @@ public class BoardDetails
         doneList = newDoneList;
     }
 
-    public String getCsvFormattedValues()
+    public void parseTasksFromCsv(List<String> csvs, int toDoCount, int doneCount)
+    {
+        int readOffset = 0;
+        // Read TO DO tasks
+        ArrayList<TaskDetails> newTodoList = new ArrayList<>(toDoCount);
+        for (int toDoIndex = 0; toDoIndex < toDoCount; toDoIndex++, readOffset++) 
+        {
+            TaskDetails newTask = new TaskDetails(csvs.get(readOffset));
+            newTodoList.add(newTask);
+        }
+        setTodoList(newTodoList);
+
+        // Read DONE tasks
+        ArrayList<TaskDetails> newDoneList = new ArrayList<>(doneCount);
+        for (int doneIndex = 0; doneIndex < doneCount; doneIndex++, readOffset++) 
+        {
+            TaskDetails newTask = new TaskDetails(csvs.get(readOffset));
+            newDoneList.add(newTask);
+        }
+        setDoneList(newDoneList);
+    }
+
+    public String formatAsCsv()
     {
         int todoCount = todoList.size();
         int doneCount = doneList.size();

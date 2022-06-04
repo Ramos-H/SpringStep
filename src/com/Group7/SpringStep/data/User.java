@@ -1,12 +1,6 @@
 package com.Group7.SpringStep.data;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.Group7.SpringStep.Utils;
+import java.util.*;
 
 public class User 
 {
@@ -35,31 +29,18 @@ public class User
         int boardCount = Integer.parseInt(userData[3]);
         ArrayList<BoardDetails> newBoardList = new ArrayList<>();
         int readOffset = 1;
-        for (int boardIndex = 0; boardIndex < boardCount; boardIndex++, readOffset++)
+        for (int boardIndex = 0; boardIndex < boardCount; boardIndex++)
         {
             String[] currentBoardData = csvInput.get(readOffset).split(",");
-            readOffset++;
             BoardDetails newBoard = new BoardDetails(currentBoardData[0]);
+            readOffset++;
 
-            // Read TO DO tasks
             int toDoCount = Integer.parseInt(currentBoardData[1]);
-            ArrayList<TaskDetails> newTodoList = new ArrayList<>(toDoCount);
-            for (int toDoIndex = 0; toDoIndex < toDoCount; toDoIndex++, readOffset++) 
-            {
-                TaskDetails newTask = new TaskDetails(csvInput.get(readOffset));
-                newTodoList.add(newTask);
-            }
-            newBoard.setTodoList(newTodoList);
-
-            // Read DONE tasks
             int doneCount = Integer.parseInt(currentBoardData[2]);
-            ArrayList<TaskDetails> newDoneList = new ArrayList<>(doneCount);
-            for (int doneIndex = 0; doneIndex < doneCount; doneIndex++, readOffset++) 
-            {
-                TaskDetails newTask = new TaskDetails(csvInput.get(readOffset));
-                newDoneList.add(newTask);
-            }
-            newBoard.setDoneList(newDoneList);
+            int totalTasksCount = toDoCount + doneCount;
+            List<String> subList = csvInput.subList(readOffset, readOffset + totalTasksCount);
+            newBoard.parseTasksFromCsv(subList, toDoCount, doneCount);
+            readOffset += totalTasksCount;
 
             newBoardList.add(newBoard);
         }
@@ -118,7 +99,7 @@ public class User
         String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
         for (BoardDetails board : boards) 
         {
-            output += board.getCsvFormattedValues();
+            output += board.formatAsCsv();
         }
         return output;
     }
