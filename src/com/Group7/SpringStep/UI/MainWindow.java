@@ -53,7 +53,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         setTitle("SpringStep");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(this);
-        
+
         long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
         getToolkit().addAWTEventListener(this, eventMask);
 
@@ -184,6 +184,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
     }
 
+    
+    // --------------------------------------------EVENT HANDLERS----------------------------------
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -371,7 +373,36 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         // updateDebugDetails();
     }
+
+    @Override
+    public void windowClosed(WindowEvent e) 
+    {
+        getToolkit().removeAWTEventListener(this);
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) 
+    {
+        getToolkit().removeAWTEventListener(this);
+    }
     
+    @Override
+    public void windowOpened(WindowEvent e) { }
+
+    @Override
+    public void windowIconified(WindowEvent e) { }
+    
+    @Override
+    public void windowDeiconified(WindowEvent e) { }
+    
+    @Override
+    public void windowActivated(WindowEvent e) { }
+    
+    @Override
+    public void windowDeactivated(WindowEvent e) { }
+
+
+    // --------------------------------------------MAIN WINDOW FUNCTIONS----------------------------------
     public void resetMainWindow()
     {
         // reset timer
@@ -551,35 +582,9 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         System.out.println("Saved user data: " + LocalTime.now().toString());
     }
 
-    @Override
-    public void windowClosed(WindowEvent e) 
-    {
-        getToolkit().removeAWTEventListener(this);
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) 
-    {
-        getToolkit().removeAWTEventListener(this);
-    }
-    
-    @Override
-    public void windowOpened(WindowEvent e) { }
-
-    @Override
-    public void windowIconified(WindowEvent e) { }
-    
-    @Override
-    public void windowDeiconified(WindowEvent e) { }
-    
-    @Override
-    public void windowActivated(WindowEvent e) { }
-    
-    @Override
-    public void windowDeactivated(WindowEvent e) { }
-
     public void logOut() 
     {
         getToolkit().removeAWTEventListener(this);
+        Utils.moveToNewWindow(this, new LoginWindow());
     }
 }
