@@ -7,6 +7,8 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
+import com.Group7.SpringStep.ui.MarginBorder;
+
 public class Utils 
 {
     private static boolean layoutDebugMode = true;
@@ -21,7 +23,7 @@ public class Utils
     
     public static void padJComponent (JComponent targetComponent, int top, int left, int bottom, int right)
     {
-        Border outerBorder = BorderFactory.createEmptyBorder(top, left, bottom, right);
+        Border outerBorder = new MarginBorder(top, left, bottom, right);
         Border insideBorder = targetComponent.getBorder();
         targetComponent.setBorder(new CompoundBorder(outerBorder, insideBorder));
     }
