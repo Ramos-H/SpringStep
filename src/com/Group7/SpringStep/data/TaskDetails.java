@@ -1,18 +1,13 @@
 package com.Group7.SpringStep.data;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import javax.print.attribute.standard.MediaSize.Other;
 
 public class TaskDetails 
 {
     private String name;
     private String description;
-    private ArrayList<TagDetails> tags = new ArrayList<>();
     private LocalDate deadline;
-    private LocalTime expectedDuration;
 
     public TaskDetails() { }
     public TaskDetails(String csv) { parseCsv(csv); }
@@ -35,19 +30,9 @@ public class TaskDetails
     public String getDescription() { return description; }
 
     /**
-     * @return the tags
-     */
-    public ArrayList<TagDetails> getTags() { return tags; }
-
-    /**
      * @return the deadline
      */
     public LocalDate getDeadline() { return deadline; }
-
-    /**
-     * @return the expectedDuration
-     */
-    public LocalTime getExpectedDuration() { return expectedDuration; }
 
     // Setters
     /**
@@ -68,15 +53,6 @@ public class TaskDetails
     /**
      * @param expectedDuration the expectedDuration to set
      */
-
-    public void setExpectedDuration(LocalTime expectedDuration) { this.expectedDuration = expectedDuration; }
-
-    // Methods
-    public void addTag(TagDetails newTag) { tags.add(newTag); }
-
-    public void removeTag(TagDetails tag) { tags.remove(tag); }
-
-    public void removeTagByIndex(int index) { tags.remove(index); }
 
     @Override
     public boolean equals(Object obj) 
