@@ -15,7 +15,6 @@ public class ProfilePopup extends JPanel implements ActionListener
     private JButton editUsernameButton;
     private JButton editEmailButton;
     private JButton editPasswordButton;
-    private ImageIcon editButtonIcon = new ImageIcon(App.resources.get("editIcon.png"));
     private boolean editMode = false;
     private JTextField usernameField;
     private JTextField emailField;
@@ -54,19 +53,35 @@ public class ProfilePopup extends JPanel implements ActionListener
             editUsernameButton.addActionListener(this);
             editUsernameButton.setVisible(false);
             editUsernameButton.setBackground(Color.WHITE);
-            editUsernameButton.setIcon(editButtonIcon);
             
             editEmailButton = new JButton();
             editEmailButton.addActionListener(this);
             editEmailButton.setVisible(false);
             editEmailButton.setBackground(Color.WHITE);
-            editEmailButton.setIcon(editButtonIcon);
             
             editPasswordButton = new JButton();
             editPasswordButton.addActionListener(this);
             editPasswordButton.setVisible(false);
             editPasswordButton.setBackground(Color.WHITE);
-            editPasswordButton.setIcon(editButtonIcon);
+            
+            Image editButtonImage = Utils.getScaledImage(App.resources.get("Edit_Button_(Pencil)_256.png"), 0.05f);
+            if(editButtonImage != null)
+            {
+                editUsernameButton.setIcon(new ImageIcon(editButtonImage));
+                editUsernameButton.setContentAreaFilled(false);
+                editUsernameButton.setBorderPainted(false);
+                editUsernameButton.setMargin(new Insets(0, 0, 0, 0));
+                
+                editEmailButton.setIcon(new ImageIcon(editButtonImage));
+                editEmailButton.setContentAreaFilled(false);
+                editEmailButton.setBorderPainted(false);
+                editEmailButton.setMargin(new Insets(0, 0, 0, 0));
+
+                editPasswordButton.setIcon(new ImageIcon(editButtonImage));
+                editPasswordButton.setContentAreaFilled(false);
+                editPasswordButton.setBorderPainted(false);
+                editPasswordButton.setMargin(new Insets(0, 0, 0, 0));
+            }
             
             JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
             {
