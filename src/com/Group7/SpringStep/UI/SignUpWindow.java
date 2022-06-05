@@ -53,8 +53,11 @@ public class SignUpWindow extends JFrame implements ActionListener
                 signUpButton.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
-                iconLogo.setIcon(
-                        new ImageIcon(App.resources.get("SpringStep_Logo_Colored_Circle_200x200.png")));
+                Image logoImage = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 0.10);
+                if (logoImage != null)
+                {
+                    iconLogo.setIcon(new ImageIcon(logoImage));
+                }
                 
                 JPanel buttonPanel = new JPanel(new FlowLayout()); // pinasok buttons here
                 {
