@@ -19,6 +19,7 @@ public class ListPanel extends JPanel
     {
         setLayout(new GridBagLayout());
         {
+            setOpaque(false);
             RoundedPanel outerPanel = new RoundedPanel(new GridBagLayout());
             outerPanel.setBackground(color);
             {
