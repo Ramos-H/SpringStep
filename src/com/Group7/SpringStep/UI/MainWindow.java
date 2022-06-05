@@ -56,6 +56,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         // Set window parameters
         setTitle("SpringStep");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setBackground(Color.WHITE);
         addWindowListener(this);
 
         long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
@@ -76,6 +77,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             // Put nested components here
             JPanel topBar = new JPanel(new GridBagLayout());
+            topBar.setOpaque(false);
             {
                 boardName = new JLabel();
                 boardName.setHorizontalAlignment(SwingConstants.CENTER);
@@ -104,11 +106,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
 
             JPanel contentPanel = new JPanel(new GridBagLayout());
+            contentPanel.setOpaque(false);
             Utils.setDebugVisible(contentPanel, Color.ORANGE);
             {
                 JPanel searchBar = new JPanel(new GridBagLayout());
-                searchBar.setOpaque(true);
-                searchBar.setBackground(Color.WHITE);
+                searchBar.setOpaque(false);
                 {
                     JTextField searchBarTextField = new JTextField();
                     JButton searchButton = new JButton("Search");
@@ -133,8 +135,10 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 }
 
                 timerPanel = new TimerPanel();
+                timerPanel.setOpaque(false);
 
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
+                boardPanel.setOpaque(false);
                 Utils.setDebugVisible(boardPanel, Color.MAGENTA);
                 {
                     toDoPanel = new ListPanel("To Do", "Add a task", new Color(247, 226, 203));
@@ -149,7 +153,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
                     donePanel = new ListPanel("Done", "Drag a task from \"To Do\" or \"Doing\"", new Color(179, 195, 193));
                     donePanel.getAddTaskButton().setVisible(false);
-
                     Utils.padJComponent(donePanel, 5, 5, 5, 5);
 
                     boardPanel.add(toDoPanel);
