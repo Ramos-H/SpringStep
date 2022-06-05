@@ -71,8 +71,11 @@ public class AddTaskPopup extends JPanel implements ActionListener
                 addTaskWindowConstraints.anchor = GridBagConstraints.WEST;
                 addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
+                addTaskWindowConstraints.gridx = 0;
+                addTaskWindowConstraints.gridy = 0;
                 contentArea.add(new JLabel("Title"), addTaskWindowConstraints);
 
+                addTaskWindowConstraints.gridx = 0;
                 addTaskWindowConstraints.gridy++;
                 contentArea.add(taskTitleField, addTaskWindowConstraints);
 
