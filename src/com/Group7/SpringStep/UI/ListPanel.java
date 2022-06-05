@@ -42,8 +42,8 @@ public class ListPanel extends JPanel
 
                     internalListContainer = new JPanel(new GridBagLayout());
                     internalListContainer.setOpaque(false);
+
                     listScrollPanel = new ListScrollPane(internalListContainer);
-                    listScrollPanel.setVisible(false);
                     listScrollPanel.setOpaque(false);
 
                     addTaskButton = new JButton("Add");
