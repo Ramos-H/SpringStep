@@ -13,7 +13,7 @@ import javax.swing.Timer;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener
 {
     private ListPanel toDoPanel, doingPanel, donePanel;
     private JButton toDoAddTaskButton, doingAddTaskButton;
@@ -42,6 +42,9 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JMenuItem renameBoardMenuItem;
     private JMenuItem deleteBoardMenuItem;
     private JButton helpButton;
+
+    private JTextField searchBarTextField;
+    private ArrayList<SearchResult> searchResults;
 
     public MainWindow()
     {
@@ -123,7 +126,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 JPanel searchBar = new JPanel(new GridBagLayout());
                 searchBar.setOpaque(false);
                 {
-                    JTextField searchBarTextField = new JTextField();
+                    searchBarTextField = new JTextField();
+                    searchBarTextField.addKeyListener(this);
 
                     JButton searchButton = new JButton();
                     Image searchButtonImage = Utils.getScaledImage(App.resources.get("Search_Icon_256.png"), 0.125);
@@ -612,7 +616,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             e.printStackTrace();
         }
-        System.out.println("Saved user data: " + LocalTime.now().toString());
+        // System.out.println("Saved user data: " + LocalTime.now().toString());
     }
 
     public void logOut() 
@@ -620,4 +624,56 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         getToolkit().removeAWTEventListener(this);
         Utils.moveToNewWindow(this, new LoginWindow());
     }
+
+    @Override
+    public void keyReleased(KeyEvent e) 
+    {
+        searchResults = new ArrayList<>();
+        ArrayList<BoardDetails> boards = currentUser.getBoards();
+        for (BoardDetails board : boards) 
+        {
+            ArrayList<TaskDetails> todoList = board.getTodoList();
+            ArrayList<TaskDetails> doneList = board.getDoneList();
+            ArrayList<TaskDetails> taskList = new ArrayList<>();
+            if (todoList.size() > 0) {
+                taskList.addAll(todoList);
+            }
+            if (doneList.size() > 0) {
+                taskList.addAll(doneList);
+            }
+
+            String searchQuery = searchBarTextField.getText().toUpperCase();
+
+            if (taskList.size() > 0) {
+                for (TaskDetails task : taskList) {
+                    if (task.getName().toUpperCase().contains(searchQuery) && !Utils.isTextEmpty(searchQuery)) 
+                    {
+                        SearchResult newResult = new SearchResult();
+                        newResult.setName(task.getName());
+                        newResult.setBoardSource(board);
+                        searchResults.add(newResult);
+                    }
+                }
+            }
+        }
+        
+        if (searchResults.size() > 0)
+        {
+            for (SearchResult result : searchResults) 
+            {
+                System.out.printf("%s from %s\n", result.getName(), result.getBoardSource().getName());
+            }
+            System.out.println();
+        }
+        else
+        {
+            System.out.println("No results currently");
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) { }
+
+    @Override
+    public void keyPressed(KeyEvent e) { }
 }
