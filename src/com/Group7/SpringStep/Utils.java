@@ -73,6 +73,14 @@ public class Utils
         comp.repaint();
     }
 
+    public static void setButtonIcon(JButton button, Icon icon)
+    {
+        button.setIcon(icon);
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+    }
+
     public static void centerByRect(Component comp, int basisWidth, int basisHeight) 
     {
         int x = Math.round(basisWidth / 2 - comp.getWidth() / 2);

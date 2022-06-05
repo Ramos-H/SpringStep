@@ -20,41 +20,53 @@ public class TaskNode extends JPanel implements ActionListener
     {
         taskEditor = editor;
         
-        setLayout(new GridBagLayout());
-        setOpaque(true);
+        setLayout(new GridLayout(1,1));
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
         {
-            taskNameArea = new JTextArea(Integer.toString(this.hashCode()));
-            taskNameArea.setLineWrap(true);
+            JPanel innerPanel = new JPanel(new GridBagLayout());
+            Utils.padJComponent(innerPanel, 5, 5, 5, 5);
+            innerPanel.setOpaque(false);
+            {
+                taskNameArea = new JTextArea();
+                taskNameArea.setEditable(false);
+                taskNameArea.setLineWrap(true);
+                taskNameArea.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
-            tagPanel = new JPanel(new FlowLayout());
-            Utils.setDebugVisible(tagPanel, Color.PINK);
-            
-            editButton = new JButton("Edit");
-            editButton.addActionListener(this);
+                tagPanel = new JPanel(new FlowLayout());
+                tagPanel.setOpaque(false);
+                Utils.setDebugVisible(tagPanel, Color.PINK);
 
-            GridBagConstraints taskNodeConstraints = new GridBagConstraints();
-            taskNodeConstraints.gridx = 0;
-            taskNodeConstraints.gridy = 0;
-            taskNodeConstraints.weightx = 1;
-            taskNodeConstraints.weighty = 1;
-            taskNodeConstraints.gridwidth = 2;
-            taskNodeConstraints.fill = GridBagConstraints.BOTH;
-            taskNodeConstraints.anchor = GridBagConstraints.CENTER;
-            add(taskNameArea, taskNodeConstraints);
+                editButton = new JButton();
+                editButton.addActionListener(this);
+                Image editButtonImage = Utils.getScaledImage(App.resources.get("Edit_Button_(Dots)_256.png"), 0.125);
+                if (editButtonImage != null) {
+                    Utils.setButtonIcon(editButton, new ImageIcon(editButtonImage));
+                }
 
-            taskNodeConstraints.gridy = 1;
-            taskNodeConstraints.weighty = 0;
-            taskNodeConstraints.gridwidth = 1;
-            taskNodeConstraints.fill = GridBagConstraints.HORIZONTAL;
-            taskNodeConstraints.anchor = taskNodeConstraints.NORTHWEST;
-            add(tagPanel, taskNodeConstraints);
+                GridBagConstraints innerPanelConstraints = new GridBagConstraints();
+                innerPanelConstraints.gridx = 0;
+                innerPanelConstraints.gridy = 0;
+                innerPanelConstraints.weightx = 1;
+                innerPanelConstraints.weighty = 1;
+                innerPanelConstraints.gridwidth = 2;
+                innerPanelConstraints.fill = GridBagConstraints.BOTH;
+                innerPanelConstraints.anchor = GridBagConstraints.CENTER;
+                innerPanel.add(taskNameArea, innerPanelConstraints);
 
-            taskNodeConstraints.gridx = 1;
-            taskNodeConstraints.weightx = 0;
-            taskNodeConstraints.fill = GridBagConstraints.NONE;
-            add(editButton, taskNodeConstraints);
+                innerPanelConstraints.gridy = 1;
+                innerPanelConstraints.weighty = 0;
+                innerPanelConstraints.gridwidth = 1;
+                innerPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                innerPanelConstraints.anchor = innerPanelConstraints.NORTHWEST;
+                innerPanel.add(tagPanel, innerPanelConstraints);
+
+                innerPanelConstraints.gridx = 1;
+                innerPanelConstraints.weightx = 0;
+                innerPanelConstraints.fill = GridBagConstraints.NONE;
+                innerPanel.add(editButton, innerPanelConstraints);
+            }
+            add(innerPanel);
         }
         setTaskDetails(newDetails);
     }
@@ -77,15 +89,8 @@ public class TaskNode extends JPanel implements ActionListener
         tagPanel.removeAll();
 
         if (taskDetails.getDeadline() != null)
-            tagPanel.add(createTagDisplay("DL: " + taskDetails.getDeadline().toString(), Color.RED));
+            tagPanel.add(createTagDisplay("Deadline: " + taskDetails.getDeadline().toString(), Color.RED));
 
-        // ArrayList<TagDetails> tags = taskDetails.getTags();
-        // for (TagDetails tag : tags) 
-        // {
-        //     tagPanel.add(createTagDisplay(tag.getName(), tag.getColor()));
-        // }
-
-        // tagPanel.add(createTagDisplay(taskDetails.getExpectedDuration().toString(), Color.BLUE));
         revalidate();
         repaint();
     }
@@ -99,9 +104,11 @@ public class TaskNode extends JPanel implements ActionListener
     
     public JPanel createTagDisplay(String text, Color bgColor)
     {
-        JPanel newTagDisplay = new JPanel(new FlowLayout());
+        JPanel newTagDisplay = new RoundedPanel(new FlowLayout());
         newTagDisplay.setBackground(bgColor);
-        newTagDisplay.add(new JLabel(text));
+        JLabel tagLabel = new JLabel(text);
+        tagLabel.setForeground(Color.WHITE);
+        newTagDisplay.add(tagLabel);
         return newTagDisplay;
     }
 
