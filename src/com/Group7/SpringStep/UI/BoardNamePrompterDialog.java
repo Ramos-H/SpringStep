@@ -36,6 +36,7 @@ public class BoardNamePrompterDialog extends JDialog implements ActionListener
             gbc.weightx = 0.8;
             gbc.gridheight = 1;
             gbc.fill = GridBagConstraints.BOTH;
+            gbc.insets = new Insets(5, 5, 5, 5);
 
             gbc.gridx = 1;
             add(messageLabel, gbc);
@@ -67,7 +68,7 @@ public class BoardNamePrompterDialog extends JDialog implements ActionListener
         if(defaultText != null) { nameField.setText(defaultText); }
         if(newIcon != null) { icon.setIcon(newIcon); }
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Utils.scaleByPercentage(this, screenSize, 20, 10);
+        Utils.scaleByPercentage(this, screenSize, 20, 20);
         Utils.centerByRect(this, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setVisible(true);
         
