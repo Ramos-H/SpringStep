@@ -13,14 +13,12 @@ import com.github.lgooddatepicker.components.*;
 public class AddTaskPopup extends JPanel implements ActionListener 
 {
     private JButton btnSave;
-    private JButton addTagButton;
     private JButton btnExit;
     private JButton btnDelete;
 
     private JTextField taskTitleField;
     private JTextArea descriptionArea;
     private DatePicker deadlinePicker;
-    private JPanel tagPanel;
 
     private TaskNode currentTaskNode;
     private TaskDetails currentTaskDetails;
@@ -59,15 +57,6 @@ public class AddTaskPopup extends JPanel implements ActionListener
                 descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
                 descriptionArea.setLineWrap(true);
 
-                tagPanel = new JPanel(new FlowLayout());
-                {
-                    addTagButton = new JButton("+ TAG");
-                    addTagButton.addActionListener(this);
-                    addTagButton.setBackground(new Color(217, 217, 217));
-
-                    tagPanel.add(addTagButton);
-                }
-
                 DatePickerSettings settings = new DatePickerSettings();
                 settings.setAllowEmptyDates(true);
                 deadlinePicker = new DatePicker(settings);
@@ -82,35 +71,22 @@ public class AddTaskPopup extends JPanel implements ActionListener
                 addTaskWindowConstraints.anchor = GridBagConstraints.WEST;
                 addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
-                addTaskWindowConstraints.gridy = 0;
                 contentArea.add(new JLabel("Title"), addTaskWindowConstraints);
 
-                addTaskWindowConstraints.gridy = 1;
+                addTaskWindowConstraints.gridy++;
                 contentArea.add(taskTitleField, addTaskWindowConstraints);
 
-                addTaskWindowConstraints.gridy = 2;
+                addTaskWindowConstraints.gridy++;
                 contentArea.add(new JLabel("Description"), addTaskWindowConstraints);
 
-                addTaskWindowConstraints.gridy = 3;
+                addTaskWindowConstraints.gridy++;
                 contentArea.add(descriptionArea, addTaskWindowConstraints);
-                
-                // addTaskWindowConstraints.gridy = 4;
-                // contentArea.add(new JLabel("Tags"), addTaskWindowConstraints);
 
-                // addTaskWindowConstraints.gridy = 5;
-                // // contentArea.add(tagPanel, addTaskWindowConstraints);
-
-                addTaskWindowConstraints.gridy = 6;
+                addTaskWindowConstraints.gridy++;
                 contentArea.add(new JLabel("Due Date"), addTaskWindowConstraints);
 
-                addTaskWindowConstraints.gridy = 7;
+                addTaskWindowConstraints.gridy++;
                 contentArea.add(deadlinePicker, addTaskWindowConstraints);
-
-                // addTaskWindowConstraints.gridy = 8;
-                // contentArea.add(new JLabel("Expected Duration"), addTaskWindowConstraints);
-
-                // addTaskWindowConstraints.gridy = 9;
-                // contentArea.add(btnDuration, addTaskWindowConstraints);
             }
             
             JScrollPane contentAreaContainer = new JScrollPane(contentArea);
@@ -148,10 +124,6 @@ public class AddTaskPopup extends JPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        // if (eventSource == addTagButton) {
-        //     JDialog newTagDialog = new NewTagDialog(tagPanel);
-        //     newTagDialog.setVisible(true);
-        // } 
         if (eventSource == btnSave) {
             if (taskTitleField.getText().trim().equals("")) {
                 JOptionPane.showMessageDialog(null, "Please add a name for the task", "Error: No name for task",
