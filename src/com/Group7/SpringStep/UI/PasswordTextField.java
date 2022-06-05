@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import com.Group7.SpringStep.App;
+import com.Group7.SpringStep.Utils;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -23,20 +24,8 @@ public class PasswordTextField extends JPanel implements ActionListener
     public PasswordTextField()
     {
         
-        Image passwordHiddenSourceImage = null;
-        Image passwordShownSourceImage = null;
-        try 
-        {
-            passwordHiddenSourceImage = Thumbnails.of(App.resources.get("Closed_Eye_Icon_256.png"))
-                                                        .size(32, 32)
-                                                        .asBufferedImage();
-            passwordShownSourceImage = Thumbnails.of(App.resources.get("Opened_Eye_Icon_256.png"))
-                                                        .size(32, 32)
-                                                        .asBufferedImage();
-        } catch (IOException e) 
-        {
-            e.printStackTrace();
-        }
+        Image passwordHiddenSourceImage = Utils.getScaledImage(App.resources.get("Closed_Eye_Icon_256.png"), 12.5f);
+        Image passwordShownSourceImage = Utils.getScaledImage(App.resources.get("Opened_Eye_Icon_256.png"), 12.5f);
 
         if (passwordHiddenSourceImage != null)
         {
