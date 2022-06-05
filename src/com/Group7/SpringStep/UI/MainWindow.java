@@ -558,13 +558,13 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         currentBoard.setTodoList(todoListSave);
 
         // Store done tasks
+        ArrayList<TaskDetails> doneListSave = new ArrayList<>();
         if (doneNodes.size() > 0) {
-            ArrayList<TaskDetails> doneListSave = new ArrayList<>();
             for (TaskNode taskDisplay : doneNodes) {
                 doneListSave.add(taskDisplay.getTaskDetails());
             }
-            currentBoard.setDoneList(doneListSave);
         }
+        currentBoard.setDoneList(doneListSave);
     }
 
     public void saveUserData()
