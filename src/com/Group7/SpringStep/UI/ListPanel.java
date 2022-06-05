@@ -13,63 +13,76 @@ public class ListPanel extends JPanel
     private JPanel internalListContainer;
     private JScrollPane listScrollPanel;
     private JButton addTaskButton;
-    private JPanel outerContainer;
+    private JPanel innerPanel;
     
     public ListPanel(String title, String addButtonMessage, Color color)
     {
         setLayout(new GridBagLayout());
         {
-            outerContainer = new JPanel(new GridBagLayout());
+            RoundedPanel outerPanel = new RoundedPanel(new GridBagLayout());
+            outerPanel.setBackground(color);
             {
-                outerContainer.setBackground(color);
-                JPanel listTitleBar = new JPanel(new BorderLayout());
-                listTitleBar.setOpaque(false);
-                Utils.padJComponent(listTitleBar, 5, 5, 5, 5);
+                innerPanel = new JPanel(new GridBagLayout());
+                innerPanel.setOpaque(false);
+                Utils.padJComponent(innerPanel, 5, 5, 5, 5);
                 {
-                    JLabel listTitleLabel = new JLabel(title);
-                    listTitleLabel.setFont(new Font(listTitleLabel.getFont().getFontName(), Font.BOLD, 21));
+                    JPanel listTitleBar = new JPanel(new BorderLayout());
+                    listTitleBar.setOpaque(false);
+                    Utils.padJComponent(listTitleBar, 5, 5, 5, 5);
+                    {
+                        JLabel listTitleLabel = new JLabel(title);
+                        listTitleLabel.setFont(new Font(listTitleLabel.getFont().getFontName(), Font.BOLD, 21));
 
-                    JButton listEditButton = new JButton("...");
+                        JButton listEditButton = new JButton("...");
 
-                    listTitleBar.add(listTitleLabel, BorderLayout.CENTER);
-                    listTitleBar.add(listEditButton, BorderLayout.LINE_END);
+                        listTitleBar.add(listTitleLabel, BorderLayout.CENTER);
+                        listTitleBar.add(listEditButton, BorderLayout.LINE_END);
+                    }
+
+                    internalListContainer = new JPanel(new GridBagLayout());
+                    internalListContainer.setOpaque(false);
+                    listScrollPanel = new ListScrollPane(internalListContainer);
+                    listScrollPanel.setVisible(false);
+                    listScrollPanel.setOpaque(false);
+
+                    addTaskButton = new JButton("Add");
+
+                    GridBagConstraints innerPanelConstraints = new GridBagConstraints();
+                    innerPanelConstraints.weightx = 1;
+                    innerPanelConstraints.gridwidth = 2;
+
+                    innerPanelConstraints.gridy = 0;
+                    innerPanelConstraints.anchor = GridBagConstraints.NORTH;
+                    innerPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                    innerPanel.add(listTitleBar, innerPanelConstraints);
+
+                    innerPanelConstraints.gridy = 1;
+                    innerPanelConstraints.weighty = 1;
+                    innerPanelConstraints.fill = GridBagConstraints.BOTH;
+                    innerPanel.add(listScrollPanel, innerPanelConstraints);
+
+                    innerPanelConstraints.weighty = 0;
+                    innerPanelConstraints.gridwidth = 1;
+                    innerPanelConstraints.anchor = GridBagConstraints.WEST;
+
+                    innerPanelConstraints.gridx = 0;
+                    innerPanelConstraints.gridy = 2;
+                    innerPanelConstraints.fill = GridBagConstraints.NONE;
+                    innerPanel.add(addTaskButton, innerPanelConstraints);
+
+                    innerPanelConstraints.gridx = 1;
+                    innerPanelConstraints.gridy = 2;
+                    innerPanelConstraints.fill = GridBagConstraints.BOTH;
+                    innerPanel.add(new JLabel(addButtonMessage), innerPanelConstraints);
                 }
 
-                internalListContainer = new JPanel(new GridBagLayout());
-                internalListContainer.setOpaque(false);
-                listScrollPanel = new ListScrollPane(internalListContainer);
-                listScrollPanel.setVisible(false);
-                listScrollPanel.setOpaque(false);
-
-                addTaskButton = new JButton("Add");
-
                 GridBagConstraints outerPanelConstraints = new GridBagConstraints();
-                outerPanelConstraints.weightx = 1;
-                outerPanelConstraints.gridwidth = 2;
-
-                outerPanelConstraints.gridy = 0;
                 outerPanelConstraints.anchor = GridBagConstraints.NORTH;
                 outerPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-                outerContainer.add(listTitleBar, outerPanelConstraints);
-
-                outerPanelConstraints.gridy = 1;
+                outerPanelConstraints.weightx = 1;
                 outerPanelConstraints.weighty = 1;
-                outerPanelConstraints.fill = GridBagConstraints.BOTH;
-                outerContainer.add(listScrollPanel, outerPanelConstraints);
 
-                outerPanelConstraints.weighty = 0;
-                outerPanelConstraints.gridwidth = 1;
-                outerPanelConstraints.anchor = GridBagConstraints.WEST;
-
-                outerPanelConstraints.gridx = 0;
-                outerPanelConstraints.gridy = 2;
-                outerPanelConstraints.fill = GridBagConstraints.NONE;
-                outerContainer.add(addTaskButton, outerPanelConstraints);
-
-                outerPanelConstraints.gridx = 1;
-                outerPanelConstraints.gridy = 2;
-                outerPanelConstraints.fill = GridBagConstraints.BOTH;
-                outerContainer.add(new JLabel(addButtonMessage), outerPanelConstraints);
+                outerPanel.add(innerPanel, outerPanelConstraints);
             }
 
             GridBagConstraints listPanelConstraints = new GridBagConstraints();
@@ -78,14 +91,14 @@ public class ListPanel extends JPanel
             listPanelConstraints.weightx = 1;
             listPanelConstraints.weighty = 1;
 
-            add(outerContainer, listPanelConstraints);
+            add(outerPanel, listPanelConstraints);
         }
     }
 
     @Override
     public Rectangle getVisibleRect() 
     {
-        return outerContainer.getVisibleRect();
+        return innerPanel.getVisibleRect();
     }
     
     public JButton getAddTaskButton() 

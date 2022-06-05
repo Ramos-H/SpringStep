@@ -8,10 +8,9 @@ public class RoundedPanel extends JPanel
 {
     private int arcCurve = 12;
 
-    public RoundedPanel(LayoutManager layout)
-    {
-        super(layout);
-    }
+    public RoundedPanel() { super(); }
+    public RoundedPanel(LayoutManager layout) { super(layout); }
+
 
     /**
      * @return the arcCurve

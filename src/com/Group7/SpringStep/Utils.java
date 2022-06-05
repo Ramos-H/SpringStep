@@ -18,7 +18,7 @@ import net.coobird.thumbnailator.resizers.configurations.*;
 
 public class Utils 
 {
-    private static boolean layoutDebugMode = true;
+    private static boolean layoutDebugMode = false;
 
     public static void setDebugVisible(JComponent targetComponent, Color backgroundColor)
     {
