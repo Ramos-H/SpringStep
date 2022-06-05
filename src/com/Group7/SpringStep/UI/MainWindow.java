@@ -123,8 +123,20 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 searchBar.setOpaque(false);
                 {
                     JTextField searchBarTextField = new JTextField();
-                    JButton searchButton = new JButton("Search");
-                    JButton helpButton = new JButton("?");
+
+                    JButton searchButton = new JButton();
+                    Image searchButtonImage = Utils.getScaledImage(App.resources.get("Search_Icon_256.png"), 0.125);
+                    if(searchButtonImage != null)
+                    {
+                        Utils.setButtonIcon(searchButton, new ImageIcon(searchButtonImage));
+                    }
+
+                    JButton helpButton = new JButton();
+                    Image helpButtonImage = Utils.getScaledImage(App.resources.get("Help_Icon_256.png"), 0.125);
+                    if(helpButtonImage != null)
+                    {
+                        Utils.setButtonIcon(helpButton, new ImageIcon(helpButtonImage));
+                    }
 
                     GridBagConstraints searchBarConstraints = new GridBagConstraints();
                     searchBarConstraints.anchor = GridBagConstraints.CENTER;
