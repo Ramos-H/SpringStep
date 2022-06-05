@@ -41,6 +41,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private JMenuItem createBoardMenuItem;
     private JMenuItem renameBoardMenuItem;
     private JMenuItem deleteBoardMenuItem;
+    private JButton helpButton;
 
     public MainWindow()
     {
@@ -131,7 +132,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                         Utils.setButtonIcon(searchButton, new ImageIcon(searchButtonImage));
                     }
 
-                    JButton helpButton = new JButton();
+                    helpButton = new JButton();
+                    helpButton.addActionListener(this);
                     Image helpButtonImage = Utils.getScaledImage(App.resources.get("Help_Icon_256.png"), 0.125);
                     if(helpButtonImage != null)
                     {
@@ -236,6 +238,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         if(eventSource == userButton)
         {
             popupContainer.setPopup(profilePopup);
+        }
+
+        if (eventSource == helpButton)
+        {
+            new HelpWindow().setVisible(true);
         }
 
         if (eventSource instanceof JMenuItem)
