@@ -2,10 +2,10 @@ package com.Group7.SpringStep.ui;
 
 import javax.swing.*;
 
-import com.Group7.SpringStep.Utils;
-
 import java.awt.*;
 import java.awt.event.*;
+
+import com.Group7.SpringStep.*;
 
 public class EditPasswordDialog extends JDialog implements ActionListener
 {

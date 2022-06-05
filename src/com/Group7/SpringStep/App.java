@@ -1,8 +1,5 @@
 package com.Group7.SpringStep;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import javax.swing.*;
 
 import com.Group7.SpringStep.ui.*;
@@ -15,7 +12,7 @@ public class App
         resources = new Resources();
 
         JFrame frame;
-        // frame = new LoginWindow();
+        frame = new LoginWindow();
         // frame = new SignUpWindow();
         // frame = new MainWindow();
         // frame = new AddTaskWindow();

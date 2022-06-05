@@ -1,11 +1,11 @@
 package com.Group7.SpringStep.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-
 import java.time.*;
 
 import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 

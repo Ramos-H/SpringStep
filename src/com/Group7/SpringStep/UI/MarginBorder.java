@@ -2,7 +2,6 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 
-import javax.swing.BorderFactory;
 import javax.swing.border.*;
 
 public class MarginBorder extends EmptyBorder

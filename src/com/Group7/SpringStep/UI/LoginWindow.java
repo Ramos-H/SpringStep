@@ -1,21 +1,14 @@
 package com.Group7.SpringStep.ui;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.*;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import com.Group7.SpringStep.*;
-import com.Group7.SpringStep.data.DataManager;
-import com.Group7.SpringStep.data.User;
+import java.nio.file.*;
 
-import net.coobird.thumbnailator.Thumbnails;
-import net.coobird.thumbnailator.filters.ImageFilter;
-import net.coobird.thumbnailator.resizers.configurations.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import com.Group7.SpringStep.*;
+import com.Group7.SpringStep.data.*;
 
 public class LoginWindow extends JFrame implements ActionListener
 {

@@ -1,10 +1,9 @@
 package com.Group7.SpringStep.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
+
+import java.awt.*;
+import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;

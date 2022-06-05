@@ -3,15 +3,17 @@ package com.Group7.SpringStep;
 import java.time.*;
 
 import java.awt.*;
-import java.io.IOException;
-import java.net.URL;
+
+import java.io.*;
+
+import java.net.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
-import com.Group7.SpringStep.ui.MarginBorder;
+import com.Group7.SpringStep.ui.*;
 
-import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.*;
 import net.coobird.thumbnailator.resizers.configurations.*;
 
 public class Utils 

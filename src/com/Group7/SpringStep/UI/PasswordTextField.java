@@ -1,17 +1,11 @@
 package com.Group7.SpringStep.ui;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import com.Group7.SpringStep.App;
-import com.Group7.SpringStep.Utils;
-
-import net.coobird.thumbnailator.Thumbnails;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
+import java.awt.event.*;
+
+import com.Group7.SpringStep.*;
 
 public class PasswordTextField extends JPanel implements ActionListener
 {

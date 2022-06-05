@@ -1,12 +1,9 @@
 package com.Group7.SpringStep.ui;
 
+import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
-
-import java.io.*;
-import java.nio.file.*;
-
-import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
