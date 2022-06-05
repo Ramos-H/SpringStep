@@ -86,14 +86,23 @@ public class TaskDetails
         boolean nameCheck = getName().equals(other.getName());
         boolean descriptionCheck = getDescription().equals(other.getDescription());
         boolean deadlineCheck = false;
+        LocalDate thisDeadline = getDeadline();
         LocalDate otherDeadline = other.getDeadline();
-        if (otherDeadline != null)
+        if (thisDeadline == null && otherDeadline != null)
         {
-            deadlineCheck = getDeadline().equals(other.getDeadline());
+            deadlineCheck = false;
+        }
+        else if (thisDeadline != null && otherDeadline == null)
+        {
+            deadlineCheck = false;
+        }
+        else if (getDeadline() != null && otherDeadline != null)
+        {
+            deadlineCheck = getDeadline().equals(otherDeadline);
         }
         else
         {
-            deadlineCheck = (getDeadline() == otherDeadline);
+            deadlineCheck = true;
         }
         return nameCheck && descriptionCheck && deadlineCheck;
     }
