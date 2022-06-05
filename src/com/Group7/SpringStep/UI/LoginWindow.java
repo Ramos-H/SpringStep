@@ -2,15 +2,20 @@ package com.Group7.SpringStep.ui;
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.DataManager;
 import com.Group7.SpringStep.data.User;
+
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.filters.ImageFilter;
+import net.coobird.thumbnailator.resizers.configurations.*;
 
 public class LoginWindow extends JFrame implements ActionListener
 {
@@ -54,7 +59,11 @@ public class LoginWindow extends JFrame implements ActionListener
                 logInButton.setBackground(new Color(135, 195, 193));
 
                 JLabel iconLogo = new JLabel();
-                iconLogo.setIcon(new ImageIcon(App.resources.get("SpringStep_Logo_Colored_Circle_200x200.png")));
+                Image scaledLogoImage = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 0.10);
+                if(scaledLogoImage != null)
+                {
+                    iconLogo.setIcon(new ImageIcon(scaledLogoImage));
+                }
                 
                 JPanel buttonPanel = new JPanel(new FlowLayout());
                 {

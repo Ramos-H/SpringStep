@@ -3,11 +3,16 @@ package com.Group7.SpringStep;
 import java.time.*;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
 import com.Group7.SpringStep.ui.MarginBorder;
+
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.resizers.configurations.*;
 
 public class Utils 
 {
@@ -73,6 +78,25 @@ public class Utils
         comp.setLocation(x, y);
         comp.revalidate();
         comp.repaint();
+    }
+
+    public static Image getScaledImage(URL path, double scale)
+    {
+        Image scaledImage = null;
+        try 
+        {
+            scaledImage = Thumbnails.of(path)
+                                    .alphaInterpolation(AlphaInterpolation.QUALITY)
+                                    .antialiasing(Antialiasing.ON)
+                                    .rendering(Rendering.QUALITY)
+                                    .scalingMode(ScalingMode.PROGRESSIVE_BILINEAR)
+                                    .scale(0.10f)
+                                    .asBufferedImage();
+        } catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+        return scaledImage;
     }
 
     public static boolean isTextEmpty(String text) 
