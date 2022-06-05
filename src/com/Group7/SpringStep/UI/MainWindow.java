@@ -87,6 +87,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
                 userButton = new JButton("User");
                 userButton.addActionListener(this);
+                Image userButtonImage = Utils.getScaledImage(App.resources.get("Profile_Icon_256.png"), 0.125);
+                if(userButtonImage != null)
+                {
+                    Utils.setButtonIcon(userButton, new ImageIcon(userButtonImage));
+                }
 
                 GridBagConstraints titleBarConstraints = new GridBagConstraints();
                 titleBarConstraints.weightx = 1;
