@@ -50,12 +50,18 @@ public class AddTaskPopup extends JPanel implements ActionListener
             }
 
             JPanel contentArea = new JPanel(new GridBagLayout());
+            Utils.padJComponent(contentArea, 5, 5, 5, 5);
             {
                 taskTitleField = new JTextField();
 
-                descriptionArea = new JTextArea();
-                descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
-                descriptionArea.setLineWrap(true);
+                JScrollPane descriptionScroller = new JScrollPane();
+                {
+                    descriptionArea = new JTextArea();
+                    descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
+                    descriptionArea.setLineWrap(true);
+
+                    descriptionScroller.setViewportView(descriptionArea);
+                }
 
                 DatePickerSettings settings = new DatePickerSettings();
                 settings.setAllowEmptyDates(true);
@@ -68,7 +74,7 @@ public class AddTaskPopup extends JPanel implements ActionListener
                 GridBagConstraints addTaskWindowConstraints = new GridBagConstraints();
                 addTaskWindowConstraints.weightx = 1;
                 addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-                addTaskWindowConstraints.anchor = GridBagConstraints.WEST;
+                addTaskWindowConstraints.anchor = GridBagConstraints.NORTHWEST;
                 addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
                 addTaskWindowConstraints.gridx = 0;
@@ -81,19 +87,21 @@ public class AddTaskPopup extends JPanel implements ActionListener
 
                 addTaskWindowConstraints.gridy++;
                 contentArea.add(new JLabel("Description"), addTaskWindowConstraints);
-
+                
                 addTaskWindowConstraints.gridy++;
-                contentArea.add(descriptionArea, addTaskWindowConstraints);
-
+                addTaskWindowConstraints.weighty = 0.1;
+                addTaskWindowConstraints.fill = GridBagConstraints.BOTH;
+                contentArea.add(descriptionScroller, addTaskWindowConstraints);
+                
                 addTaskWindowConstraints.gridy++;
+                addTaskWindowConstraints.weighty = 0;
+                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
                 contentArea.add(new JLabel("Due Date"), addTaskWindowConstraints);
 
                 addTaskWindowConstraints.gridy++;
                 contentArea.add(deadlinePicker, addTaskWindowConstraints);
             }
             
-            JScrollPane contentAreaContainer = new JScrollPane(contentArea);
-
             JPanel buttonBar = new JPanel(new GridBagLayout());
             {
                 btnDelete = new JButton("Delete");
@@ -116,7 +124,7 @@ public class AddTaskPopup extends JPanel implements ActionListener
             }
             
             add(titleBar, BorderLayout.PAGE_START);
-            add(contentAreaContainer, BorderLayout.CENTER);
+            add(contentArea, BorderLayout.CENTER);
             add(buttonBar, BorderLayout.PAGE_END);
 
             setEditMode(false);
