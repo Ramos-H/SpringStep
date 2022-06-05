@@ -76,7 +76,7 @@ public class ProfilePopup extends JPanel implements ActionListener
             }
             
             JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
-            Utils.padJComponent(buttonPanel, 0, 10, 0, 10);
+            Utils.padJComponent(buttonPanel, 0, 5, 0, 5);
             {
                 backButton = new JButton("Back");
                 backButton.setBackground(new Color(215, 204, 195));
@@ -91,13 +91,14 @@ public class ProfilePopup extends JPanel implements ActionListener
 
                 GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
                 buttonPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                buttonPanelConstraints.insets = new Insets(3, 3, 3, 3);
                 buttonPanel.add(backButton, buttonPanelConstraints);
 
                 buttonPanelConstraints.gridy++;
                 buttonPanel.add(editProfileButton, buttonPanelConstraints);
 
-                buttonPanelConstraints.gridy = 0;
-                buttonPanelConstraints.gridx++;
+                buttonPanelConstraints.gridy++;
+                buttonPanelConstraints.gridx = 0;
                 buttonPanelConstraints.gridwidth = 2;
                 buttonPanel.add(logOutButton, buttonPanelConstraints);
             }
