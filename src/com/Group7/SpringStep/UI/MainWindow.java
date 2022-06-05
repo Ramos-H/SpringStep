@@ -253,37 +253,53 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             if(eventSource == createBoardMenuItem)
             {
-                String response = null;
+                BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
+                boolean properlyResponded = false;
                 do
                 {
-                    response = JOptionPane.showInputDialog(this, "Please give a name for the new board",
-                            "New board");
-                    if(response.trim().equals(""))
+                    int response = namePrompter.showDialog("Please give a name for the new board", "New board", "New Board",
+                            null);
+                    if(response == BoardNamePrompterDialog.RESPONSE_SUBMITTED)
                     {
-                        String warningTitle = "Warning: Can't create nameless board";
-                        String warningMessage = "Please enter a name for the new board.";
-                        JOptionPane.showMessageDialog(this, warningMessage, warningTitle, JOptionPane.WARNING_MESSAGE);
-                    }
-
-                    ArrayList<BoardDetails> boards = currentUser.getBoards();
-                    for (BoardDetails boardDetails : boards) 
-                    {
-                        if(boardDetails.getName().equals(response))
+                        boolean nameIsValid = true;
+                        String enteredName = namePrompter.getText();
+                        if(Utils.isTextEmpty(enteredName))
                         {
-                            String warningTitle = "Warning: Board name already taken";
-                            String warningMessage = "That name is already taken. Please enter a different name";
-                            JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
+                            JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
+                                    "Warning: Can't create a nameless board", JOptionPane.WARNING_MESSAGE);
+                            nameIsValid = false;
+                        }
+                        
+                        ArrayList<BoardDetails> boards = currentUser.getBoards();
+
+                        for (BoardDetails boardDetails : boards) 
+                        {
+                            if(boardDetails.getName().equals(enteredName))
+                            {
+                                String warningTitle = "Warning: Board name already taken";
+                                String warningMessage = "That name is already taken. Please enter a different name";
+                                JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
                                     JOptionPane.WARNING_MESSAGE);
-                            response = null;
+                                nameIsValid = false;
+                            }
+                        }
+
+                        if(nameIsValid)
+                        {
+                            properlyResponded = true;
+                            BoardDetails newBoard = new BoardDetails(enteredName);
+                            boards.add(newBoard);
+                            setCurrentBoard(newBoard);
+                            updateBoardList();
+                            JOptionPane.showMessageDialog(this, "The board has been successfully created.",
+                                    "New board created", JOptionPane.INFORMATION_MESSAGE);
                         }
                     }
-                } while (Utils.isTextEmpty(response));
-
-                BoardDetails newBoard = new BoardDetails(response);
-                ArrayList<BoardDetails> boards = currentUser.getBoards();
-                boards.add(newBoard);
-                updateBoardList();
-                setCurrentBoard(newBoard);
+                    else
+                    {
+                        properlyResponded = true;
+                    }
+                } while (!properlyResponded);
             }
             else if(eventSource == deleteBoardMenuItem)
             {
@@ -295,6 +311,54 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     updateBoardList();
                     setCurrentBoard(boards.get(0));
                 }
+            }
+            else if(eventSource == renameBoardMenuItem)
+            {
+                BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
+                boolean properlyResponded = false;
+                do
+                {
+                    int response = namePrompter.showDialog("Enter a new name for the board", "Rename board", currentBoard.getName(),
+                            null);
+                    if(response == BoardNamePrompterDialog.RESPONSE_SUBMITTED)
+                    {
+                        boolean nameIsValid = true;
+                        String enteredName = namePrompter.getText();
+                        if(Utils.isTextEmpty(enteredName))
+                        {
+                            JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
+                                    "Warning: Can't rename board", JOptionPane.WARNING_MESSAGE);
+                            nameIsValid = false;
+                        }
+                        
+                        ArrayList<BoardDetails> boards = currentUser.getBoards();
+                        for (BoardDetails boardDetails : boards) 
+                        {
+                            if(boardDetails.getName().equals(enteredName))
+                            {
+                                String warningTitle = "Warning: Board name already taken";
+                                String warningMessage = "That name is already taken. Please enter a different name";
+                                JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
+                                    JOptionPane.WARNING_MESSAGE);
+                                nameIsValid = false;
+                            }
+                        }
+
+                        if(nameIsValid)
+                        {
+                            properlyResponded = true;
+                            currentBoard.setName(enteredName);
+                            setCurrentBoard(currentBoard);
+                            updateBoardList();
+                            JOptionPane.showMessageDialog(this, "The board has been successfully renamed.",
+                                    "Current board was renamed", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }
+                    else
+                    {
+                        properlyResponded = true;
+                    }
+                } while (!properlyResponded);
             }
             else
             {
