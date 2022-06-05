@@ -624,9 +624,12 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         renameBoardMenuItem.addActionListener(this);
         boardOptionsMenu.add(renameBoardMenuItem);
 
-        deleteBoardMenuItem = new JMenuItem("Delete board");
-        deleteBoardMenuItem.addActionListener(this);
-        boardOptionsMenu.add(deleteBoardMenuItem);
+        if (boards.size() > 1)
+        {
+            deleteBoardMenuItem = new JMenuItem("Delete board");
+            deleteBoardMenuItem.addActionListener(this);
+            boardOptionsMenu.add(deleteBoardMenuItem);
+        }
     }
 
     public void saveTasksToBoard()
