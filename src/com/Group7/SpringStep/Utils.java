@@ -99,8 +99,8 @@ public class Utils
                                     .alphaInterpolation(AlphaInterpolation.QUALITY)
                                     .antialiasing(Antialiasing.ON)
                                     .rendering(Rendering.QUALITY)
-                                    .scalingMode(ScalingMode.PROGRESSIVE_BILINEAR)
-                                    .scale(0.10f)
+                                    .scalingMode(ScalingMode.BILINEAR)
+                                    .scale(scale)
                                     .asBufferedImage();
         } catch (IOException e) 
         {

@@ -18,8 +18,8 @@ public class PasswordTextField extends JPanel implements ActionListener
     public PasswordTextField()
     {
         
-        Image passwordHiddenSourceImage = Utils.getScaledImage(App.resources.get("Closed_Eye_Icon_256.png"), 12.5f);
-        Image passwordShownSourceImage = Utils.getScaledImage(App.resources.get("Opened_Eye_Icon_256.png"), 12.5f);
+        Image passwordHiddenSourceImage = Utils.getScaledImage(App.resources.get("Closed_Eye_Icon_256.png"), 0.10f);
+        Image passwordShownSourceImage = Utils.getScaledImage(App.resources.get("Opened_Eye_Icon_256.png"), 0.10f);
 
         if (passwordHiddenSourceImage != null)
         {
