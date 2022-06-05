@@ -82,8 +82,13 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 boardName = new JLabel();
                 boardName.setHorizontalAlignment(SwingConstants.CENTER);
 
-                boardListButton = new JButton("v");
+                boardListButton = new JButton();
                 boardListButton.addActionListener(this);
+                Image boardListButtonImage = Utils.getScaledImage(App.resources.get("Dropdown_Icon_256.png"), 0.125f);
+                if (boardListButtonImage != null)
+                {
+                    Utils.setButtonIcon(boardListButton, new ImageIcon(boardListButtonImage));
+                }
 
                 userButton = new JButton("User");
                 userButton.addActionListener(this);
