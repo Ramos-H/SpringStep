@@ -32,21 +32,13 @@ public class ProfilePopup extends JPanel implements ActionListener
         mainWindow = window;
         popupHandler = popupContainer;
         setLayout(new GridBagLayout());
-        setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
+        Utils.padJComponent(this, 0, 50, 0, 50);
         {
             JLabel profileLabel = new JLabel("User Profile");
 
             usernameField = new JTextField();
             emailField = new JTextField();
             passwordField = new PasswordTextField();
-
-            backButton = new JButton("Back");
-            backButton.setBackground(new Color(215, 204, 195));
-            backButton.addActionListener(this);
-
-            editProfileButton = new JButton("Edit Profile");
-            editProfileButton.setBackground(new Color(135, 195, 193));
-            editProfileButton.addActionListener(this);
 
             // for the edit buttons
             editUsernameButton = new JButton();
@@ -83,76 +75,85 @@ public class ProfilePopup extends JPanel implements ActionListener
                 editPasswordButton.setMargin(new Insets(0, 0, 0, 0));
             }
             
-            JPanel btnPanel = new JPanel(new FlowLayout()); // pinasok buttons here
+            JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
+            Utils.padJComponent(buttonPanel, 0, 10, 0, 10);
             {
-                btnPanel.add(backButton);
-                btnPanel.add(editProfileButton);
+                backButton = new JButton("Back");
+                backButton.setBackground(new Color(215, 204, 195));
+                backButton.addActionListener(this);
+
+                editProfileButton = new JButton("Edit Profile");
+                editProfileButton.setBackground(new Color(135, 195, 193));
+                editProfileButton.addActionListener(this);
+
+                logOutButton = new JButton("Log out");
+                logOutButton.addActionListener(this);
+
+                GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
+                buttonPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                buttonPanel.add(backButton, buttonPanelConstraints);
+
+                buttonPanelConstraints.gridy++;
+                buttonPanel.add(editProfileButton, buttonPanelConstraints);
+
+                buttonPanelConstraints.gridy = 0;
+                buttonPanelConstraints.gridx++;
+                buttonPanelConstraints.gridwidth = 2;
+                buttonPanel.add(logOutButton, buttonPanelConstraints);
             }
-            
-            logOutButton = new JButton("Log out");
-            logOutButton.addActionListener(this);
 
             GridBagConstraints profileWindowConstraints = new GridBagConstraints();
-            profileWindowConstraints.weighty = 0;
             profileWindowConstraints.anchor = GridBagConstraints.CENTER;
             profileWindowConstraints.insets = new Insets(5, 5, 0, 5);
 
-            profileWindowConstraints.gridwidth = 2; // to center the label
+            profileWindowConstraints.gridwidth = 3; // to center the label
             add(profileLabel, profileWindowConstraints);
 
-            // for the edit buttons
-            profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            profileWindowConstraints.gridx = 2;
-            profileWindowConstraints.gridy = 1;
-            add(editUsernameButton, profileWindowConstraints);
-
-            profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            profileWindowConstraints.gridy = 2;
-            add(editEmailButton, profileWindowConstraints);
-
-            profileWindowConstraints.anchor = GridBagConstraints.FIRST_LINE_START;
-            profileWindowConstraints.gridy = 3;
-            add(editPasswordButton, profileWindowConstraints);
-
             // jlabels
-            profileWindowConstraints.weightx = 0;
             profileWindowConstraints.gridwidth = 1; // para bumalik
-            profileWindowConstraints.anchor = GridBagConstraints.LINE_START;
+            profileWindowConstraints.anchor = GridBagConstraints.WEST;
 
-            profileWindowConstraints.gridx = 0;// para bumalik din
-            profileWindowConstraints.gridy = 2;
+            profileWindowConstraints.gridx = 0;
+            profileWindowConstraints.gridy = 1;
             add(new JLabel("Username: "), profileWindowConstraints);
 
-            profileWindowConstraints.gridy = 3;
+            profileWindowConstraints.gridy++;
             add(new JLabel("Email: "), profileWindowConstraints);
 
-            profileWindowConstraints.gridy = 4;
+            profileWindowConstraints.gridy++;
             add(new JLabel("Password: "), profileWindowConstraints);
 
             // to make the textfields longer
             profileWindowConstraints.gridx = 1;
-            profileWindowConstraints.gridy = 2;
+            profileWindowConstraints.gridy = 1;
             profileWindowConstraints.weightx = 1;
             profileWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
             add(usernameField, profileWindowConstraints);
 
-            profileWindowConstraints.gridy = 3;
+            profileWindowConstraints.gridy++;
             add(emailField, profileWindowConstraints);
 
-            profileWindowConstraints.gridy = 4;
+            profileWindowConstraints.gridy++;
             add(passwordField, profileWindowConstraints);
+
+            // for the edit buttons
+            profileWindowConstraints.gridx = 2;
+            profileWindowConstraints.gridy = 1;
+            profileWindowConstraints.weightx = 0;
+            add(editUsernameButton, profileWindowConstraints);
+
+            profileWindowConstraints.gridy++;
+            add(editEmailButton, profileWindowConstraints);
+
+            profileWindowConstraints.gridy++;
+            add(editPasswordButton, profileWindowConstraints);
 
             // buttons
             profileWindowConstraints.gridx = 0;
-            profileWindowConstraints.gridy = 5;
+            profileWindowConstraints.gridy++;
             profileWindowConstraints.gridwidth = 3;
-            profileWindowConstraints.fill = GridBagConstraints.NONE;
             profileWindowConstraints.anchor = GridBagConstraints.CENTER;
-            add(btnPanel, profileWindowConstraints);
-
-            profileWindowConstraints.gridy = 6;
-            profileWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-            add(logOutButton, profileWindowConstraints);
+            add(buttonPanel, profileWindowConstraints);
         }
     }
 
