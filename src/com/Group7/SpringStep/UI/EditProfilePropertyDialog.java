@@ -13,8 +13,8 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
     private JLabel newPropertyLabel;
     private JLabel confirmPropertyLabel;
     private String currentPropertyValue;
-    private JButton doneButton;
-    private JButton cancelButton;
+    private RoundedButton doneButton;
+    private RoundedButton cancelButton;
     private JTextField fieldToModify;
     private JTextField newPropertyField;
     private JTextField confirmPropertyField;
@@ -27,6 +27,7 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
 
     public EditProfilePropertyDialog(String property, JTextField textField, String currentValue)
     {
+        setIconImage(App.springStepImage);
         currentPropertyValue = currentValue;
         fieldToModify = textField;
         setModal(true);
@@ -51,10 +52,12 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
                 confirmPropertyLabel = new JLabel();
                 JPanel buttonPanel = new JPanel(new FlowLayout());
                 {
-                    cancelButton = new JButton("Cancel");
+                    cancelButton = new RoundedButton("Cancel");
                     cancelButton.addActionListener(this);
+                    cancelButton.setBackground(new Color(215, 204, 195));
 
-                    doneButton = new JButton("Done");
+                    doneButton = new RoundedButton("Done");
+                    doneButton.setBackground(new Color(135, 195, 193));
                     doneButton.addActionListener(this);
 
                     buttonPanel.add(cancelButton);
@@ -96,6 +99,7 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
         currentPropertyLabel.setText("Current " + property + ": " + currentPropertyValue);
         newPropertyLabel.setText("New " + property + ": ");
         confirmPropertyLabel.setText("Confirm new " + property + ": ");
+        setTitle("Enter new " + property);
 
         if(currentPropertyValue == null)
             currentPropertyLabel.setVisible(false);
