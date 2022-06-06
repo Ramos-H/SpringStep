@@ -10,8 +10,8 @@ import com.Group7.SpringStep.data.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
 {
-    private JButton backButton;
-    private JButton signUpButton;
+    private RoundedButton backButton;
+    private RoundedButton signUpButton;
     private JTextField userNameField;
     private JTextField emailField;
     private PasswordTextField passwordField;
@@ -45,11 +45,11 @@ public class SignUpWindow extends JFrame implements ActionListener
                 passwordField = new PasswordTextField();
                 confirmPasswordField = new PasswordTextField();
 
-                backButton = new JButton("Back");
+                backButton = new RoundedButton("Back");
                 backButton.addActionListener(this);
                 backButton.setBackground(new Color(215, 204, 195));
 
-                signUpButton = new JButton("Sign Up");
+                signUpButton = new RoundedButton("Sign Up");
                 signUpButton.addActionListener(this);
                 signUpButton.setBackground(new Color(135, 195, 193));
 
