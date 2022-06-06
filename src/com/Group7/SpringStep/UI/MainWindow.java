@@ -13,7 +13,7 @@ import javax.swing.Timer;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener, FocusListener
 {
     private ListPanel toDoPanel, doingPanel, donePanel;
     private JButton toDoAddTaskButton, doingAddTaskButton;
@@ -45,6 +45,8 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     private JTextField searchBarTextField;
     private ArrayList<SearchResult> searchResults;
+    private SearchResultsPanel searchResultsPanel;
+    private JButton searchButton;
 
     public MainWindow()
     {
@@ -53,6 +55,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         setGlassPane(popupContainer);
         profilePopup = new ProfilePopup(popupContainer, this);
         taskEditorPopup = new AddTaskPopup(popupContainer, this);
+        searchResultsPanel = new SearchResultsPanel(popupContainer, this);
 
         autosaveTimer = new Timer(500, this);
         autosaveTimer.start();
@@ -123,43 +126,48 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             contentPanel.setOpaque(false);
             Utils.setDebugVisible(contentPanel, Color.ORANGE);
             {
-                JPanel searchBar = new JPanel(new GridBagLayout());
-                searchBar.setOpaque(false);
+                JPanel searchArea = new JPanel(new GridBagLayout());
+                searchArea.setOpaque(false);
                 {
-                    searchBarTextField = new JTextField();
-                    searchBarTextField.addKeyListener(this);
-
-                    JButton searchButton = new JButton();
-                    Image searchButtonImage = Utils.getScaledImage(App.resources.get("Search_Icon_256.png"), 0.125);
-                    if(searchButtonImage != null)
+                    JPanel searchBar = new JPanel(new BorderLayout());
+                    searchResultsPanel.setSearchBar(searchBar);
+                    searchBar.setOpaque(false);
                     {
-                        Utils.setButtonIcon(searchButton, new ImageIcon(searchButtonImage));
+                        searchBarTextField = new JTextField();
+                        searchBarTextField.addKeyListener(this);
+                        searchBarTextField.addFocusListener(this);
+                        popupContainer.setSearchBar(searchBarTextField);
+                        searchButton = new JButton();
+                        searchButton.addActionListener(this);
+                        Image searchButtonImage = Utils.getScaledImage(App.resources.get("Search_Icon_256.png"), 0.125);
+                        if (searchButtonImage != null) {
+                            Utils.setButtonIcon(searchButton, new ImageIcon(searchButtonImage));
+                        }
+                        searchButton.setBorderPainted(true);
+                        searchBar.add(searchBarTextField, BorderLayout.CENTER);
+                        searchBar.add(searchButton, BorderLayout.LINE_END);
                     }
-
+                    
                     helpButton = new JButton();
                     helpButton.addActionListener(this);
                     Image helpButtonImage = Utils.getScaledImage(App.resources.get("Help_Icon_256.png"), 0.125);
-                    if(helpButtonImage != null)
-                    {
+                    if (helpButtonImage != null) {
                         Utils.setButtonIcon(helpButton, new ImageIcon(helpButtonImage));
                     }
+                    helpButton.setBorderPainted(true);
 
-                    GridBagConstraints searchBarConstraints = new GridBagConstraints();
-                    searchBarConstraints.anchor = GridBagConstraints.CENTER;
-
-                    searchBarConstraints.gridx = 0;
-                    searchBarConstraints.weightx = 1;
-                    searchBarConstraints.fill = GridBagConstraints.HORIZONTAL;
-                    searchBar.add(searchBarTextField, searchBarConstraints);
-
-                    searchBarConstraints.weightx = 0;
-                    searchBarConstraints.fill = GridBagConstraints.NONE;
-
-                    searchBarConstraints.gridx = 1;
-                    searchBar.add(searchButton, searchBarConstraints);
-
-                    searchBarConstraints.gridx = 2;
-                    searchBar.add(helpButton, searchBarConstraints);
+                    GridBagConstraints searchAreaConstraints = new GridBagConstraints();
+                    searchAreaConstraints.gridx = 0;
+                    searchAreaConstraints.weightx = 1;
+                    searchAreaConstraints.anchor = GridBagConstraints.CENTER;
+                    searchAreaConstraints.fill = GridBagConstraints.HORIZONTAL;
+                    searchArea.add(searchBar, searchAreaConstraints);
+                    
+                    searchAreaConstraints.weightx = 0;
+                    searchAreaConstraints.gridx++;
+                    searchAreaConstraints.anchor = GridBagConstraints.WEST;
+                    searchAreaConstraints.fill = GridBagConstraints.NONE;
+                    searchArea.add(helpButton, searchAreaConstraints);
                 }
 
                 timerPanel = new TimerPanel();
@@ -196,7 +204,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 contentPanelConstraints.insets = new Insets(5, 150, 5, 150);
 
                 contentPanelConstraints.gridy = 0;
-                contentPanel.add(searchBar, contentPanelConstraints);
+                contentPanel.add(searchArea, contentPanelConstraints);
 
                 contentPanelConstraints.gridy = 1;
                 contentPanelConstraints.fill = GridBagConstraints.NONE;
@@ -247,6 +255,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         if (eventSource == helpButton)
         {
             new HelpWindow().setVisible(true);
+        }
+
+        if (eventSource == searchButton)
+        {
+            searchBarTextField.requestFocus();
         }
 
         if (eventSource instanceof JMenuItem)
@@ -508,6 +521,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     {
         // reset timer
         timerPanel.setWorkMode(true);
+        timerPanel.stopTimer();
         timerPanel.resetTimer();
         // clear task lists
         toDoPanel.clear();
@@ -586,6 +600,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     {
         saveUserData();
         currentBoard = newBoard;
+        searchButton.requestFocus();
         resetMainWindow();
         boardName.setText(currentBoard.getName());
         ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
@@ -695,10 +710,28 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     @Override
     public void keyReleased(KeyEvent e) 
     {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            searchButton.requestFocus();
+        }
+
+        if (!popupContainer.isVisible()) {
+            popupContainer.setPopup(searchResultsPanel);
+        }
+
+        compileSearchResults();
+    }
+
+    public void compileSearchResults()
+    {
         searchResults = new ArrayList<>();
         ArrayList<BoardDetails> boards = currentUser.getBoards();
         for (BoardDetails board : boards) 
         {
+            if(board == currentBoard)
+            {
+                continue;
+            }
+
             ArrayList<TaskDetails> todoList = board.getTodoList();
             ArrayList<TaskDetails> doneList = board.getDoneList();
             ArrayList<TaskDetails> taskList = new ArrayList<>();
@@ -710,11 +743,16 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
 
             String searchQuery = searchBarTextField.getText().toUpperCase();
+            if (Utils.isTextEmpty(searchQuery))
+            {
+                searchResultsPanel.setResults(null);
+                return;
+            }
 
-            if (taskList.size() > 0) {
+            if (taskList.size() > 0) 
+            {
                 for (TaskDetails task : taskList) {
-                    if (task.getName().toUpperCase().contains(searchQuery) && !Utils.isTextEmpty(searchQuery)) 
-                    {
+                    if (task.getName().toUpperCase().contains(searchQuery) && !Utils.isTextEmpty(searchQuery)) {
                         SearchResult newResult = new SearchResult();
                         newResult.setName(task.getName());
                         newResult.setBoardSource(board);
@@ -722,6 +760,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     }
                 }
             }
+            
         }
         
         if (searchResults.size() > 0)
@@ -736,6 +775,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         {
             System.out.println("No results currently");
         }
+        searchResultsPanel.setResults(searchResults);
     }
 
     @Override
@@ -743,4 +783,25 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     @Override
     public void keyPressed(KeyEvent e) { }
+
+
+    @Override
+    public void focusGained(FocusEvent e) 
+    {
+        if(e.getSource() == searchBarTextField)
+        {
+            compileSearchResults();
+            popupContainer.setPopup(searchResultsPanel);
+        }
+    }
+    
+    @Override
+    public void focusLost(FocusEvent e) 
+    {
+        if(e.getSource() == searchBarTextField)
+        {
+            popupContainer.hidePopup();
+            searchBarTextField.setText("");
+        }
+    }
 }
