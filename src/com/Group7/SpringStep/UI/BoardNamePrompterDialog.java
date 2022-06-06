@@ -12,7 +12,7 @@ public class BoardNamePrompterDialog extends JDialog implements ActionListener
     private JLabel icon = new JLabel();
     private JTextArea messageLabel;
     private JTextField nameField = new JTextField();
-    private JButton submitButton = new JButton("Confirm");
+    private RoundedButton submitButton = new RoundedButton("Confirm");
 
     public static int RESPONSE_SUBMITTED = 0;
     public static int RESPONSE_CANCELLED = 1;
@@ -22,9 +22,11 @@ public class BoardNamePrompterDialog extends JDialog implements ActionListener
     public BoardNamePrompterDialog()
     {
         setModal(true);
+        setIconImage(App.springStepImage);
         setLayout(new GridBagLayout());
         {
             submitButton.addActionListener(this);
+            submitButton.setBackground(new Color(135, 195, 193));
 
             messageLabel = new JTextArea();
             messageLabel.setLineWrap(true);
