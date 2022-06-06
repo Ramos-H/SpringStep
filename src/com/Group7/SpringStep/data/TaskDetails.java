@@ -3,6 +3,8 @@ package com.Group7.SpringStep.data;
 import java.time.*;
 import java.util.*;
 
+import com.Group7.SpringStep.Utils;
+
 public class TaskDetails 
 {
     private String name;
@@ -14,7 +16,10 @@ public class TaskDetails
     public TaskDetails(TaskDetails source)
     {
         setName(new String(source.getName()));
-        setDescription(new String(source.getDescription()));
+        if (description != null)
+        {
+            setDescription(new String(source.getDescription()));
+        }
         setDeadline(source.getDeadline());
     }
 
@@ -57,30 +62,29 @@ public class TaskDetails
     @Override
     public boolean equals(Object obj) 
     {
-        if(obj == null) { return false; }
+        if (obj == null) {
+            return false;
+        }
         TaskDetails other = (TaskDetails) obj;
-        boolean nameCheck = getName().equals(other.getName());
-        boolean descriptionCheck = getDescription().equals(other.getDescription());
-        boolean deadlineCheck = false;
-        LocalDate thisDeadline = getDeadline();
-        LocalDate otherDeadline = other.getDeadline();
-        if (thisDeadline == null && otherDeadline != null)
-        {
-            deadlineCheck = false;
-        }
-        else if (thisDeadline != null && otherDeadline == null)
-        {
-            deadlineCheck = false;
-        }
-        else if (getDeadline() != null && otherDeadline != null)
-        {
-            deadlineCheck = getDeadline().equals(otherDeadline);
-        }
-        else
-        {
-            deadlineCheck = true;
-        }
+        boolean nameCheck = betterEquals(getName(), other.getName());
+        boolean descriptionCheck = betterEquals(getDescription(), other.getDescription());
+        boolean deadlineCheck = betterEquals(getDeadline(), other.getDeadline());
         return nameCheck && descriptionCheck && deadlineCheck;
+    }
+    
+    private boolean betterEquals(Object obj1, Object obj2)
+    {
+        boolean result = false;
+        if (obj1 == null && obj2 != null) {
+            result = false;
+        } else if (obj1 != null && obj2 == null) {
+            result = false;
+        } else if (obj1 != null && obj2 != null) {
+            result = obj1.equals(obj2);
+        } else {
+            result = true;
+        }
+        return result;
     }
 
     public void parseCsv(String csv)
@@ -93,7 +97,7 @@ public class TaskDetails
         // Description
         if (!currentTaskData[1].equals("NULL")) 
         {
-            setDescription(currentTaskData[1]);
+            setDescription(parseCsvFriendlyFormat(currentTaskData[1]));
         }
 
         // Deadline
@@ -105,27 +109,38 @@ public class TaskDetails
 
     public String getAsCsv() 
     {
-        
+
         final String DEFAULT_VALUE = "NULL";
-        
+
         String formattedName = DEFAULT_VALUE;
-        if(name != null)
-        {
-            formattedName = String.format("%s", name);
+        if (!Utils.isTextEmpty(getName())) {
+            formattedName = String.format("%s", csvFriendlyFormat(name));
         }
 
         String formattedDescription = DEFAULT_VALUE;
-        if(description != null)
-        {
-            formattedDescription = String.format("%s", description);
+        if (!Utils.isTextEmpty(getDescription())) {
+            formattedDescription = String.format("%s", csvFriendlyFormat(description));
         }
 
         String formattedDeadline = DEFAULT_VALUE;
-        if(deadline != null)
-        {
+        if (deadline != null) {
             formattedDeadline = deadline.toString();
         }
 
         return String.format("%s,%s,%s", formattedName, formattedDescription, formattedDeadline);
+    }
+    
+    private String csvFriendlyFormat(String input)
+    {
+        return input.replace("\\", "\\\\")
+                    .replace("\n", "\\n")
+                    .replace("\"", "\\\"");
+    }
+
+    private String parseCsvFriendlyFormat(String input)
+    {
+        return input.replace("\\\\", "\\")
+                    .replace("\\n", "\n")
+                    .replace("\\\"", "\"");
     }
 }
