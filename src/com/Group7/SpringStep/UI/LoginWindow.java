@@ -38,6 +38,7 @@ public class LoginWindow extends JFrame implements ActionListener
         {
             // Initialize nested components here
             JPanel mainPanel = new JPanel(new GridBagLayout());
+            mainPanel.setOpaque(false);
             mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
             {
                 JLabel welcomeLabel = new JLabel("Log in to SpringStep!");
@@ -60,6 +61,7 @@ public class LoginWindow extends JFrame implements ActionListener
                 }
                 
                 JPanel buttonPanel = new JPanel(new FlowLayout());
+                buttonPanel.setOpaque(false);
                 {
                     buttonPanel.add(signUpButton);
                     buttonPanel.add(logInButton);
