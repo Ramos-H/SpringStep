@@ -114,8 +114,8 @@ public class SearchResultsPanel extends JPanel implements MouseListener
             {
                 SearchResult currentResult = currentResults.get(resultIndex);
                 innerContainerConstraints.gridy++;
-                JButton resultButton = new JButton(
-                        currentResult.getName() + " from " + currentResult.getBoardSource().getName());
+                JButton resultButton = new JButton(String.format("\"%s\" from \"%s\"", currentResult.getName(),
+                        currentResult.getBoardSource().getName()));
                 resultButton.addMouseListener(this);
                 resultButton.setHorizontalAlignment(SwingConstants.LEFT);
                 resultButton.setContentAreaFilled(false);

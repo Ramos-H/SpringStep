@@ -5,6 +5,7 @@ import javax.swing.undo.StateEditable;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.Visibility;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
@@ -302,7 +303,7 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
     public void setEditMode(boolean newMode) 
     {
         editMode = newMode;
-        setEditButtonVisibility(editMode);
+        setButtonVisibility(editMode);
         if(editMode)
         {
             editProfileButton.setText("Save changes");
@@ -315,11 +316,12 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         }
     }
 
-    private void setEditButtonVisibility(boolean isVisible) 
+    private void setButtonVisibility(boolean isVisible) 
     {
         editUsernameButton.setVisible(isVisible);
         editEmailButton.setVisible(isVisible);
         editPasswordButton.setVisible(isVisible);
+        logOutButton.setVisible(!isVisible);
     }
 
     public void setUser(User newUser)
