@@ -39,6 +39,8 @@ public class PasswordTextField extends JPanel implements ActionListener
             passwordVisibilityButton.setBorderPainted(false);
             passwordVisibilityButton.setMargin(new Insets(0, 0, 0, 0));
             passwordVisibilityButton.addActionListener(this);
+            passwordVisibilityButton.setFocusable(false);
+
             add(passwordField, BorderLayout.CENTER);
             add(passwordVisibilityButton, BorderLayout.LINE_END);
         }
