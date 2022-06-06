@@ -8,7 +8,7 @@ import java.awt.event.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class TaskNode extends JPanel implements ActionListener 
+public class TaskNode extends RoundedPanel implements ActionListener 
 {
     private JTextArea taskNameArea;
     private TaskDetails taskDetails;
@@ -22,7 +22,6 @@ public class TaskNode extends JPanel implements ActionListener
         
         setLayout(new GridLayout(1,1));
         setBackground(Color.WHITE);
-        setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
         {
             JPanel innerPanel = new JPanel(new GridBagLayout());
             Utils.padJComponent(innerPanel, 5, 5, 5, 5);
