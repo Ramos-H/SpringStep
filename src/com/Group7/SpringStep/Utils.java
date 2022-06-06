@@ -112,4 +112,20 @@ public class Utils
     {
         return text == null || text.trim().equals("");
     }
+
+    public static String getCsvFriendlyFormat(String input)
+    {
+        return input.replace("\\", "\\\\")
+                    .replace(",", "\\,")
+                    .replace("\n", "\\n")
+                    .replace("\"", "\\\"");
+    }
+
+    public static String parseCsvFriendlyFormat(String input)
+    {
+        return input.replace("\\\\", "\\")
+                    .replace("\\,", ",")
+                    .replace("\\n", "\n")
+                    .replace("\\\"", "\"");
+    }
 }

@@ -97,7 +97,7 @@ public class TaskDetails
         // Description
         if (!currentTaskData[1].equals("NULL")) 
         {
-            setDescription(parseCsvFriendlyFormat(currentTaskData[1]));
+            setDescription(Utils.parseCsvFriendlyFormat(currentTaskData[1]));
         }
 
         // Deadline
@@ -114,12 +114,12 @@ public class TaskDetails
 
         String formattedName = DEFAULT_VALUE;
         if (!Utils.isTextEmpty(getName())) {
-            formattedName = String.format("%s", csvFriendlyFormat(name));
+            formattedName = String.format("%s", Utils.getCsvFriendlyFormat(name));
         }
 
         String formattedDescription = DEFAULT_VALUE;
         if (!Utils.isTextEmpty(getDescription())) {
-            formattedDescription = String.format("%s", csvFriendlyFormat(description));
+            formattedDescription = String.format("%s", Utils.getCsvFriendlyFormat(description));
         }
 
         String formattedDeadline = DEFAULT_VALUE;
@@ -128,19 +128,5 @@ public class TaskDetails
         }
 
         return String.format("%s,%s,%s", formattedName, formattedDescription, formattedDeadline);
-    }
-    
-    private String csvFriendlyFormat(String input)
-    {
-        return input.replace("\\", "\\\\")
-                    .replace("\n", "\\n")
-                    .replace("\"", "\\\"");
-    }
-
-    private String parseCsvFriendlyFormat(String input)
-    {
-        return input.replace("\\\\", "\\")
-                    .replace("\\n", "\n")
-                    .replace("\\\"", "\"");
     }
 }
