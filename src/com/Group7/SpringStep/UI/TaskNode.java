@@ -31,6 +31,7 @@ public class TaskNode extends JPanel implements ActionListener
                 taskNameArea = new JTextArea();
                 taskNameArea.setEditable(false);
                 taskNameArea.setLineWrap(true);
+                taskNameArea.setWrapStyleWord(true);
                 taskNameArea.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 
                 tagPanel = new JPanel(new FlowLayout());
