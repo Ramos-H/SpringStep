@@ -1,6 +1,7 @@
 package com.Group7.SpringStep.ui;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -31,7 +32,9 @@ public class TaskNode extends RoundedPanel implements ActionListener
                 taskNameArea.setEditable(false);
                 taskNameArea.setLineWrap(true);
                 taskNameArea.setWrapStyleWord(true);
-                taskNameArea.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+                taskNameArea.setBorder(null);
+                Utils.padJComponent(taskNameArea, 3, 3, 3, 3);
+                taskNameArea.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), taskNameArea.getBorder()));
 
                 tagPanel = new JPanel(new FlowLayout());
                 tagPanel.setOpaque(false);
