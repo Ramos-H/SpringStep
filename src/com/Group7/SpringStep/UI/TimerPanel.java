@@ -26,6 +26,11 @@ public class TimerPanel extends JPanel implements ActionListener
 
     private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 2);
     private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 1);
+    private JLabel timerStatusIcon;
+    private Image workTimeImage;
+    private Image breakTimeImage;
+    private ImageIcon workTimeIcon;
+    private ImageIcon breakTimeIcon;
 
     public TimerPanel(TrayIcon icon)
     {
@@ -33,14 +38,37 @@ public class TimerPanel extends JPanel implements ActionListener
         // Set timer
         remainingTime = DEFAULT_WORK_DURATION;
         timer = new Timer(1000, this);
+        workTimeImage = Utils.getScaledImage(App.resources.get("Work_Time_Icon_256.png"), 0.125f);
+        if (workTimeImage != null)
+        {
+            workTimeIcon = new ImageIcon(workTimeImage);
+        }
+        breakTimeImage = Utils.getScaledImage(App.resources.get("Break_Time_Icon_256.png"), 0.125f);
+        if (breakTimeImage != null)
+        {
+            breakTimeIcon = new ImageIcon(breakTimeImage);
+        }
 
         setLayout(new GridBagLayout());
         {
-            timerLabel = new JLabel(Utils.formatTime(remainingTime));
-            timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            timerLabel.setFont(new Font(timerLabel.getFont().getFontName(), Font.PLAIN, 21));
-            timerLabel.setForeground(Color.RED);
-            timerLabel.setOpaque(false);
+            JPanel timeIndicatorArea = new JPanel(new BorderLayout());
+            timeIndicatorArea.setOpaque(false);
+            {
+                timerStatusIcon = new JLabel();
+                if (workTimeIcon != null)
+                {
+                    timerStatusIcon.setIcon(workTimeIcon);
+                }
+
+                timerLabel = new JLabel(Utils.formatTime(remainingTime));
+                timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                timerLabel.setFont(new Font(timerLabel.getFont().getFontName(), Font.PLAIN, 40));
+                timerLabel.setForeground(Color.RED);
+                timerLabel.setOpaque(false);
+
+                timeIndicatorArea.add(timerStatusIcon, BorderLayout.LINE_START);
+                timeIndicatorArea.add(timerLabel, BorderLayout.CENTER);
+            }
 
             startStopTimerButton = new JButton("Start");
             startStopTimerButton.addActionListener(this);
@@ -52,7 +80,7 @@ public class TimerPanel extends JPanel implements ActionListener
             timerPanelConstraints.gridx = 0;
 
             timerPanelConstraints.gridwidth = 2;
-            add(timerLabel, timerPanelConstraints);
+            add(timeIndicatorArea, timerPanelConstraints);
 
             timerPanelConstraints.gridy = 1;
             timerPanelConstraints.gridwidth = 1;
@@ -97,9 +125,17 @@ public class TimerPanel extends JPanel implements ActionListener
         if (workMode) {
             timerLabel.setForeground(Color.RED);
             remainingTime = DEFAULT_WORK_DURATION;
+            if(workTimeIcon != null)
+            {
+                timerStatusIcon.setIcon(workTimeIcon);
+            }
         } else {
             timerLabel.setForeground(Color.GREEN);
             remainingTime = DEFAULT_BREAK_DURATION;
+            if(breakTimeIcon != null)
+            {
+                timerStatusIcon.setIcon(breakTimeIcon);
+            }
         }
         timerLabel.setText(Utils.formatTime(remainingTime));
     }
