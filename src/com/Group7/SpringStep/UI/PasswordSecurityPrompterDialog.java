@@ -12,7 +12,7 @@ public class PasswordSecurityPrompterDialog extends JDialog implements ActionLis
     private JLabel icon = new JLabel();
     private JTextArea messageLabel;
     private PasswordTextField passField;
-    private JButton submitButton = new JButton("Confirm");
+    private RoundedButton submitButton = new RoundedButton("Confirm");
 
     public static int RESPONSE_SUBMITTED = 0;
     public static int RESPONSE_CANCELLED = 1;
@@ -26,6 +26,7 @@ public class PasswordSecurityPrompterDialog extends JDialog implements ActionLis
         setLayout(new GridBagLayout());
         {
             submitButton.addActionListener(this);
+            submitButton.setBackground(new Color(135, 195, 193));
 
             passField = new PasswordTextField();
             passField.setPassShowButtonVisibility(false);
