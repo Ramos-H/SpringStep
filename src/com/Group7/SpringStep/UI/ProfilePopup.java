@@ -249,42 +249,49 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
             }
             else
             {
-                PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
-                boolean properlyResponded = false;
-                String message = "To make sure it really is you, please enter your password before you make changes.\n";
-                message += "We'll only ask you this once for this session.";
-                do
+                if(passVerified)
                 {
-                    int response = passwordPrompter.showDialog(message, "Security Check", null, null);
-                    if(response == PasswordSecurityPrompterDialog.RESPONSE_SUBMITTED)
+                    setEditMode(true);
+                }
+                else
+                {
+                    PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
+                    boolean properlyResponded = false;
+                    String message = "To make sure it really is you, please enter your password before you make changes.\n";
+                    message += "We'll only ask you this once for this session.";
+                    do
                     {
-                        boolean passwordIsValid = true;
-                        String enteredPassword = passwordPrompter.getText();
-                        if(Utils.isTextEmpty(enteredPassword))
+                        int response = passwordPrompter.showDialog(message, "Security Check", null, null);
+                        if(response == PasswordSecurityPrompterDialog.RESPONSE_SUBMITTED)
                         {
-                            JOptionPane.showMessageDialog(this, "Please enter your password",
-                                    "Password confirmation unsuccessful", JOptionPane.WARNING_MESSAGE);
-                            passwordIsValid = false;
+                            boolean passwordIsValid = true;
+                            String enteredPassword = passwordPrompter.getText();
+                            if(Utils.isTextEmpty(enteredPassword))
+                            {
+                                JOptionPane.showMessageDialog(this, "Please enter your password",
+                                        "Password confirmation unsuccessful", JOptionPane.WARNING_MESSAGE);
+                                passwordIsValid = false;
+                            }
+                            else if (!enteredPassword.equals(oldPassword))
+                            {
+                                JOptionPane.showMessageDialog(this, "The password is incorrect. Please try entering it again. ",
+                                        "Warning: Password incorrect", JOptionPane.WARNING_MESSAGE);
+                                passwordIsValid = false;
+                            }
+                            
+                            if(passwordIsValid)
+                            {
+                                properlyResponded = true;
+                                passVerified = true;
+                                setEditMode(true);
+                            }
                         }
-                        else if (!enteredPassword.equals(oldPassword))
-                        {
-                            JOptionPane.showMessageDialog(this, "The password is incorrect. Please try entering it again. ",
-                                    "Warning: Password incorrect", JOptionPane.WARNING_MESSAGE);
-                            passwordIsValid = false;
-                        }
-                        
-                        if(passwordIsValid)
+                        else
                         {
                             properlyResponded = true;
-                            passVerified = true;
-                            setEditMode(true);
                         }
-                    }
-                    else
-                    {
-                        properlyResponded = true;
-                    }
-                } while (!properlyResponded);
+                    } while (!properlyResponded);
+                }
             }
         }
     }
