@@ -39,6 +39,7 @@ public class SignUpWindow extends JFrame implements ActionListener
         {
             // Initialize nested components here
             JPanel mainPanel = new JPanel(new GridBagLayout());
+            mainPanel.setOpaque(false);
             mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 150, 0, 150));
             {
                 JLabel welcomeLabel = new JLabel("Welcome to SpringStep!");
@@ -63,6 +64,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 }
                 
                 JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
+                buttonPanel.setOpaque(false);
                 {
                     GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
                     buttonPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
