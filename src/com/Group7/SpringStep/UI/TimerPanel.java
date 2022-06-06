@@ -130,7 +130,7 @@ public class TimerPanel extends JPanel implements ActionListener
     {
         workMode = newWorkMode;
         if (workMode) {
-            timerLabel.setForeground(new Color(245, 204, 190));
+            timerLabel.setForeground(new Color(255, 164, 133));
             remainingTime = DEFAULT_WORK_DURATION;
             if(workTimeIcon != null)
             {
