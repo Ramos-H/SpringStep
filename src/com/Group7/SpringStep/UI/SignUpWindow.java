@@ -60,10 +60,16 @@ public class SignUpWindow extends JFrame implements ActionListener
                     iconLogo.setIcon(new ImageIcon(logoImage));
                 }
                 
-                JPanel buttonPanel = new JPanel(new FlowLayout()); // pinasok buttons here
+                JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
                 {
-                    buttonPanel.add(backButton);
-                    buttonPanel.add(signUpButton);
+                    GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
+                    buttonPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                    buttonPanelConstraints.insets = new Insets(5, 5, 5, 5);
+                    buttonPanelConstraints.weightx = 1;
+                    buttonPanel.add(backButton, buttonPanelConstraints);
+
+                    buttonPanelConstraints.gridy++;
+                    buttonPanel.add(signUpButton, buttonPanelConstraints);
                 }
 
                 GridBagConstraints signUpWindowConstraints = new GridBagConstraints();
