@@ -17,6 +17,7 @@ public class HelpWindow extends JDialog
         Utils.centerByRect(this, (int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(new GridLayout(1, 1));
         setTitle("Help Page");
+        setIconImage(App.springStepImage);
         {
             JScrollPane scrollPane = new JScrollPane();
             try 
