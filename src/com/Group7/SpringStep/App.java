@@ -15,6 +15,9 @@ public class App
         resources = new Resources();
         springStepImage = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 1f);
 
+        System.setProperty("awt.useSystemAAFontSettings","on");
+        System.setProperty("swing.aatext", "true");
+        
         JFrame frame;
         frame = new LoginWindow();
 
