@@ -76,7 +76,7 @@ public class ListPanel extends JPanel
 
                 GridBagConstraints outerPanelConstraints = new GridBagConstraints();
                 outerPanelConstraints.anchor = GridBagConstraints.NORTH;
-                outerPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+                outerPanelConstraints.fill = GridBagConstraints.BOTH;
                 outerPanelConstraints.weightx = 1;
                 outerPanelConstraints.weighty = 1;
 
@@ -85,7 +85,7 @@ public class ListPanel extends JPanel
 
             GridBagConstraints listPanelConstraints = new GridBagConstraints();
             listPanelConstraints.anchor = GridBagConstraints.NORTH;
-            listPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
+            listPanelConstraints.fill = GridBagConstraints.BOTH;
             listPanelConstraints.weightx = 1;
             listPanelConstraints.weighty = 1;
 
