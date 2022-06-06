@@ -15,8 +15,8 @@ public class LoginWindow extends JFrame implements ActionListener
     private JTextField userNameField;
     private PasswordTextField passwordField;
     private JCheckBox rememberPasswordCheckBox;
-    private JButton signUpButton;
-    private JButton logInButton;
+    private RoundedButton signUpButton;
+    private RoundedButton logInButton;
 
     public LoginWindow()
     {
@@ -44,11 +44,11 @@ public class LoginWindow extends JFrame implements ActionListener
                 passwordField = new PasswordTextField();
                 rememberPasswordCheckBox = new JCheckBox("Remember password");
 
-                signUpButton = new JButton("Sign Up");
+                signUpButton = new RoundedButton("Sign Up");
                 signUpButton.addActionListener(this);
                 signUpButton.setBackground(new Color(215, 204, 195));
 
-                logInButton = new JButton("Log In");
+                logInButton = new RoundedButton("Log In");
                 logInButton.addActionListener(this);
                 logInButton.setBackground(new Color(135, 195, 193));
 
