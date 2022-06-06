@@ -238,25 +238,42 @@ public class ProfilePopup extends JPanel implements ActionListener
             }
             else
             {
+                PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
+                boolean properlyResponded = false;
                 String message = "To make sure it really is you, please enter your password before you make changes.\n";
                 message += "We'll only ask you this once for this session.";
-                while (!passVerified)
+                do
                 {
-                    String response = JOptionPane.showInputDialog(this, message);
-                    if (Utils.isTextEmpty(response)) {
-                        JOptionPane.showMessageDialog(null, "Please enter your password",
-                                "Password confirmation unsuccessful",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else if (!response.equals(passwordField.getText())) {
-                        JOptionPane.showMessageDialog(null, "The password you entered is incorrect. \nPlease try again",
-                                "Password confirmation unsuccessful",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        passVerified = true;
+                    int response = passwordPrompter.showDialog(message, "Security Check", null, null);
+                    if(response == PasswordSecurityPrompterDialog.RESPONSE_SUBMITTED)
+                    {
+                        boolean passwordIsValid = true;
+                        String enteredPassword = passwordPrompter.getText();
+                        if(Utils.isTextEmpty(enteredPassword))
+                        {
+                            JOptionPane.showMessageDialog(this, "Please enter your password",
+                                    "Password confirmation unsuccessful", JOptionPane.WARNING_MESSAGE);
+                            passwordIsValid = false;
+                        }
+                        else if (!enteredPassword.equals(oldPassword))
+                        {
+                            JOptionPane.showMessageDialog(this, "The password is incorrect. Please try entering it again. ",
+                                    "Warning: Password incorrect", JOptionPane.WARNING_MESSAGE);
+                            passwordIsValid = false;
+                        }
+                        
+                        if(passwordIsValid)
+                        {
+                            properlyResponded = true;
+                            passVerified = true;
+                            setEditMode(true);
+                        }
                     }
-                }
-                
-                setEditMode(true);
+                    else
+                    {
+                        properlyResponded = true;
+                    }
+                } while (!properlyResponded);
             }
         }
     }
