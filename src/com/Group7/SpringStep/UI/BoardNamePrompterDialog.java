@@ -10,7 +10,7 @@ import com.Group7.SpringStep.*;
 public class BoardNamePrompterDialog extends JDialog implements ActionListener
 {
     private JLabel icon = new JLabel();
-    private JLabel messageLabel = new JLabel();
+    private JTextArea messageLabel;
     private JTextField nameField = new JTextField();
     private JButton submitButton = new JButton("Confirm");
 
@@ -19,13 +19,20 @@ public class BoardNamePrompterDialog extends JDialog implements ActionListener
 
     private int value = RESPONSE_CANCELLED;
 
-
     public BoardNamePrompterDialog()
     {
         setModal(true);
         setLayout(new GridBagLayout());
         {
             submitButton.addActionListener(this);
+
+            messageLabel = new JTextArea();
+            messageLabel.setLineWrap(true);
+            messageLabel.setBorder(null);
+            messageLabel.setWrapStyleWord(true);
+            messageLabel.setEnabled(false);
+            messageLabel.setDisabledTextColor(Color.BLACK);
+            messageLabel.setOpaque(false);
 
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.anchor = GridBagConstraints.CENTER;
