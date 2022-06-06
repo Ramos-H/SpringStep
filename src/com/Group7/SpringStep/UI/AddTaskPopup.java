@@ -59,6 +59,7 @@ public class AddTaskPopup extends JPanel implements ActionListener
                     descriptionArea = new JTextArea();
                     descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
                     descriptionArea.setLineWrap(true);
+                    descriptionArea.setWrapStyleWord(true);
 
                     descriptionScroller.setViewportView(descriptionArea);
                 }
