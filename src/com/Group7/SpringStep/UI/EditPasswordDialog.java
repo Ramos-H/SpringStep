@@ -11,8 +11,8 @@ public class EditPasswordDialog extends JDialog implements ActionListener
 {
     private JLabel newPasswordLabel;
     private JLabel confirmPasswordLabel;
-    private JButton doneButton;
-    private JButton cancelButton;
+    private RoundedButton doneButton;
+    private RoundedButton cancelButton;
     private PasswordTextField fieldToModify;
     private PasswordTextField newPasswordField;
     private PasswordTextField confirmPasswordField;
@@ -21,6 +21,8 @@ public class EditPasswordDialog extends JDialog implements ActionListener
     {
         fieldToModify = textField;
         setModal(true);
+        setTitle("Enter new password");
+        setIconImage(App.springStepImage);
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 30f;
         float heightScale = 30f;
@@ -39,11 +41,13 @@ public class EditPasswordDialog extends JDialog implements ActionListener
             {
                 JPanel buttonPanel = new JPanel(new FlowLayout());
                 {
-                    cancelButton = new JButton("Cancel");
+                    cancelButton = new RoundedButton("Cancel");
                     cancelButton.addActionListener(this);
+                    cancelButton.setBackground(new Color(215, 204, 195));
 
-                    doneButton = new JButton("Done");
+                    doneButton = new RoundedButton("Done");
                     doneButton.addActionListener(this);
+                    doneButton.setBackground(new Color(135, 195, 193));
 
                     buttonPanel.add(cancelButton);
                     buttonPanel.add(doneButton);
@@ -52,14 +56,14 @@ public class EditPasswordDialog extends JDialog implements ActionListener
                 gbc.anchor = GridBagConstraints.WEST;
                 gbc.fill = GridBagConstraints.HORIZONTAL;
                 gbc.weightx = 1;
-                padPanel.add(new JLabel("New password"), gbc);
+                padPanel.add(new JLabel("New password:"), gbc);
 
                 gbc.gridy = 1;
                 newPasswordField = new PasswordTextField();
                 padPanel.add(newPasswordField, gbc);
 
                 gbc.gridy = 2;
-                padPanel.add(new JLabel("Confirm password"), gbc);
+                padPanel.add(new JLabel("Confirm password:"), gbc);
 
                 gbc.gridy = 3;
                 confirmPasswordField = new PasswordTextField();
