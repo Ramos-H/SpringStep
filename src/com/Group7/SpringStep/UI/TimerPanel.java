@@ -14,8 +14,8 @@ import com.Group7.SpringStep.*;
 public class TimerPanel extends JPanel implements ActionListener
 {
     private JLabel timerLabel;
-    private JButton startStopTimerButton;
-    private JButton resetTimerButton;
+    private RoundedButton startStopTimerButton;
+    private RoundedButton resetTimerButton;
 
     private Timer timer;
     private int timerTick = 10;
@@ -70,23 +70,30 @@ public class TimerPanel extends JPanel implements ActionListener
                 timeIndicatorArea.add(timerLabel, BorderLayout.CENTER);
             }
 
-            startStopTimerButton = new JButton("Start");
+            startStopTimerButton = new RoundedButton("Start");
             startStopTimerButton.addActionListener(this);
-            resetTimerButton = new JButton("Reset");
+            startStopTimerButton.setBackground(new Color(135, 195, 193));
+            
+            resetTimerButton = new RoundedButton("Reset");
             resetTimerButton.addActionListener(this);
+            resetTimerButton.setBackground(new Color(215, 204, 195));
 
             GridBagConstraints timerPanelConstraints = new GridBagConstraints();
             timerPanelConstraints.anchor = GridBagConstraints.CENTER;
             timerPanelConstraints.gridx = 0;
-
+            
             timerPanelConstraints.gridwidth = 2;
             add(timeIndicatorArea, timerPanelConstraints);
-
+            
             timerPanelConstraints.gridy = 1;
             timerPanelConstraints.gridwidth = 1;
+            timerPanelConstraints.anchor = GridBagConstraints.EAST;
+            timerPanelConstraints.insets = new Insets(0, 26, 0, 0);
             add(startStopTimerButton, timerPanelConstraints);
-
+            
             timerPanelConstraints.gridx = 1;
+            timerPanelConstraints.anchor = GridBagConstraints.WEST;
+            timerPanelConstraints.insets = new Insets(0, 5, 0, 0);
             add(resetTimerButton, timerPanelConstraints);
         }
     }
