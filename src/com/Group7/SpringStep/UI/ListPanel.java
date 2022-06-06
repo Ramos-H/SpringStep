@@ -34,14 +34,11 @@ public class ListPanel extends JPanel
                         JLabel listTitleLabel = new JLabel(title);
                         listTitleLabel.setFont(new Font(listTitleLabel.getFont().getFontName(), Font.BOLD, 21));
 
-                        JButton listEditButton = new JButton("...");
-
                         listTitleBar.add(listTitleLabel, BorderLayout.CENTER);
-                        listTitleBar.add(listEditButton, BorderLayout.LINE_END);
                     }
 
                     internalListContainer = new JPanel(new GridBagLayout());
-                    internalListContainer.setBackground(new Color(0, 0, 0, 0));
+                    internalListContainer.setBackground(new Color(0, 0, 0, 128));
 
                     listScrollPanel = new ListScrollPane(internalListContainer);
                     listScrollPanel.setOpaque(false);
