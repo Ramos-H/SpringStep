@@ -53,7 +53,6 @@ public class Utils
 
     public static void moveToNewWindow(JFrame oldWindow, JFrame newWindow) 
     {
-        newWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         newWindow.setVisible(true);
         oldWindow.setVisible(false);
         oldWindow.dispose();

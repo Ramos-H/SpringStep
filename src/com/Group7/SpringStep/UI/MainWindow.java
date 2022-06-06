@@ -1,19 +1,20 @@
 package com.Group7.SpringStep.ui;
 
-import java.time.*;
+import java.io.*;
 
 import java.util.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
+import javax.imageio.*;
 import javax.swing.*;
 import javax.swing.Timer;
 
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener, FocusListener
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener, FocusListener, MouseListener
 {
     private ListPanel toDoPanel, doingPanel, donePanel;
     private JButton toDoAddTaskButton, doingAddTaskButton;
@@ -48,8 +49,16 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private SearchResultsPanel searchResultsPanel;
     private JButton searchButton;
 
+    private PopupMenu trayMenu;
+    private MenuItem openAppMenuItem;
+    private MenuItem exitAppMenuItem;
+    private Image miniSpringStepIcon;
+    private SystemTray tray;
+    private TrayIcon trayIcon;
+
     public MainWindow()
     {
+        miniSpringStepIcon = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 1f);
         boardOptionsMenu = new JPopupMenu();
         popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
@@ -62,9 +71,12 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         // Set window parameters
         setTitle("SpringStep");
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setIconImage(miniSpringStepIcon);
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
         addWindowListener(this);
+
+        doSystemTrayStuff();
 
         long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
         getToolkit().addAWTEventListener(this, eventMask);
@@ -92,16 +104,14 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 boardListButton = new JButton();
                 boardListButton.addActionListener(this);
                 Image boardListButtonImage = Utils.getScaledImage(App.resources.get("Dropdown_Icon_256.png"), 0.125f);
-                if (boardListButtonImage != null)
-                {
+                if (boardListButtonImage != null) {
                     Utils.setButtonIcon(boardListButton, new ImageIcon(boardListButtonImage));
                 }
 
                 userButton = new JButton("User");
                 userButton.addActionListener(this);
                 Image userButtonImage = Utils.getScaledImage(App.resources.get("Profile_Icon_256.png"), 0.125);
-                if(userButtonImage != null)
-                {
+                if (userButtonImage != null) {
                     Utils.setButtonIcon(userButton, new ImageIcon(userButtonImage));
                 }
 
@@ -147,7 +157,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                         searchBar.add(searchBarTextField, BorderLayout.CENTER);
                         searchBar.add(searchButton, BorderLayout.LINE_END);
                     }
-                    
+
                     helpButton = new JButton();
                     helpButton.addActionListener(this);
                     Image helpButtonImage = Utils.getScaledImage(App.resources.get("Help_Icon_256.png"), 0.125);
@@ -162,7 +172,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     searchAreaConstraints.anchor = GridBagConstraints.CENTER;
                     searchAreaConstraints.fill = GridBagConstraints.HORIZONTAL;
                     searchArea.add(searchBar, searchAreaConstraints);
-                    
+
                     searchAreaConstraints.weightx = 0;
                     searchAreaConstraints.gridx++;
                     searchAreaConstraints.anchor = GridBagConstraints.WEST;
@@ -170,7 +180,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     searchArea.add(helpButton, searchAreaConstraints);
                 }
 
-                timerPanel = new TimerPanel();
+                timerPanel = new TimerPanel(trayIcon);
                 timerPanel.setOpaque(false);
 
                 JPanel boardPanel = new JPanel(new GridLayout(1, 3));
@@ -182,12 +192,14 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     toDoAddTaskButton.addActionListener(this);
                     Utils.padJComponent(toDoPanel, 5, 5, 5, 5);
 
-                    doingPanel = new ListPanel("Doing", "Add a task or drag one from \"To Do\"", new Color(215, 204, 195));
+                    doingPanel = new ListPanel("Doing", "Add a task or drag one from \"To Do\"",
+                            new Color(215, 204, 195));
                     doingAddTaskButton = doingPanel.getAddTaskButton();
                     doingAddTaskButton.addActionListener(this);
                     Utils.padJComponent(doingPanel, 5, 5, 5, 5);
 
-                    donePanel = new ListPanel("Done", "Drag a task from \"To Do\" or \"Doing\"", new Color(179, 195, 193));
+                    donePanel = new ListPanel("Done", "Drag a task from \"To Do\" or \"Doing\"",
+                            new Color(179, 195, 193));
                     donePanel.getAddTaskButton().setVisible(false);
                     Utils.padJComponent(donePanel, 5, 5, 5, 5);
 
@@ -227,78 +239,113 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
     }
 
-    
+    public void doSystemTrayStuff()
+    {
+        if (!SystemTray.isSupported()) {
+            return;
+        }
+
+        trayMenu = new PopupMenu();
+        openAppMenuItem = new MenuItem("Open");
+        openAppMenuItem.addActionListener(this);
+        trayMenu.add(openAppMenuItem);
+        
+        trayMenu.addSeparator();
+        
+        exitAppMenuItem = new MenuItem("Exit");
+        exitAppMenuItem.addActionListener(this);
+        trayMenu.add(exitAppMenuItem);
+        
+        try 
+        {
+            trayIcon = new TrayIcon(ImageIO.read(App.resources.get("SpringStep_Logo.png")));
+        } catch (IOException e1) 
+        {
+            e1.printStackTrace();
+        }
+        trayIcon.setImageAutoSize(true);
+        trayIcon.setPopupMenu(trayMenu);
+        trayIcon.addMouseListener(this);
+
+        tray = SystemTray.getSystemTray();
+        try 
+        {
+            tray.add(trayIcon);
+        } catch (AWTException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
     // --------------------------------------------EVENT HANDLERS----------------------------------
     @Override
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if(eventSource == toDoAddTaskButton)
-        {
+        if (eventSource == toDoAddTaskButton) {
             taskEditorPopup.addTask(toDoPanel);
-        }
-        else if(eventSource == doingAddTaskButton)
-        {
+        } else if (eventSource == doingAddTaskButton) {
             taskEditorPopup.addTask(doingPanel);
         }
 
-        if (eventSource == boardListButton)
-        {
-            boardOptionsMenu.show(boardListButton.getParent(), boardListButton.getX() + boardListButton.getWidth(), boardListButton.getY() + boardListButton.getHeight());
+        if (eventSource == boardListButton) {
+            boardOptionsMenu.show(boardListButton.getParent(), boardListButton.getX() + boardListButton.getWidth(),
+                    boardListButton.getY() + boardListButton.getHeight());
         }
 
-        if(eventSource == userButton)
-        {
+        if (eventSource == userButton) {
             popupContainer.setPopup(profilePopup);
         }
 
-        if (eventSource == helpButton)
-        {
+        if (eventSource == helpButton) {
             new HelpWindow().setVisible(true);
         }
 
-        if (eventSource == searchButton)
-        {
+        if (eventSource == searchButton) {
             searchBarTextField.requestFocus();
         }
 
-        if (eventSource instanceof JMenuItem)
-        {
-            if(eventSource == createBoardMenuItem)
-            {
+        if (eventSource == openAppMenuItem) {
+            setVisible(true);
+        } else if (eventSource == exitAppMenuItem) {
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to close SpringStep?",
+                    "Close SpringStep?",
+                    JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) {
+                close();
+            }
+        }
+
+        if (eventSource instanceof JMenuItem) {
+            if (eventSource == createBoardMenuItem) {
                 BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
                 boolean properlyResponded = false;
-                do
-                {
-                    int response = namePrompter.showDialog("Please give a name for the new board", "New board", "New Board",
+                do {
+                    int response = namePrompter.showDialog("Please give a name for the new board", "New board",
+                            "New Board",
                             null);
-                    if(response == BoardNamePrompterDialog.RESPONSE_SUBMITTED)
-                    {
+                    if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) {
                         boolean nameIsValid = true;
                         String enteredName = namePrompter.getText();
-                        if(Utils.isTextEmpty(enteredName))
-                        {
+                        if (Utils.isTextEmpty(enteredName)) {
                             JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
                                     "Warning: Can't create a nameless board", JOptionPane.WARNING_MESSAGE);
                             nameIsValid = false;
                         }
-                        
+
                         ArrayList<BoardDetails> boards = currentUser.getBoards();
 
-                        for (BoardDetails boardDetails : boards) 
-                        {
-                            if(boardDetails.getName().equals(enteredName))
-                            {
+                        for (BoardDetails boardDetails : boards) {
+                            if (boardDetails.getName().equals(enteredName)) {
                                 String warningTitle = "Warning: Board name already taken";
                                 String warningMessage = "That name is already taken. Please enter a different name";
                                 JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
-                                    JOptionPane.WARNING_MESSAGE);
+                                        JOptionPane.WARNING_MESSAGE);
                                 nameIsValid = false;
                             }
                         }
 
-                        if(nameIsValid)
-                        {
+                        if (nameIsValid) {
                             properlyResponded = true;
                             BoardDetails newBoard = new BoardDetails(enteredName);
                             boards.add(newBoard);
@@ -307,15 +354,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                             JOptionPane.showMessageDialog(this, "The board has been successfully created.",
                                     "New board created", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         properlyResponded = true;
                     }
                 } while (!properlyResponded);
-            }
-            else if(eventSource == deleteBoardMenuItem)
-            {
+            } else if (eventSource == deleteBoardMenuItem) {
                 int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this board?",
                         "Delete current board?", JOptionPane.YES_NO_OPTION);
                 if (response == JOptionPane.YES_OPTION) {
@@ -324,41 +367,34 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     updateBoardList();
                     setCurrentBoard(boards.get(0));
                 }
-            }
-            else if(eventSource == renameBoardMenuItem)
-            {
+            } else if (eventSource == renameBoardMenuItem) {
                 BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
                 boolean properlyResponded = false;
-                do
-                {
-                    int response = namePrompter.showDialog("Enter a new name for the board", "Rename board", currentBoard.getName(),
+                do {
+                    int response = namePrompter.showDialog("Enter a new name for the board", "Rename board",
+                            currentBoard.getName(),
                             null);
-                    if(response == BoardNamePrompterDialog.RESPONSE_SUBMITTED)
-                    {
+                    if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) {
                         boolean nameIsValid = true;
                         String enteredName = namePrompter.getText();
-                        if(Utils.isTextEmpty(enteredName))
-                        {
+                        if (Utils.isTextEmpty(enteredName)) {
                             JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
                                     "Warning: Can't rename board", JOptionPane.WARNING_MESSAGE);
                             nameIsValid = false;
                         }
-                        
+
                         ArrayList<BoardDetails> boards = currentUser.getBoards();
-                        for (BoardDetails boardDetails : boards) 
-                        {
-                            if(boardDetails.getName().equals(enteredName))
-                            {
+                        for (BoardDetails boardDetails : boards) {
+                            if (boardDetails.getName().equals(enteredName)) {
                                 String warningTitle = "Warning: Board name already taken";
                                 String warningMessage = "That name is already taken. Please enter a different name";
                                 JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
-                                    JOptionPane.WARNING_MESSAGE);
+                                        JOptionPane.WARNING_MESSAGE);
                                 nameIsValid = false;
                             }
                         }
 
-                        if(nameIsValid)
-                        {
+                        if (nameIsValid) {
                             properlyResponded = true;
                             currentBoard.setName(enteredName);
                             setCurrentBoard(currentBoard);
@@ -366,21 +402,15 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                             JOptionPane.showMessageDialog(this, "The board has been successfully renamed.",
                                     "Current board was renamed", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         properlyResponded = true;
                     }
                 } while (!properlyResponded);
-            }
-            else
-            {
+            } else {
                 JMenuItem selectedBoard = (JMenuItem) eventSource;
                 ArrayList<BoardDetails> boards = currentUser.getBoards();
-                for (BoardDetails boardDetails : boards) 
-                {
-                    if(selectedBoard.getText().equals(boardDetails.getName()))
-                    {
+                for (BoardDetails boardDetails : boards) {
+                    if (selectedBoard.getText().equals(boardDetails.getName())) {
                         setCurrentBoard(boardDetails);
                         break;
                     }
@@ -388,10 +418,18 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
         }
 
-        if(eventSource == autosaveTimer)
-        {
+        if (eventSource == autosaveTimer) {
             saveUserData();
         }
+    }
+
+    public void close()
+    {
+        getToolkit().removeAWTEventListener(this);
+        setVisible(false);
+        if (trayIcon != null) { tray.remove(trayIcon); }
+        dispose();
+        System.exit(0);
     }
 
     @Override
@@ -803,5 +841,38 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             popupContainer.hidePopup();
             searchBarTextField.setText("");
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) 
+    {
+        if(e.getSource() == trayIcon && e.getClickCount() > 1)
+        {
+            setVisible(true);
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        // TODO Auto-generated method stub
+        
     }
 }

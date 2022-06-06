@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import java.awt.TrayIcon.*;
+
 import com.Group7.SpringStep.*;
 
 public class TimerPanel extends JPanel implements ActionListener
@@ -20,11 +22,14 @@ public class TimerPanel extends JPanel implements ActionListener
     private boolean workMode = true;
     private LocalTime remainingTime;
 
+    private TrayIcon trayIcon;
+
     private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 2);
     private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 1);
 
-    public TimerPanel()
+    public TimerPanel(TrayIcon icon)
     {
+        trayIcon = icon;
         // Set timer
         remainingTime = DEFAULT_WORK_DURATION;
         timer = new Timer(1000, this);
@@ -103,6 +108,21 @@ public class TimerPanel extends JPanel implements ActionListener
     {
         return workMode;
     }
+
+    private void displayNotifMessage()
+    {
+        if (trayIcon != null)
+        {
+            if (getWorkMode())
+            {
+                trayIcon.displayMessage("Time to work!", "Start working on your tasks now!", MessageType.INFO);
+            }
+            else
+            {
+                trayIcon.displayMessage("Time for a break!", "Take a break for a sec! Eat some snacks or play some games", MessageType.INFO);
+            }
+        }
+    }
     
     @Override
     public void actionPerformed(ActionEvent e) 
@@ -117,6 +137,7 @@ public class TimerPanel extends JPanel implements ActionListener
             } else 
             {
                 setWorkMode(!getWorkMode());
+                displayNotifMessage();
             }
         }
         
