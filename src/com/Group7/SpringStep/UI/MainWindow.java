@@ -52,13 +52,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     private PopupMenu trayMenu;
     private MenuItem openAppMenuItem;
     private MenuItem exitAppMenuItem;
-    private Image miniSpringStepIcon;
     private SystemTray tray;
     private TrayIcon trayIcon;
 
     public MainWindow()
     {
-        miniSpringStepIcon = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 1f);
         boardOptionsMenu = new JPopupMenu();
         popupContainer = new PopupContainer(getContentPane());
         setGlassPane(popupContainer);
@@ -71,7 +69,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         // Set window parameters
         setTitle("SpringStep");
-        setIconImage(miniSpringStepIcon);
+        setIconImage(App.springStepImage);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         getContentPane().setBackground(Color.WHITE);
         addWindowListener(this);

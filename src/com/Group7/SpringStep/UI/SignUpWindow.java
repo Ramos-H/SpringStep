@@ -21,6 +21,7 @@ public class SignUpWindow extends JFrame implements ActionListener
     {
         // Set window parameters first
         setTitle("SpringStep - Sign Up");
+        setIconImage(App.springStepImage);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();

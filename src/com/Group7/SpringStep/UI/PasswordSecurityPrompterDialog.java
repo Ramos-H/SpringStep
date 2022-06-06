@@ -23,6 +23,7 @@ public class PasswordSecurityPrompterDialog extends JDialog implements ActionLis
     public PasswordSecurityPrompterDialog()
     {
         setModal(true);
+        setIconImage(App.springStepImage);
         setLayout(new GridBagLayout());
         {
             submitButton.addActionListener(this);

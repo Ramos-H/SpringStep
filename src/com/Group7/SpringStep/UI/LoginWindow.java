@@ -22,6 +22,7 @@ public class LoginWindow extends JFrame implements ActionListener
         // Set window parameters first
         setTitle("SpringStep - Login");
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setIconImage(App.springStepImage);
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 40f;
