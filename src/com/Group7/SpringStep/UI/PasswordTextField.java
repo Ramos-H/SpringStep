@@ -17,7 +17,6 @@ public class PasswordTextField extends JPanel implements ActionListener
 
     public PasswordTextField()
     {
-        
         Image passwordHiddenSourceImage = Utils.getScaledImage(App.resources.get("Closed_Eye_Icon_256.png"), 0.10f);
         Image passwordShownSourceImage = Utils.getScaledImage(App.resources.get("Opened_Eye_Icon_256.png"), 0.10f);
 
@@ -48,16 +47,24 @@ public class PasswordTextField extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        if (!passwordIsVisible) 
-        {
+        if (!passwordIsVisible) {
             passwordField.setEchoChar((char) 0);
             passwordVisibilityButton.setIcon(passwordShownIcon);
-        } else 
-        {
+        } else {
             passwordField.setEchoChar('*');
             passwordVisibilityButton.setIcon(passwordHiddenIcon);
         }
         passwordIsVisible = !passwordIsVisible;
+    }
+    
+    public void setPassShowButtonVisibility(boolean visible)
+    {
+        passwordVisibilityButton.setVisible(visible);
+    }
+
+    public boolean getPassShowButtonVisibility()
+    {
+        return passwordVisibilityButton.isVisible();
     }
     
     public void setText(String text)

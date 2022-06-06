@@ -38,7 +38,9 @@ public class ProfilePopup extends JPanel implements ActionListener
 
             usernameField = new JTextField();
             emailField = new JTextField();
+
             passwordField = new PasswordTextField();
+            passwordField.setPassShowButtonVisibility(false);
 
             // for the edit buttons
             editUsernameButton = new JButton();
