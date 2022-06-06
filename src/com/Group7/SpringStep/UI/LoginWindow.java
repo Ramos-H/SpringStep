@@ -14,7 +14,6 @@ public class LoginWindow extends JFrame implements ActionListener
 {
     private JTextField userNameField;
     private PasswordTextField passwordField;
-    private JCheckBox rememberPasswordCheckBox;
     private RoundedButton signUpButton;
     private RoundedButton logInButton;
 
@@ -42,7 +41,6 @@ public class LoginWindow extends JFrame implements ActionListener
                 JLabel welcomeLabel = new JLabel("Log in to SpringStep!");
                 userNameField = new JTextField();
                 passwordField = new PasswordTextField();
-                rememberPasswordCheckBox = new JCheckBox("Remember password");
 
                 signUpButton = new RoundedButton("Sign Up");
                 signUpButton.addActionListener(this);
@@ -101,10 +99,7 @@ public class LoginWindow extends JFrame implements ActionListener
                 logInWindowConstraints.fill = GridBagConstraints.NONE;
                 logInWindowConstraints.anchor = GridBagConstraints.CENTER;
 
-                logInWindowConstraints.gridy = 4;
-                mainPanel.add(rememberPasswordCheckBox, logInWindowConstraints);
-
-                logInWindowConstraints.gridy = 5;
+                logInWindowConstraints.gridy++;
                 mainPanel.add(buttonPanel, logInWindowConstraints);
             }
             // Put the call to add the nested components here
