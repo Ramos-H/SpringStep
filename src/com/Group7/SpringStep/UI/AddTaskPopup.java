@@ -115,10 +115,12 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
                 {
                     btnDelete = new RoundedButton("Delete");
                     btnDelete.addActionListener(this);
-                    btnDelete.setBackground(new Color(215, 204, 195));
+                    btnDelete.setBackground(Color.RED);
+                    btnDelete.setForeground(Color.WHITE);
 
                     btnSave = new RoundedButton("Save");
                     btnSave.addActionListener(this);
+                    btnSave.setBackground(new Color(135, 195, 193));
 
                     GridBagConstraints btnPanelConstraints = new GridBagConstraints();
                     buttonBar.add(btnDelete, btnPanelConstraints);
