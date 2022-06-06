@@ -71,7 +71,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         setTitle("SpringStep");
         setIconImage(App.springStepImage);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        getContentPane().setBackground(Color.WHITE);
+        getContentPane().setBackground(new Color(255, 242, 238));
         addWindowListener(this);
 
         doSystemTrayStuff();

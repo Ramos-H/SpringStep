@@ -23,6 +23,7 @@ public class SignUpWindow extends JFrame implements ActionListener
         setTitle("SpringStep - Sign Up");
         setIconImage(App.springStepImage);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setBackground(new Color(255, 242, 238));
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 40f;
