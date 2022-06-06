@@ -1,6 +1,7 @@
 package com.Group7.SpringStep.ui;
 
 import javax.swing.*;
+import javax.swing.undo.StateEditable;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -37,9 +38,13 @@ public class ProfilePopup extends JPanel implements ActionListener
             JLabel profileLabel = new JLabel("User Profile");
 
             usernameField = new JTextField();
+            usernameField.setEditable(false);
+
             emailField = new JTextField();
+            emailField.setEditable(false);
 
             passwordField = new PasswordTextField();
+            passwordField.setEditable(false);
             passwordField.setPassShowButtonVisibility(false);
 
             // for the edit buttons

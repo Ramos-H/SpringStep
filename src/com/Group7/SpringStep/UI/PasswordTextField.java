@@ -56,6 +56,16 @@ public class PasswordTextField extends JPanel implements ActionListener
         }
         passwordIsVisible = !passwordIsVisible;
     }
+
+    public void setEditable(boolean editable)
+    {
+        passwordField.setEditable(editable);
+    }
+
+    public boolean getEditable()
+    {
+        return passwordField.isEditable();
+    }
     
     public void setPassShowButtonVisibility(boolean visible)
     {
