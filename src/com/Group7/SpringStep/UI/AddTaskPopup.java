@@ -10,11 +10,11 @@ import com.Group7.SpringStep.data.*;
 
 import com.github.lgooddatepicker.components.*;
 
-public class AddTaskPopup extends JPanel implements ActionListener 
+public class AddTaskPopup extends RoundedPanel implements ActionListener 
 {
-    private JButton btnSave;
     private JButton btnExit;
-    private JButton btnDelete;
+    private RoundedButton btnSave;
+    private RoundedButton btnDelete;
 
     private JTextField taskTitleField;
     private JTextArea descriptionArea;
@@ -34,101 +34,113 @@ public class AddTaskPopup extends JPanel implements ActionListener
         popupHandler = popupContainer;
         mainWindow = window;
 
-        setLayout(new BorderLayout());
-        Utils.padJComponent(this, 5, 5, 5, 5);
+        setLayout(new GridLayout(1, 1));
         {
-            JPanel titleBar = new JPanel(new BorderLayout());
+            JPanel innerPanel = new JPanel(new BorderLayout());
+            innerPanel.setOpaque(false);
+            Utils.padJComponent(innerPanel, 5, 5, 5, 5);
             {
-                JLabel titleLabel = new JLabel("Task Details");
-
-                btnExit = new JButton("X");
-                btnExit.addActionListener(this);
-                btnExit.setBackground(Color.WHITE);
-
-                titleBar.add(titleLabel, BorderLayout.CENTER);
-                titleBar.add(btnExit, BorderLayout.LINE_END);
-            }
-
-            JPanel contentArea = new JPanel(new GridBagLayout());
-            Utils.padJComponent(contentArea, 5, 5, 5, 5);
-            {
-                taskTitleField = new JTextField();
-
-                JScrollPane descriptionScroller = new JScrollPane();
+                JPanel titleBar = new JPanel(new BorderLayout());
                 {
-                    descriptionArea = new JTextArea();
-                    descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
-                    descriptionArea.setLineWrap(true);
-                    descriptionArea.setWrapStyleWord(true);
+                    JLabel titleLabel = new JLabel("Task Details");
 
-                    descriptionScroller.setViewportView(descriptionArea);
+                    btnExit = new JButton();
+                    Image btnExitImage = Utils.getScaledImage(App.resources.get("Close_Icon_256.png"), 0.125f);
+                    if (btnExitImage != null)
+                    {
+                        Utils.setButtonIcon(btnExit, new ImageIcon(btnExitImage));
+                    }
+                    btnExit.addActionListener(this);
+                    btnExit.setBackground(Color.WHITE);
+
+                    titleBar.add(titleLabel, BorderLayout.CENTER);
+                    titleBar.add(btnExit, BorderLayout.LINE_END);
                 }
 
-                DatePickerSettings settings = new DatePickerSettings();
-                settings.setAllowEmptyDates(true);
-                deadlinePicker = new DatePicker(settings);
-                deadlinePicker.setBackground(new Color(217, 217, 217));
+                JPanel contentArea = new JPanel(new GridBagLayout());
+                Utils.padJComponent(contentArea, 5, 5, 5, 5);
+                {
+                    taskTitleField = new JTextField();
 
-                JButton btnDuration = new JButton("+");
-                btnDuration.setBackground(new Color(217, 217, 217));
+                    JScrollPane descriptionScroller = new JScrollPane();
+                    {
+                        descriptionArea = new JTextArea();
+                        descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
+                        descriptionArea.setLineWrap(true);
+                        descriptionArea.setWrapStyleWord(true);
 
-                GridBagConstraints addTaskWindowConstraints = new GridBagConstraints();
-                addTaskWindowConstraints.weightx = 1;
-                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-                addTaskWindowConstraints.anchor = GridBagConstraints.NORTHWEST;
-                addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
+                        descriptionScroller.setViewportView(descriptionArea);
+                    }
 
-                addTaskWindowConstraints.gridx = 0;
-                addTaskWindowConstraints.gridy = 0;
-                contentArea.add(new JLabel("Title"), addTaskWindowConstraints);
+                    DatePickerSettings settings = new DatePickerSettings();
+                    settings.setAllowEmptyDates(true);
+                    deadlinePicker = new DatePicker(settings);
+                    deadlinePicker.setBackground(new Color(217, 217, 217));
 
-                addTaskWindowConstraints.gridx = 0;
-                addTaskWindowConstraints.gridy++;
-                contentArea.add(taskTitleField, addTaskWindowConstraints);
+                    JButton btnDuration = new JButton("+");
+                    btnDuration.setBackground(new Color(217, 217, 217));
 
-                addTaskWindowConstraints.gridy++;
-                contentArea.add(new JLabel("Description"), addTaskWindowConstraints);
+                    GridBagConstraints addTaskWindowConstraints = new GridBagConstraints();
+                    addTaskWindowConstraints.weightx = 1;
+                    addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
+                    addTaskWindowConstraints.anchor = GridBagConstraints.NORTHWEST;
+                    addTaskWindowConstraints.insets = new Insets(5, 5, 0, 5);
+
+                    addTaskWindowConstraints.gridx = 0;
+                    addTaskWindowConstraints.gridy = 0;
+                    contentArea.add(new JLabel("Title"), addTaskWindowConstraints);
+
+                    addTaskWindowConstraints.gridx = 0;
+                    addTaskWindowConstraints.gridy++;
+                    contentArea.add(taskTitleField, addTaskWindowConstraints);
+
+                    addTaskWindowConstraints.gridy++;
+                    contentArea.add(new JLabel("Description"), addTaskWindowConstraints);
+                    
+                    addTaskWindowConstraints.gridy++;
+                    addTaskWindowConstraints.weighty = 0.1;
+                    addTaskWindowConstraints.fill = GridBagConstraints.BOTH;
+                    contentArea.add(descriptionScroller, addTaskWindowConstraints);
+                    
+                    addTaskWindowConstraints.gridy++;
+                    addTaskWindowConstraints.weighty = 0;
+                    addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
+                    contentArea.add(new JLabel("Due Date"), addTaskWindowConstraints);
+
+                    addTaskWindowConstraints.gridy++;
+                    contentArea.add(deadlinePicker, addTaskWindowConstraints);
+                }
                 
-                addTaskWindowConstraints.gridy++;
-                addTaskWindowConstraints.weighty = 0.1;
-                addTaskWindowConstraints.fill = GridBagConstraints.BOTH;
-                contentArea.add(descriptionScroller, addTaskWindowConstraints);
+                JPanel buttonBar = new JPanel(new GridBagLayout());
+                {
+                    btnDelete = new RoundedButton("Delete");
+                    btnDelete.addActionListener(this);
+                    btnDelete.setBackground(new Color(215, 204, 195));
+
+                    btnSave = new RoundedButton("Save");
+                    btnSave.addActionListener(this);
+
+                    GridBagConstraints btnPanelConstraints = new GridBagConstraints();
+                    buttonBar.add(btnDelete, btnPanelConstraints);
+
+                    btnPanelConstraints.gridx = 2;
+                    buttonBar.add(btnSave, btnPanelConstraints);
+
+                    // Spacer
+                    btnPanelConstraints.gridx = 1;
+                    btnPanelConstraints.weightx = 1;
+                    btnPanelConstraints.fill = GridBagConstraints.BOTH;
+                    buttonBar.add(new JPanel(), btnPanelConstraints);
+                }
                 
-                addTaskWindowConstraints.gridy++;
-                addTaskWindowConstraints.weighty = 0;
-                addTaskWindowConstraints.fill = GridBagConstraints.HORIZONTAL;
-                contentArea.add(new JLabel("Due Date"), addTaskWindowConstraints);
+                innerPanel.add(titleBar, BorderLayout.PAGE_START);
+                innerPanel.add(contentArea, BorderLayout.CENTER);
+                innerPanel.add(buttonBar, BorderLayout.PAGE_END);
 
-                addTaskWindowConstraints.gridy++;
-                contentArea.add(deadlinePicker, addTaskWindowConstraints);
+                setEditMode(false);
             }
-            
-            JPanel buttonBar = new JPanel(new GridBagLayout());
-            {
-                btnDelete = new JButton("Delete");
-                btnDelete.addActionListener(this);
-                btnDelete.setBackground(new Color(215, 204, 195));
-                btnSave = new JButton("Save");
-                btnSave.addActionListener(this);
 
-                GridBagConstraints btnPanelConstraints = new GridBagConstraints();
-                buttonBar.add(btnDelete, btnPanelConstraints);
-
-                btnPanelConstraints.gridx = 2;
-                buttonBar.add(btnSave, btnPanelConstraints);
-
-                // Spacer
-                btnPanelConstraints.gridx = 1;
-                btnPanelConstraints.weightx = 1;
-                btnPanelConstraints.fill = GridBagConstraints.BOTH;
-                buttonBar.add(new JPanel(), btnPanelConstraints);
-            }
-            
-            add(titleBar, BorderLayout.PAGE_START);
-            add(contentArea, BorderLayout.CENTER);
-            add(buttonBar, BorderLayout.PAGE_END);
-
-            setEditMode(false);
+            add(innerPanel);
         }
     }
 
