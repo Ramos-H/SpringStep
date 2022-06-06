@@ -19,6 +19,17 @@ public class User
         boards.add(new BoardDetails("New Board"));
     }
 
+    public User(User copyFrom)
+    {
+        if(copyFrom != null)
+        {
+            setUserName(copyFrom.getUserName());
+            setEmail(copyFrom.getEmail());
+            setPassword(copyFrom.getPassword());
+            setBoards(copyFrom.getBoards());
+        }
+    }
+
     public static User reconstructFromCsv(List<String> csvInput)
     {
         if (csvInput.size() < 1) { return null; }

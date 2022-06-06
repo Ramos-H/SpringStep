@@ -27,6 +27,7 @@ public class ProfilePopup extends JPanel implements ActionListener
     private MainWindow mainWindow;
     private JButton logOutButton;
     private boolean passVerified = false;
+    private User currentUser;
 
     public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
     {
@@ -215,7 +216,10 @@ public class ProfilePopup extends JPanel implements ActionListener
                             JOptionPane.YES_NO_OPTION);
                     if(response == JOptionPane.YES_OPTION)
                     {
-                        User editedUser = new User(currentUsername, currentEmail, currentPassword);
+                        User editedUser = new User(currentUser);
+                        editedUser.setUserName(currentUsername);
+                        editedUser.setEmail(currentEmail);
+                        editedUser.setPassword(currentPassword);
 
                         DataManager dataWriter = new DataManager();
                         try 
@@ -304,17 +308,18 @@ public class ProfilePopup extends JPanel implements ActionListener
         editPasswordButton.setVisible(isVisible);
     }
 
-    public void setUser(User currentUser)
+    public void setUser(User newUser)
     {
-        String userName = currentUser.getUserName();
+        this.currentUser = newUser;
+        String userName = newUser.getUserName();
         usernameField.setText(userName);
         oldUsername = userName;
 
-        String email = currentUser.getEmail();
+        String email = newUser.getEmail();
         emailField.setText(email);
         oldEmail = email;
 
-        String password = currentUser.getPassword();
+        String password = newUser.getPassword();
         passwordField.setText(password);
         oldPassword = password;
     }
