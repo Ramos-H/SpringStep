@@ -138,7 +138,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                 searchArea.setOpaque(false);
                 {
                     JPanel searchBar = new JPanel(new BorderLayout());
-                    searchResultsPanel.setSearchBar(searchBar);
                     searchBar.setOpaque(false);
                     {
                         searchBarTextField = new JTextField();
@@ -155,6 +154,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                         searchBar.add(searchBarTextField, BorderLayout.CENTER);
                         searchBar.add(searchButton, BorderLayout.LINE_END);
                     }
+                    searchResultsPanel.setSearchBar(searchBarTextField);
 
                     helpButton = new JButton();
                     helpButton.addActionListener(this);

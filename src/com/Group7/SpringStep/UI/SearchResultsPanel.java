@@ -17,7 +17,7 @@ public class SearchResultsPanel extends JPanel implements MouseListener
     private JLabel textMessage;
     private GridBagConstraints innerContainerConstraints;
     private int resultLimit = 10;
-    private JPanel searchBar;
+    private JComponent searchBar;
     private PopupContainer popupHandler;
     private MainWindow mainWindow;
     private ArrayList<SearchResult> currentResults;
@@ -77,7 +77,7 @@ public class SearchResultsPanel extends JPanel implements MouseListener
         return newLocation;
     }
 
-    public void setSearchBar(JPanel newSearchBar)
+    public void setSearchBar(JComponent newSearchBar)
     {
         this.searchBar = newSearchBar;
     }
