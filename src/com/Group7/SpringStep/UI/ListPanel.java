@@ -12,7 +12,7 @@ public class ListPanel extends JPanel
 {
     private JPanel internalListContainer;
     private JScrollPane listScrollPanel;
-    private JButton addTaskButton;
+    private RoundedButton addTaskButton;
     private JPanel innerPanel;
     
     public ListPanel(String title, String addButtonMessage, Color color)
@@ -43,7 +43,8 @@ public class ListPanel extends JPanel
                     listScrollPanel = new ListScrollPane(internalListContainer);
                     listScrollPanel.setOpaque(false);
 
-                    addTaskButton = new JButton("Add");
+                    addTaskButton = new RoundedButton("Add");
+                    addTaskButton.setBackground(new Color(135, 195, 193));
 
                     GridBagConstraints innerPanelConstraints = new GridBagConstraints();
                     innerPanelConstraints.weightx = 1;
@@ -66,11 +67,13 @@ public class ListPanel extends JPanel
                     innerPanelConstraints.gridx = 0;
                     innerPanelConstraints.gridy = 2;
                     innerPanelConstraints.fill = GridBagConstraints.NONE;
+                    innerPanelConstraints.insets = new Insets(5, 0, 0, 5);
                     innerPanel.add(addTaskButton, innerPanelConstraints);
-
+                    
                     innerPanelConstraints.gridx = 1;
                     innerPanelConstraints.gridy = 2;
                     innerPanelConstraints.fill = GridBagConstraints.BOTH;
+                    innerPanelConstraints.insets = new Insets(5, 0, 5, 0);
                     innerPanel.add(new JLabel(addButtonMessage), innerPanelConstraints);
                 }
 
