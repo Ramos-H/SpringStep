@@ -9,24 +9,29 @@ import java.awt.event.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class ProfilePopup extends JPanel implements ActionListener 
+public class ProfilePopup extends RoundedPanel implements ActionListener 
 {
-    private JButton editProfileButton;
-    private JButton backButton;
+    private RoundedButton editProfileButton;
+    private RoundedButton backButton;
+    private RoundedButton logOutButton;
+
     private JButton editUsernameButton;
     private JButton editEmailButton;
     private JButton editPasswordButton;
+
     private boolean editMode = false;
+    private boolean passVerified = false;
+
     private JTextField usernameField;
     private JTextField emailField;
     private PasswordTextField passwordField;
+
     private PopupContainer popupHandler;
+    private MainWindow mainWindow;
+
     private String oldUsername;
     private String oldEmail;
     private String oldPassword;
-    private MainWindow mainWindow;
-    private JButton logOutButton;
-    private boolean passVerified = false;
     private User currentUser;
 
     public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
@@ -86,15 +91,17 @@ public class ProfilePopup extends JPanel implements ActionListener
             JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
             Utils.padJComponent(buttonPanel, 0, 5, 0, 5);
             {
-                backButton = new JButton("Back");
+                backButton = new RoundedButton("Back");
                 backButton.setBackground(new Color(215, 204, 195));
                 backButton.addActionListener(this);
 
-                editProfileButton = new JButton("Edit Profile");
+                editProfileButton = new RoundedButton("Edit Profile");
                 editProfileButton.setBackground(new Color(135, 195, 193));
                 editProfileButton.addActionListener(this);
 
-                logOutButton = new JButton("Log out");
+                logOutButton = new RoundedButton("Log out");
+                logOutButton.setBackground(Color.RED);
+                logOutButton.setForeground(Color.WHITE);
                 logOutButton.addActionListener(this);
 
                 GridBagConstraints buttonPanelConstraints = new GridBagConstraints();
