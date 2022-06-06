@@ -42,6 +42,7 @@ public class ListPanel extends JPanel
 
                     listScrollPanel = new ListScrollPane(internalListContainer);
                     listScrollPanel.setOpaque(false);
+                    listScrollPanel.getVerticalScrollBar().setUnitIncrement(10);
 
                     addTaskButton = new RoundedButton("Add");
                     addTaskButton.setBackground(new Color(135, 195, 193));
