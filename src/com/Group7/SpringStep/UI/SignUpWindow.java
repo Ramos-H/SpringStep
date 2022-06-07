@@ -205,7 +205,7 @@ public class SignUpWindow extends JFrame implements ActionListener
             catch (Exception e1) 
             {
                 String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
-                JOptionPane.showMessageDialog(null, e1.getMessage(), "Save Record Unsuccessful",
+                JOptionPane.showMessageDialog(null, fileSaveErrorMessage, "Save Record Unsuccessful",
                         JOptionPane.ERROR_MESSAGE);
                 e1.printStackTrace();
                 return;
