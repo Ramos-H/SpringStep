@@ -10,12 +10,12 @@ import com.Group7.SpringStep.data.*;
 
 public class SignUpWindow extends JFrame implements ActionListener 
 {
-    private RoundedButton backButton;
-    private RoundedButton signUpButton;
     private JTextField userNameField;
     private JTextField emailField;
     private PasswordTextField passwordField;
     private PasswordTextField confirmPasswordField;
+    private RoundedButton backButton;
+    private RoundedButton signUpButton;
 
     public SignUpWindow() 
     {
@@ -58,10 +58,7 @@ public class SignUpWindow extends JFrame implements ActionListener
 
                 JLabel iconLogo = new JLabel();
                 Image logoImage = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 0.10);
-                if (logoImage != null)
-                {
-                    iconLogo.setIcon(new ImageIcon(logoImage));
-                }
+                if (logoImage != null) { iconLogo.setIcon(new ImageIcon(logoImage)); }
                 
                 JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
                 buttonPanel.setOpaque(false);
@@ -125,6 +122,7 @@ public class SignUpWindow extends JFrame implements ActionListener
                 signUpWindowConstraints.anchor = GridBagConstraints.CENTER;
                 mainPanel.add(buttonPanel, signUpWindowConstraints);
             }
+
             // Put the call to add the nested components here
             add(mainPanel);
         }
@@ -134,10 +132,7 @@ public class SignUpWindow extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if(eventSource == backButton)
-        {
-            Utils.moveToNewWindow(this, new LoginWindow());
-        }
+        if(eventSource == backButton) { Utils.moveToNewWindow(this, new LoginWindow()); }
         else if(eventSource == signUpButton)
         {
             String enteredUsername = userNameField.getText();
