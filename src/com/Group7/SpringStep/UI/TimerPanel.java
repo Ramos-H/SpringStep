@@ -24,8 +24,8 @@ public class TimerPanel extends JPanel implements ActionListener
 
     private TrayIcon trayIcon;
 
-    private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 2);
-    private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 1);
+    private final LocalTime DEFAULT_WORK_DURATION = LocalTime.of(0, 25);
+    private final LocalTime DEFAULT_BREAK_DURATION = LocalTime.of(0, 5);
     private JLabel timerStatusIcon;
     private Image workTimeImage;
     private Image breakTimeImage;
