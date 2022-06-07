@@ -29,22 +29,16 @@ public class DataManager
         boolean folderDoesntExist = Files.notExists(accountSavePath);
         boolean folderUnverifiable = !folderExists && !folderDoesntExist;
         boolean folderSurelyDoesntExists = !folderExists && folderDoesntExist;
-        if (folderSurelyDoesntExists) {
-            Files.createDirectories(accountSavePath);
-        }
+        if (folderSurelyDoesntExists) { Files.createDirectories(accountSavePath); }
 
         boolean fileExists = Files.exists(filePath);
         boolean fileDoesntExist = Files.notExists(filePath);
         boolean fileUnverifiable = !fileExists && !fileDoesntExist;
         boolean fileSurelyExists = fileExists && !fileDoesntExist;
         boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
-        if (!fileSurelyExists) {
-            Files.createFile(filePath);
-        }
+        if (!fileSurelyExists) { Files.createFile(filePath); }
 
-        if (!overwrite && (readUser(filePath) != null)) {
-            return USER_ALREADY_EXISTS;
-        }
+        if (!overwrite && (readUser(filePath) != null)) { return USER_ALREADY_EXISTS; }
 
         PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
         printWriter.println(newUser.getAsCsv());
