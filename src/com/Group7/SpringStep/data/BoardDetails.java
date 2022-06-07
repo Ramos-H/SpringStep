@@ -28,7 +28,7 @@ public class BoardDetails
         doneList = newDoneList;
     }
 
-    public String formatAsCsv()
+    public String getAsCsv()
     {
         int todoCount = todoList.size();
         int doneCount = doneList.size();

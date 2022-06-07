@@ -35,10 +35,10 @@ public class User
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public ArrayList<BoardDetails> getBoards() { return boards; }
-    public String getCsvFormattedInfo() 
+    public String getAsCsv() 
     {
         String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
-        for (BoardDetails board : boards) { output += board.formatAsCsv(); }
+        for (BoardDetails board : boards) { output += board.getAsCsv(); }
         return output;
     }
 
@@ -48,7 +48,7 @@ public class User
     public void setPassword(String password) { this.password = password; }
     public void setBoards(ArrayList<BoardDetails> boards) { this.boards = boards; }
 
-    public static User reconstructFromCsv(List<String> csvInput)
+    public static User getNewFromCsv(List<String> csvInput)
     {
         if (csvInput.size() < 1) { return null; }
 

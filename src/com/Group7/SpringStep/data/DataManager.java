@@ -12,7 +12,7 @@ public class DataManager
 
     public User readUser(Path filePath) throws Exception
     {
-        User currentUser = User.reconstructFromCsv(Files.readAllLines(filePath));
+        User currentUser = User.getNewFromCsv(Files.readAllLines(filePath));
         return currentUser;
     }
 
@@ -47,7 +47,7 @@ public class DataManager
         }
 
         PrintWriter printWriter = new PrintWriter(new FileWriter(filePath.toString(), false));
-        printWriter.println(newUser.getCsvFormattedInfo());
+        printWriter.println(newUser.getAsCsv());
         printWriter.close();
         return USER_SAVE_SUCCESSFUL;
     }
