@@ -178,141 +178,37 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == backButton) 
-        {
+        if (eventSource == backButton) {
             if (!editMode) { popupHandler.hidePopup(); }
             setEditMode(false);
-        }
-        else if (eventSource == logOutButton) 
+        } else if (eventSource == logOutButton) 
         {
             int response = JOptionPane.showConfirmDialog(this, "Are you really sure you want to log out?", "Log out?",
                     JOptionPane.YES_NO_OPTION);
-            if(response == JOptionPane.YES_OPTION) { mainWindow.logOut(); }
-        }
-        else if (eventSource == editUsernameButton) 
+            if (response == JOptionPane.YES_OPTION) { mainWindow.logOut(); }
+        } else if (eventSource == editUsernameButton) 
         {
             JDialog dialog = new EditProfilePropertyDialog("username", usernameField, usernameField.getText());
             dialog.setVisible(true);
-        } 
-        else if (eventSource == editEmailButton) 
+        } else if (eventSource == editEmailButton) 
         {
             JDialog dialog = new EditProfilePropertyDialog("email", emailField, emailField.getText());
             dialog.setVisible(true);
-        } 
-        else if (eventSource == editPasswordButton) 
+        } else if (eventSource == editPasswordButton) 
         {
             JDialog dialog = new EditPasswordDialog(passwordField);
             dialog.setVisible(true);
-        } 
-        else if (eventSource == editProfileButton) 
+        } else if (eventSource == editProfileButton) 
         {
-            if (editMode)
+            if (editMode) { saveProfileEdit(); } 
+            else 
             {
-                String currentUsername = usernameField.getText();
-                String currentEmail = emailField.getText();
-                String currentPassword = passwordField.getText();
-
-                if(!currentUsername.equals(oldUsername) || !currentEmail.equals(oldEmail) || !currentPassword.equals(oldPassword))
-                {
-                    int response = JOptionPane.showConfirmDialog(this,
-                            "Are you really sure you want to save these changes?", "Save profile edits?",
-                            JOptionPane.YES_NO_OPTION);
-                    if(response == JOptionPane.YES_OPTION)
-                    {
-                        User editedUser = new User(currentUser);
-                        editedUser.setUserName(currentUsername);
-                        editedUser.setEmail(currentEmail);
-                        editedUser.setPassword(currentPassword);
-
-                        DataManager dataWriter = new DataManager();
-                        try 
-                        {
-                            dataWriter.saveUserData(editedUser, true);
-                            JOptionPane.showMessageDialog(null, "Your account has been successfully edited.", "Account has been successfully edited.",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            setEditMode(false);
-                            mainWindow.setUser(editedUser);
-                        } catch (Exception e1) 
-                        {
-                            String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
-                            JOptionPane.showMessageDialog(null, fileSaveErrorMessage, "Save Record Unsuccessful",
-                                    JOptionPane.ERROR_MESSAGE);
-                            e1.printStackTrace();
-                            return;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if(passVerified) { setEditMode(true); }
-                else
-                {
-                    PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
-                    boolean properlyResponded = false;
-                    String message = "To make sure it really is you, please enter your password before you make changes.\n";
-                    message += "We'll only ask you this once for this session.";
-                    do
-                    {
-                        int response = passwordPrompter.showDialog(message, "Security Check", null, null);
-                        if(response == PasswordSecurityPrompterDialog.RESPONSE_SUBMITTED)
-                        {
-                            boolean passwordIsValid = true;
-                            String enteredPassword = passwordPrompter.getText();
-                            if(Utils.isTextEmpty(enteredPassword))
-                            {
-                                JOptionPane.showMessageDialog(this, "Please enter your password",
-                                        "Password confirmation unsuccessful", JOptionPane.WARNING_MESSAGE);
-                                passwordIsValid = false;
-                            }
-                            else if (!enteredPassword.equals(oldPassword))
-                            {
-                                JOptionPane.showMessageDialog(this, "The password is incorrect. Please try entering it again. ",
-                                        "Warning: Password incorrect", JOptionPane.WARNING_MESSAGE);
-                                passwordIsValid = false;
-                            }
-                            
-                            if(passwordIsValid)
-                            {
-                                properlyResponded = true;
-                                passVerified = true;
-                                setEditMode(true);
-                            }
-                        }
-                        else { properlyResponded = true; }
-                    } while (!properlyResponded);
-                }
+                if (passVerified) { setEditMode(true); } 
+                else { promptPasswordBeforeEditMode(); }
             }
         }
     }
     
-    /**
-     * @param newMode the editMode to set
-     */
-    public void setEditMode(boolean newMode) 
-    {
-        editMode = newMode;
-        setButtonVisibility(editMode);
-        if(editMode)
-        {
-            editProfileButton.setText("Save changes");
-            backButton.setText("Cancel edit");
-        }
-        else 
-        {
-            editProfileButton.setText("Edit Profile");
-            backButton.setText("Back");
-        }
-    }
-
-    private void setButtonVisibility(boolean isVisible) 
-    {
-        editUsernameButton.setVisible(isVisible);
-        editEmailButton.setVisible(isVisible);
-        editPasswordButton.setVisible(isVisible);
-        logOutButton.setVisible(!isVisible);
-    }
-
     public void setUser(User newUser)
     {
         this.currentUser = newUser;
@@ -327,5 +223,106 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         String password = newUser.getPassword();
         passwordField.setText(password);
         oldPassword = password;
+    }
+
+    private void promptPasswordBeforeEditMode() 
+    {
+        PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
+        boolean properlyResponded = false;
+        String message = "To make sure it really is you, please enter your password before you make changes.\n";
+        message += "We'll only ask you this once for this session.";
+        do
+        {
+            int response = passwordPrompter.showDialog(message, "Security Check", null, null);
+            if(response == PasswordSecurityPrompterDialog.RESPONSE_SUBMITTED)
+            {
+                boolean passwordIsValid = true;
+                String enteredPassword = passwordPrompter.getText();
+                if(Utils.isTextEmpty(enteredPassword))
+                {
+                    JOptionPane.showMessageDialog(this, "Please enter your password",
+                            "Password confirmation unsuccessful", JOptionPane.WARNING_MESSAGE);
+                    passwordIsValid = false;
+                }
+                else if (!enteredPassword.equals(oldPassword))
+                {
+                    JOptionPane.showMessageDialog(this, "The password is incorrect. Please try entering it again. ",
+                            "Warning: Password incorrect", JOptionPane.WARNING_MESSAGE);
+                    passwordIsValid = false;
+                }
+                
+                if(passwordIsValid)
+                {
+                    properlyResponded = true;
+                    passVerified = true;
+                    setEditMode(true);
+                }
+            }
+            else { properlyResponded = true; }
+        } while (!properlyResponded);
+    }
+    
+    /**
+     * @param newMode the editMode to set
+     */
+    public void setEditMode(boolean newMode) 
+    {
+        editMode = newMode;
+        setButtonVisibility(editMode);
+        if (editMode) 
+        {
+            editProfileButton.setText("Save changes");
+            backButton.setText("Cancel edit");
+        } else 
+        {
+            editProfileButton.setText("Edit Profile");
+            backButton.setText("Back");
+        }
+    }
+    
+    private void setButtonVisibility(boolean isVisible) 
+    {
+        editUsernameButton.setVisible(isVisible);
+        editEmailButton.setVisible(isVisible);
+        editPasswordButton.setVisible(isVisible);
+        logOutButton.setVisible(!isVisible);
+    }
+
+    private void saveProfileEdit()
+    {
+        String currentUsername = usernameField.getText();
+        String currentEmail = emailField.getText();
+        String currentPassword = passwordField.getText();
+
+        if(!currentUsername.equals(oldUsername) || !currentEmail.equals(oldEmail) || !currentPassword.equals(oldPassword))
+        {
+            int response = JOptionPane.showConfirmDialog(this,
+                    "Are you really sure you want to save these changes?", "Save profile edits?",
+                    JOptionPane.YES_NO_OPTION);
+            if(response == JOptionPane.YES_OPTION)
+            {
+                User editedUser = new User(currentUser);
+                editedUser.setUserName(currentUsername);
+                editedUser.setEmail(currentEmail);
+                editedUser.setPassword(currentPassword);
+
+                DataManager dataWriter = new DataManager();
+                try 
+                {
+                    dataWriter.saveUserData(editedUser, true);
+                    JOptionPane.showMessageDialog(null, "Your account has been successfully edited.", "Account has been successfully edited.",
+                            JOptionPane.INFORMATION_MESSAGE);
+                    setEditMode(false);
+                    mainWindow.setUser(editedUser);
+                } catch (Exception e1) 
+                {
+                    String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
+                    JOptionPane.showMessageDialog(null, fileSaveErrorMessage, "Save Record Unsuccessful",
+                            JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                    return;
+                }
+            }
+        }
     }
 }
