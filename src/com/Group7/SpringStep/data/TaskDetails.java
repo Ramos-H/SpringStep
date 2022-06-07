@@ -24,47 +24,19 @@ public class TaskDetails
     }
 
     // Getters
-    /**
-     * @return the name
-     */
     public String getName() { return name; }
-
-    /**
-     * @return the description
-     */
     public String getDescription() { return description; }
-
-    /**
-     * @return the deadline
-     */
     public LocalDate getDeadline() { return deadline; }
 
     // Setters
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) { this.name = name; }
-
-    /**
-     * @param description the description to set
-     */
     public void setDescription(String description) { this.description = description; }
-
-    /**
-     * @param deadline the deadline to set
-     */
     public void setDeadline(LocalDate deadline) { this.deadline = deadline; }
-
-    /**
-     * @param expectedDuration the expectedDuration to set
-     */
 
     @Override
     public boolean equals(Object obj) 
     {
-        if (obj == null) {
-            return false;
-        }
+        if (obj == null) { return false; }
         TaskDetails other = (TaskDetails) obj;
         boolean nameCheck = betterEquals(getName(), other.getName());
         boolean descriptionCheck = betterEquals(getDescription(), other.getDescription());
@@ -75,16 +47,36 @@ public class TaskDetails
     private boolean betterEquals(Object obj1, Object obj2)
     {
         boolean result = false;
-        if (obj1 == null && obj2 != null) {
-            result = false;
-        } else if (obj1 != null && obj2 == null) {
-            result = false;
-        } else if (obj1 != null && obj2 != null) {
-            result = obj1.equals(obj2);
-        } else {
-            result = true;
-        }
+        if (obj1 == null && obj2 != null) { result = false; } 
+        else if (obj1 != null && obj2 == null) { result = false; } 
+        else if (obj1 != null && obj2 != null) { result = obj1.equals(obj2); } 
+        else { result = true; }
         return result;
+    }
+
+    public String getAsCsv() 
+    {
+        final String DEFAULT_VALUE = "NULL";
+
+        String formattedName = DEFAULT_VALUE;
+        if (!Utils.isTextEmpty(getName())) 
+        {
+            formattedName = String.format("%s", Utils.getCsvFriendlyFormat(name));
+        }
+
+        String formattedDescription = DEFAULT_VALUE;
+        if (!Utils.isTextEmpty(getDescription())) 
+        {
+            formattedDescription = String.format("%s", Utils.getCsvFriendlyFormat(description));
+        }
+
+        String formattedDeadline = DEFAULT_VALUE;
+        if (deadline != null) 
+        {
+            formattedDeadline = deadline.toString();
+        }
+
+        return String.format("%s,%s,%s", formattedName, formattedDescription, formattedDeadline);
     }
 
     public void parseCsv(String csv)
@@ -105,28 +97,5 @@ public class TaskDetails
         {
             setDeadline(LocalDate.parse(currentTaskData[2]));
         }
-    }
-
-    public String getAsCsv() 
-    {
-
-        final String DEFAULT_VALUE = "NULL";
-
-        String formattedName = DEFAULT_VALUE;
-        if (!Utils.isTextEmpty(getName())) {
-            formattedName = String.format("%s", Utils.getCsvFriendlyFormat(name));
-        }
-
-        String formattedDescription = DEFAULT_VALUE;
-        if (!Utils.isTextEmpty(getDescription())) {
-            formattedDescription = String.format("%s", Utils.getCsvFriendlyFormat(description));
-        }
-
-        String formattedDeadline = DEFAULT_VALUE;
-        if (deadline != null) {
-            formattedDeadline = deadline.toString();
-        }
-
-        return String.format("%s,%s,%s", formattedName, formattedDescription, formattedDeadline);
     }
 }
