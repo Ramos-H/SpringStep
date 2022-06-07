@@ -29,6 +29,24 @@ public class User
             setBoards(copyFrom.getBoards());
         }
     }
+    
+    // Getters
+    public String getUserName() { return userName; }
+    public String getEmail() { return email; }
+    public String getPassword() { return password; }
+    public ArrayList<BoardDetails> getBoards() { return boards; }
+    public String getCsvFormattedInfo() 
+    {
+        String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
+        for (BoardDetails board : boards) { output += board.formatAsCsv(); }
+        return output;
+    }
+
+    // Setters
+    public void setUserName(String userName) { this.userName = userName; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPassword(String password) { this.password = password; }
+    public void setBoards(ArrayList<BoardDetails> boards) { this.boards = boards; }
 
     public static User reconstructFromCsv(List<String> csvInput)
     {
@@ -40,7 +58,7 @@ public class User
         int boardCount = Integer.parseInt(userData[3]);
         ArrayList<BoardDetails> newBoardList = new ArrayList<>();
         int readOffset = 1;
-        for (int boardIndex = 0; boardIndex < boardCount; boardIndex++)
+        for (int boardIndex = 0; boardIndex < boardCount; boardIndex++) 
         {
             String[] currentBoardData = csvInput.get(readOffset).split(",");
             BoardDetails newBoard = new BoardDetails(currentBoardData[0]);
@@ -58,60 +76,5 @@ public class User
 
         user.setBoards(newBoardList);
         return user;
-    }
-
-    // Setters
-    /**
-     * @param userName the userName to set
-     */
-    public void setUserName(String userName) { this.userName = userName; }
-
-    /**
-     * @param email the email to set
-     */
-    public void setEmail(String email) { this.email = email; }
-
-    /**
-     * @param password the password to set
-     */
-    public void setPassword(String password) { this.password = password; }
-
-    /**
-     * @param boards the boards to set
-     */
-    public void setBoards(ArrayList<BoardDetails> boards) { this.boards = boards; }
-
-    // Getters
-    /**
-     * @return the userName
-     */
-    public String getUserName() { return userName; }
-    
-    /**
-     * @return the email
-     */
-    public String getEmail() { return email; }
-    
-    /**
-     * @return the password
-     */
-    public String getPassword() { return password; }
-
-    /**
-     * @return the boards
-     */
-    public ArrayList<BoardDetails> getBoards() { return boards; }
-
-    /**
-     * @return The user info formatted into the CSV format for easy writing to file
-     */
-    public String getCsvFormattedInfo() 
-    {
-        String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
-        for (BoardDetails board : boards) 
-        {
-            output += board.formatAsCsv();
-        }
-        return output;
     }
 }
