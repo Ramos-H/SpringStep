@@ -24,53 +24,18 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         addMouseListener(this);
     }
 
-    /**
-     * @param searchBar the searchBar to set
-     */
-    public void setSearchBar(JComponent searchBar) 
-    {
-        this.searchBar = searchBar;
-    }
-    
+    public void setSearchBar(JComponent searchBar) { this.searchBar = searchBar; }
     public void setPopup(JPanel panel)
     {
         boolean visible = isVisible();
-        if (currentPopup == panel && visible) {
-            return;
-        }
-
-        if (currentPopup != null) {
-            remove(currentPopup);
-        }
+        if (currentPopup == panel && visible) { return; }
+        if (currentPopup != null) { remove(currentPopup); }
 
         currentPopup = panel;
         add(currentPopup);
         resizeCurrentPopup();
         positionCurrentPopup();
         setVisible(true);
-    }
-
-    private void positionCurrentPopup() 
-    {
-        if(currentPopup != null)
-        {
-            if (currentPopup instanceof SearchResultsPanel)
-            {
-                SearchResultsPanel searchPanel = (SearchResultsPanel) currentPopup;
-                searchPanel.setLocation(searchPanel.getPreferredLocation());
-            }
-            else
-            {
-                Utils.centerByRect(currentPopup, contentPane.getWidth(), contentPane.getHeight());
-            }
-            revalidate();
-            repaint();
-        }
-    }
-
-    public void hidePopup()
-    {
-        setVisible(false);
     }
     
     @Override
@@ -95,75 +60,6 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
     {
         resizeCurrentPopup();
         positionCurrentPopup();
-    }
-
-    private void resizeCurrentPopup() 
-    {
-        if(currentPopup != null)
-        {
-            if (currentPopup instanceof SearchResultsPanel)
-            {
-                SearchResultsPanel searchPanel = (SearchResultsPanel) currentPopup;
-                searchPanel.setSize(searchPanel.getPreferredSize());
-            }
-            else
-            {
-                Utils.scaleByPercentage(currentPopup, contentPane.getSize(), 40, 80);
-            }
-            revalidate();
-            repaint();
-        }
-    }
-
-    @Override
-    public void componentMoved(ComponentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) 
-    {
-        if (currentPopup instanceof SearchResultsPanel) 
-        {
-            if (searchBar != null) 
-            {
-                Point mousePos = e.getLocationOnScreen();
-                if (Utils.isMouseOverVisibleRect(mousePos, searchBar)) 
-                {
-                    redispatchMouseEvent(e);
-                    return;
-                }
-            }
-            hidePopup();
-        }
-    }
-    
-    private void redispatchMouseEvent(MouseEvent e) 
-    {
-        Point glassPanePoint = e.getPoint();
-        Container container = contentPane;
-        Point containerPoint = SwingUtilities.convertPoint(this, glassPanePoint, contentPane);
-        Component component = SwingUtilities.getDeepestComponentAt(container, containerPoint.x, containerPoint.y);
-        
-        boolean isSearchBar = (component == searchBar);
-        
-        if (component != null) 
-        {
-            component.dispatchEvent(SwingUtilities.convertMouseEvent(this, e, component));
-        }
     }
 
     @Override
@@ -201,12 +97,88 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) 
-    {
-    }
+    public void componentMoved(ComponentEvent e) { }
 
     @Override
-    public void mouseExited(MouseEvent e) 
+    public void componentShown(ComponentEvent e) { }
+
+    @Override
+    public void componentHidden(ComponentEvent e) { }
+    
+    @Override
+    public void mouseEntered(MouseEvent e) { }
+
+    @Override
+    public void mouseExited(MouseEvent e) { }
+
+    @Override
+    public void mouseClicked(MouseEvent e) 
     {
+        if (currentPopup instanceof SearchResultsPanel) 
+        {
+            if (searchBar != null) 
+            {
+                Point mousePos = e.getLocationOnScreen();
+                if (Utils.isMouseOverVisibleRect(mousePos, searchBar)) 
+                {
+                    redispatchMouseEvent(e);
+                    return;
+                }
+            }
+            hidePopup();
+        }
+    }
+
+    private void resizeCurrentPopup() 
+    {
+        if(currentPopup != null)
+        {
+            if (currentPopup instanceof SearchResultsPanel)
+            {
+                SearchResultsPanel searchPanel = (SearchResultsPanel) currentPopup;
+                searchPanel.setSize(searchPanel.getPreferredSize());
+            }
+            else
+            {
+                Utils.scaleByPercentage(currentPopup, contentPane.getSize(), 40, 80);
+            }
+            revalidate();
+            repaint();
+        }
+    }
+    
+    private void positionCurrentPopup() 
+    {
+        if(currentPopup != null)
+        {
+            if (currentPopup instanceof SearchResultsPanel)
+            {
+                SearchResultsPanel searchPanel = (SearchResultsPanel) currentPopup;
+                searchPanel.setLocation(searchPanel.getPreferredLocation());
+            }
+            else
+            {
+                Utils.centerByRect(currentPopup, contentPane.getWidth(), contentPane.getHeight());
+            }
+            revalidate();
+            repaint();
+        }
+    }
+
+    public void hidePopup() { setVisible(false); }
+    
+    private void redispatchMouseEvent(MouseEvent e) 
+    {
+        Point glassPanePoint = e.getPoint();
+        Container container = contentPane;
+        Point containerPoint = SwingUtilities.convertPoint(this, glassPanePoint, contentPane);
+        Component component = SwingUtilities.getDeepestComponentAt(container, containerPoint.x, containerPoint.y);
+
+        boolean isSearchBar = (component == searchBar);
+
+        if (component != null) 
+        {
+            component.dispatchEvent(SwingUtilities.convertMouseEvent(this, e, component));
+        }
     }
 }
