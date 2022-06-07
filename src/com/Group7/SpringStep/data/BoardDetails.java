@@ -26,18 +26,12 @@ public class BoardDetails
         String boardOutput = String.format("%s,%d,%d\n", getName(), todoCount, doneCount);
         if(todoCount > 0)
         {
-            for (TaskDetails taskDetails : todoList) 
-            {
-                boardOutput += taskDetails.getAsCsv() + "\n";
-            }
+            for (TaskDetails taskDetails : todoList) { boardOutput += taskDetails.getAsCsv() + "\n"; }
         }
 
         if (doneCount > 0)
         {
-            for (TaskDetails taskDetails : doneList) 
-            {
-                boardOutput += taskDetails.getAsCsv() + "\n";
-            }
+            for (TaskDetails taskDetails : doneList) { boardOutput += taskDetails.getAsCsv() + "\n"; }
         }
         
         return boardOutput;
