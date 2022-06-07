@@ -39,13 +39,12 @@ public class TimerPanel extends JPanel implements ActionListener
         remainingTime = DEFAULT_WORK_DURATION;
         timer = new Timer(1000, this);
         workTimeImage = Utils.getScaledImage(App.resources.get("Work_Time_Icon_256.png"), 0.125f);
-        if (workTimeImage != null)
-        {
+        if (workTimeImage != null) {
             workTimeIcon = new ImageIcon(workTimeImage);
         }
+
         breakTimeImage = Utils.getScaledImage(App.resources.get("Break_Time_Icon_256.png"), 0.125f);
-        if (breakTimeImage != null)
-        {
+        if (breakTimeImage != null) {
             breakTimeIcon = new ImageIcon(breakTimeImage);
         }
 
@@ -55,8 +54,7 @@ public class TimerPanel extends JPanel implements ActionListener
             timeIndicatorArea.setOpaque(false);
             {
                 timerStatusIcon = new JLabel();
-                if (workTimeIcon != null)
-                {
+                if (workTimeIcon != null) {
                     timerStatusIcon.setIcon(workTimeIcon);
                 }
 
@@ -73,7 +71,7 @@ public class TimerPanel extends JPanel implements ActionListener
             startStopTimerButton = new RoundedButton("Start");
             startStopTimerButton.addActionListener(this);
             startStopTimerButton.setBackground(new Color(135, 195, 193));
-            
+
             resetTimerButton = new RoundedButton("Reset");
             resetTimerButton.addActionListener(this);
             resetTimerButton.setBackground(new Color(215, 204, 195));
@@ -81,92 +79,42 @@ public class TimerPanel extends JPanel implements ActionListener
             GridBagConstraints timerPanelConstraints = new GridBagConstraints();
             timerPanelConstraints.anchor = GridBagConstraints.CENTER;
             timerPanelConstraints.gridx = 0;
-            
+
             timerPanelConstraints.gridwidth = 2;
             add(timeIndicatorArea, timerPanelConstraints);
-            
+
             timerPanelConstraints.gridy = 1;
             timerPanelConstraints.gridwidth = 1;
             timerPanelConstraints.anchor = GridBagConstraints.EAST;
             timerPanelConstraints.insets = new Insets(0, 26, 0, 0);
             add(startStopTimerButton, timerPanelConstraints);
-            
+
             timerPanelConstraints.gridx = 1;
             timerPanelConstraints.anchor = GridBagConstraints.WEST;
             timerPanelConstraints.insets = new Insets(0, 5, 0, 0);
             add(resetTimerButton, timerPanelConstraints);
         }
     }
-    
-    public void startTimer()
-    {
-        timer.start();
-        startStopTimerButton.setText("Stop");
-    }
 
-    public void stopTimer()
-    {
-        timer.stop();
-        startStopTimerButton.setText("Start");
-    }
+    public boolean getWorkMode() { return workMode; }
 
-    public void resetTimer()
-    {
-        if(workMode)
-        {
-            remainingTime = DEFAULT_WORK_DURATION;
-        }
-        else
-        {
-            remainingTime = DEFAULT_BREAK_DURATION;
-        }
-        timerLabel.setText(Utils.formatTime(remainingTime));
-    }
-
-    /**
-     * @param workMode the workMode to set
-     */
     public void setWorkMode(boolean newWorkMode) 
     {
         workMode = newWorkMode;
-        if (workMode) {
+        if (workMode) 
+        {
             timerLabel.setForeground(new Color(255, 164, 133));
             remainingTime = DEFAULT_WORK_DURATION;
-            if(workTimeIcon != null)
-            {
-                timerStatusIcon.setIcon(workTimeIcon);
-            }
-        } else {
+            if(workTimeIcon != null) { timerStatusIcon.setIcon(workTimeIcon); }
+        } else 
+        {
             timerLabel.setForeground(new Color(134, 194, 192));
             remainingTime = DEFAULT_BREAK_DURATION;
-            if(breakTimeIcon != null)
-            {
-                timerStatusIcon.setIcon(breakTimeIcon);
-            }
+            if(breakTimeIcon != null) { timerStatusIcon.setIcon(breakTimeIcon); }
         }
         timerLabel.setText(Utils.formatTime(remainingTime));
     }
 
-    public boolean getWorkMode()
-    {
-        return workMode;
-    }
-
-    private void displayNotifMessage()
-    {
-        if (trayIcon != null)
-        {
-            if (getWorkMode())
-            {
-                trayIcon.displayMessage("Time to work!", "Start working on your tasks now!", MessageType.INFO);
-            }
-            else
-            {
-                trayIcon.displayMessage("Time for a break!", "Take a break for a sec! Eat some snacks or play some games", MessageType.INFO);
-            }
-        }
-    }
-    
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -186,16 +134,42 @@ public class TimerPanel extends JPanel implements ActionListener
         
         if (eventSource == startStopTimerButton) 
         {
-            if (timer.isRunning()) 
-            {
-                stopTimer();
-            } else 
-            {
-                startTimer();
-            }
-        } else if(eventSource == resetTimerButton)
+            if (timer.isRunning()) { stopTimer(); } 
+            else  { startTimer(); }
+        } else if(eventSource == resetTimerButton) { resetTimer(); }
+    }
+    
+    public void startTimer()
+    {
+        timer.start();
+        startStopTimerButton.setText("Stop");
+    }
+
+    public void stopTimer()
+    {
+        timer.stop();
+        startStopTimerButton.setText("Start");
+    }
+
+    public void resetTimer()
+    {
+        if(workMode) { remainingTime = DEFAULT_WORK_DURATION; }
+        else { remainingTime = DEFAULT_BREAK_DURATION; }
+        timerLabel.setText(Utils.formatTime(remainingTime));
+    }
+
+    private void displayNotifMessage()
+    {
+        if (trayIcon != null)
         {
-            resetTimer();
+            if (getWorkMode())
+            {
+                trayIcon.displayMessage("Time to work!", "Start working on your tasks now!", MessageType.INFO);
+            }
+            else
+            {
+                trayIcon.displayMessage("Time for a break!", "Take a break for a sec! Eat some snacks or play some games", MessageType.INFO);
+            }
         }
     }
 }
