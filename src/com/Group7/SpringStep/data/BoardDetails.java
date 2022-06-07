@@ -18,16 +18,6 @@ public class BoardDetails
     public String getName() { return name; }
     public ArrayList<TaskDetails> getTodoList() { return todoList; }
     public ArrayList<TaskDetails> getDoneList() { return doneList; }
-    
-    public void setName(String name) { this.name = name; }
-    public void setTodoList(ArrayList<TaskDetails> todoList) { this.todoList = todoList; }
-    public void setDoneList(ArrayList<TaskDetails> doneList) { this.doneList = doneList; }
-    public void setLists(ArrayList<TaskDetails> newTodoList, ArrayList<TaskDetails> newDoneList)
-    {
-        todoList = newTodoList;
-        doneList = newDoneList;
-    }
-
     public String getAsCsv()
     {
         int todoCount = todoList.size();
@@ -51,6 +41,15 @@ public class BoardDetails
         }
         
         return boardOutput;
+    }
+    
+    public void setName(String name) { this.name = name; }
+    public void setTodoList(ArrayList<TaskDetails> todoList) { this.todoList = todoList; }
+    public void setDoneList(ArrayList<TaskDetails> doneList) { this.doneList = doneList; }
+    public void setLists(ArrayList<TaskDetails> newTodoList, ArrayList<TaskDetails> newDoneList)
+    {
+        todoList = newTodoList;
+        doneList = newDoneList;
     }
 
     public void parseTasksFromCsv(List<String> csvs, int toDoCount, int doneCount)
