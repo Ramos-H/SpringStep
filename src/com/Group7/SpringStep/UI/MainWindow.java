@@ -78,8 +78,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
         doSystemTrayStuff();
 
-        long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
-        getToolkit().addAWTEventListener(this, eventMask);
+        addWindowEventListener();
 
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 80f;
@@ -239,6 +238,11 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
     }
 
+    private void addWindowEventListener() {
+        long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
+        getToolkit().addAWTEventListener(this, eventMask);
+    }
+
     public void doSystemTrayStuff()
     {
         if (!SystemTray.isSupported()) { return; }
@@ -305,95 +309,95 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     @Override
     public void eventDispatched(AWTEvent caughtEvent) 
     {
-        int eventId = caughtEvent.getID();
-        Point newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
-        ArrayList<TaskNode> taskNodes = new ArrayList<>();
-        {
-            if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel)) 
+            int eventId = caughtEvent.getID();
+            Point newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
+            ArrayList<TaskNode> taskNodes = new ArrayList<>();
             {
-                hoveredPanel = toDoPanel;
-                taskNodes.addAll(toDoPanel.getTaskNodes());
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) 
-            {
-                hoveredPanel = doingPanel;
-                taskNodes.addAll(doingPanel.getTaskNodes());
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) 
-            {
-                hoveredPanel = donePanel;
-                taskNodes.addAll(donePanel.getTaskNodes());
-            } else { hoveredPanel = null; }
-        }
-
-        {
-            hoveredTask = null;
-            for (TaskNode taskNode : taskNodes) 
-            {
-                if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) 
+                if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel)) 
                 {
-                    hoveredTask = taskNode;
-                    break;
+                    hoveredPanel = toDoPanel;
+                    taskNodes.addAll(toDoPanel.getTaskNodes());
+                } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) 
+                {
+                    hoveredPanel = doingPanel;
+                    taskNodes.addAll(doingPanel.getTaskNodes());
+                } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) 
+                {
+                    hoveredPanel = donePanel;
+                    taskNodes.addAll(donePanel.getTaskNodes());
+                } else { hoveredPanel = null; }
+            }
+
+            {
+                hoveredTask = null;
+                for (TaskNode taskNode : taskNodes) 
+                {
+                    if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) 
+                    {
+                        hoveredTask = taskNode;
+                        break;
+                    }
                 }
             }
-        }
 
-        boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
-        if (eventIsntFromButton && !popupContainer.isVisible()) 
-        {
-            switch (eventId) 
+            boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
+            if (eventIsntFromButton && !popupContainer.isVisible()) 
             {
-                case MouseEvent.MOUSE_PRESSED:
-                    if (hoveredTask == null) { break; }
+                switch (eventId) 
+                {
+                    case MouseEvent.MOUSE_PRESSED:
+                        if (hoveredTask == null) { break; }
 
-                    previousPanel = hoveredPanel;
-                    heldTask = hoveredTask;
-                    hoveredTask = null;
+                        previousPanel = hoveredPanel;
+                        heldTask = hoveredTask;
+                        hoveredTask = null;
 
-                    Rectangle heldTaskBounds = heldTask.getBounds();
-                    Point heldTaskScreenPosition = heldTask.getLocationOnScreen();
-                    Point windowScreenPosition = getContentPane().getLocationOnScreen();
-                    Point heldTaskNewPosition = new Point(heldTaskScreenPosition.x - windowScreenPosition.x,
-                            heldTaskScreenPosition.y - windowScreenPosition.y);
+                        Rectangle heldTaskBounds = heldTask.getBounds();
+                        Point heldTaskScreenPosition = heldTask.getLocationOnScreen();
+                        Point windowScreenPosition = getContentPane().getLocationOnScreen();
+                        Point heldTaskNewPosition = new Point(heldTaskScreenPosition.x - windowScreenPosition.x,
+                                heldTaskScreenPosition.y - windowScreenPosition.y);
 
-                    heldTaskBounds.setLocation(heldTaskNewPosition);
+                        heldTaskBounds.setLocation(heldTaskNewPosition);
 
-                    heldTask.getParent().remove(heldTask);
-                    getLayeredPane().add(heldTask);
+                        heldTask.getParent().remove(heldTask);
+                        getLayeredPane().add(heldTask);
 
-                    heldTask.setBounds(heldTaskBounds);
-                    break;
-                case MouseEvent.MOUSE_RELEASED:
-                    if (heldTask == null) { break; }
+                        heldTask.setBounds(heldTaskBounds);
+                        break;
+                    case MouseEvent.MOUSE_RELEASED:
+                        if (heldTask == null) { break; }
 
-                    getLayeredPane().remove(heldTask);
-                    if (hoveredPanel == null) { previousPanel.addTaskToList(heldTask); } 
-                    else 
-                    {
-                        hoveredPanel.addTaskToList(heldTask);
-                        updateTimerBasedOnDoingList();
-                    }
-                    previousPanel = null;
-                    heldTask = null;
-                    hoveredTask = null;
-                    break;
+                        getLayeredPane().remove(heldTask);
+                        if (hoveredPanel == null) { previousPanel.addTaskToList(heldTask); } 
+                        else 
+                        {
+                            hoveredPanel.addTaskToList(heldTask);
+                            updateTimerBasedOnDoingList();
+                        }
+                        previousPanel = null;
+                        heldTask = null;
+                        hoveredTask = null;
+                        break;
+                }
             }
-        }
 
-        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED) 
-        {
-            revalidate();
-            repaint();
-        }
+            if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED) 
+            {
+                revalidate();
+                repaint();
+            }
 
-        if (heldTask != null) 
-        {
-            Point currentLocation = heldTask.getLocation();
-            heldTask.setLocation(new Point(currentLocation.x + mouseDelta.x, currentLocation.y + mouseDelta.y));
-        }
+            if (heldTask != null) 
+            {
+                Point currentLocation = heldTask.getLocation();
+                heldTask.setLocation(new Point(currentLocation.x + mouseDelta.x, currentLocation.y + mouseDelta.y));
+            }
 
-        mouseDelta = new Point(newMouseScreenPosition.x - oldMouseScreenPosition.x,
-                newMouseScreenPosition.y - oldMouseScreenPosition.y);
+            mouseDelta = new Point(newMouseScreenPosition.x - oldMouseScreenPosition.x,
+                    newMouseScreenPosition.y - oldMouseScreenPosition.y);
 
-        oldMouseScreenPosition = newMouseScreenPosition;
+            oldMouseScreenPosition = newMouseScreenPosition;
 
         // updateDebugDetails();
     }
@@ -560,16 +564,16 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void windowClosing(WindowEvent e) { getToolkit().removeAWTEventListener(this); }
 
     @Override
-    public void windowOpened(WindowEvent e) { }
+    public void windowOpened(WindowEvent e) { addWindowEventListener(); }
 
     @Override
     public void windowIconified(WindowEvent e) { }
     
     @Override
-    public void windowDeiconified(WindowEvent e) { }
+    public void windowDeiconified(WindowEvent e) { addWindowEventListener(); }
     
     @Override
-    public void windowActivated(WindowEvent e) { }
+    public void windowActivated(WindowEvent e) { addWindowEventListener(); }
     
     @Override
     public void windowDeactivated(WindowEvent e) { }
