@@ -20,8 +20,8 @@ public class TaskNode extends RoundedPanel implements ActionListener
     public TaskNode(TaskDetails newDetails, AddTaskPopup editor)
     {
         taskEditor = editor;
-        
-        setLayout(new GridLayout(1,1));
+
+        setLayout(new GridLayout(1, 1));
         setBackground(Color.WHITE);
         {
             JPanel innerPanel = new JPanel(new GridBagLayout());
@@ -34,7 +34,8 @@ public class TaskNode extends RoundedPanel implements ActionListener
                 taskNameArea.setWrapStyleWord(true);
                 taskNameArea.setBorder(null);
                 Utils.padJComponent(taskNameArea, 3, 3, 3, 3);
-                taskNameArea.setBorder(new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), taskNameArea.getBorder()));
+                taskNameArea.setBorder(
+                        new CompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), taskNameArea.getBorder()));
 
                 tagPanel = new JPanel(new FlowLayout());
                 tagPanel.setOpaque(false);
@@ -43,9 +44,7 @@ public class TaskNode extends RoundedPanel implements ActionListener
                 editButton = new JButton();
                 editButton.addActionListener(this);
                 Image editButtonImage = Utils.getScaledImage(App.resources.get("Edit_Button_(Dots)_256.png"), 0.125);
-                if (editButtonImage != null) {
-                    Utils.setButtonIcon(editButton, new ImageIcon(editButtonImage));
-                }
+                if (editButtonImage != null) { Utils.setButtonIcon(editButton, new ImageIcon(editButtonImage)); }
 
                 GridBagConstraints innerPanelConstraints = new GridBagConstraints();
                 innerPanelConstraints.gridx = 0;
@@ -61,7 +60,7 @@ public class TaskNode extends RoundedPanel implements ActionListener
                 innerPanelConstraints.weighty = 0;
                 innerPanelConstraints.gridwidth = 1;
                 innerPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-                innerPanelConstraints.anchor = innerPanelConstraints.NORTHWEST;
+                innerPanelConstraints.anchor = GridBagConstraints.NORTHWEST;
                 innerPanel.add(tagPanel, innerPanelConstraints);
 
                 innerPanelConstraints.gridx = 1;
@@ -74,35 +73,29 @@ public class TaskNode extends RoundedPanel implements ActionListener
         setTaskDetails(newDetails);
     }
 
-    
-    /**
-     * @return the taskNameArea
-     */
-    public JTextArea getTaskNameArea() { return taskNameArea; }
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        if(e.getSource() == editButton) { taskEditor.editTask(this); }
+    }
 
-    /**
-     * @param newTaskDetails the taskDetails to set
-     */
+    public JTextArea getTaskNameArea() { return taskNameArea; }
+    public TaskDetails getTaskDetails() { return taskDetails; }
+
     public void setTaskDetails(TaskDetails newTaskDetails) 
     {
         taskDetails = newTaskDetails;
-
         taskNameArea.setText(taskDetails.getName());
 
         tagPanel.removeAll();
 
         if (taskDetails.getDeadline() != null)
+        {
             tagPanel.add(createTagDisplay("Deadline: " + taskDetails.getDeadline().toString(), Color.RED));
+        }
 
         revalidate();
         repaint();
-    }
-    
-    /**
-     * @return the taskDetails
-     */
-    public TaskDetails getTaskDetails() {
-        return taskDetails;
     }
     
     public JPanel createTagDisplay(String text, Color bgColor)
@@ -113,15 +106,5 @@ public class TaskNode extends RoundedPanel implements ActionListener
         tagLabel.setForeground(Color.WHITE);
         newTagDisplay.add(tagLabel);
         return newTagDisplay;
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        if(e.getSource() == editButton)
-        {
-            taskEditor.editTask(this);
-        }
     }
 }
