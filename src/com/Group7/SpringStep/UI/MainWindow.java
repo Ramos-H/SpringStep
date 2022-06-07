@@ -774,6 +774,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     {
         getToolkit().removeAWTEventListener(this);
         Utils.moveToNewWindow(this, new LoginWindow());
+        if (trayIcon != null) { tray.remove(trayIcon); }
     }
 
     public void close()
