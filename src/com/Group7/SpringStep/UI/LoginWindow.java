@@ -55,10 +55,7 @@ public class LoginWindow extends JFrame implements ActionListener
 
                 JLabel iconLogo = new JLabel();
                 Image scaledLogoImage = Utils.getScaledImage(App.resources.get("SpringStep_Logo.png"), 0.10);
-                if(scaledLogoImage != null)
-                {
-                    iconLogo.setIcon(new ImageIcon(scaledLogoImage));
-                }
+                if(scaledLogoImage != null) { iconLogo.setIcon(new ImageIcon(scaledLogoImage)); }
                 
                 JPanel buttonPanel = new JPanel(new FlowLayout());
                 buttonPanel.setOpaque(false);
@@ -106,6 +103,7 @@ public class LoginWindow extends JFrame implements ActionListener
                 logInWindowConstraints.gridy++;
                 mainPanel.add(buttonPanel, logInWindowConstraints);
             }
+
             // Put the call to add the nested components here
             add(mainPanel);
         }
@@ -123,11 +121,13 @@ public class LoginWindow extends JFrame implements ActionListener
 
             String enteredUsername = userNameField.getText();
             String enteredPassword = passwordField.getText();
-            if (Utils.isTextEmpty(enteredUsername)) {
+            if (Utils.isTextEmpty(enteredUsername)) 
+            {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No username entered";
                 noInputErrorMessage = "No username has been entered. \nPlease enter your username and try again.";
-            } else if (Utils.isTextEmpty(enteredPassword)) {
+            } else if (Utils.isTextEmpty(enteredPassword)) 
+            {
                 hasInputErrors = true;
                 noInputErrorTitle = "Error: No password entered";
                 noInputErrorMessage = "No password has been entered. \nPlease enter your password and try again.";
@@ -188,9 +188,6 @@ public class LoginWindow extends JFrame implements ActionListener
                 return;
             }
         }
-        else if(eventSource == signUpButton)
-        {
-            Utils.moveToNewWindow(this, new SignUpWindow());
-        }
+        else if(eventSource == signUpButton) { Utils.moveToNewWindow(this, new SignUpWindow()); }
     }
 }
