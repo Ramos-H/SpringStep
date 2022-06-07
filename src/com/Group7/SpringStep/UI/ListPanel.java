@@ -98,14 +98,21 @@ public class ListPanel extends JPanel
     }
 
     @Override
-    public Rectangle getVisibleRect() 
+    public Rectangle getVisibleRect() { return innerPanel.getVisibleRect(); }
+    public JButton getAddTaskButton() { return addTaskButton; }
+    public ArrayList<TaskNode> getTaskNodes()
     {
-        return innerPanel.getVisibleRect();
-    }
-    
-    public JButton getAddTaskButton() 
-    {
-        return addTaskButton;
+        int taskNodeCount = internalListContainer.getComponentCount();
+        ArrayList<TaskNode> taskNodes = new ArrayList<>(taskNodeCount);
+        if (taskNodeCount < 1) { return taskNodes; }
+
+        Component[] components = internalListContainer.getComponents();
+        for (Object currentObject : components) 
+        {
+            if (currentObject instanceof TaskNode) { taskNodes.add((TaskNode) currentObject); }
+        }
+
+        return taskNodes;
     }
     
     public void addTaskToList(JPanel newTaskNode)
@@ -116,8 +123,7 @@ public class ListPanel extends JPanel
         taskListConstraints.anchor = GridBagConstraints.CENTER;
         taskListConstraints.insets = new Insets(5, 5, 5, 5);
         
-        if (!listScrollPanel.isVisible())
-            listScrollPanel.setVisible(true);
+        if (!listScrollPanel.isVisible()) { listScrollPanel.setVisible(true); }
         
         ArrayList<TaskNode> currentTaskNodes = getTaskNodes();
         internalListContainer.removeAll();
@@ -136,26 +142,5 @@ public class ListPanel extends JPanel
         revalidate();
     }
     
-    public ArrayList<TaskNode> getTaskNodes()
-    {
-        int taskNodeCount = internalListContainer.getComponentCount();
-        ArrayList<TaskNode> taskNodes = new ArrayList<>(taskNodeCount);
-        if (taskNodeCount < 1) {
-            return taskNodes;
-        }
-
-        Component[] components = internalListContainer.getComponents();
-        for (Object currentObject : components) {
-            if (currentObject instanceof TaskNode) {
-                taskNodes.add((TaskNode) currentObject);
-            }
-        }
-
-        return taskNodes;
-    }
-    
-    public void clear()
-    {
-        internalListContainer.removeAll();
-    }
+    public void clear() { internalListContainer.removeAll(); }
 }
