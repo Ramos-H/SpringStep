@@ -1,7 +1,7 @@
 package com.Group7.SpringStep;
 
 import java.time.*;
-
+import java.util.ArrayList;
 import java.awt.*;
 
 import java.io.*;
@@ -124,8 +124,47 @@ public class Utils
     public static String parseCsvFriendlyFormat(String input)
     {
         return input.replace("\\\\", "\\")
-                    .replace("\\,", ",")
-                    .replace("\\n", "\n")
-                    .replace("\\\"", "\"");
+                .replace("\\,", ",")
+                .replace("\\n", "\n")
+                .replace("\\\"", "\"");
+    }
+    
+    public static String[] splitCsv(String input)
+    {
+        ArrayList<String> parts = new ArrayList<>();
+
+        String[] split = input.split(",");
+        for (String part : split) 
+        {
+            parts.add(part);
+        }
+
+        if (input.endsWith("\\,") && parts.size() > 0)
+        {
+            parts.set(parts.size() - 1, parts.get(parts.size() - 1) + ",");
+        }
+
+        for (int i = 0; i < parts.size();) 
+        {
+            String currentPart = parts.get(i);
+            if(currentPart.endsWith("\\"))
+            {
+                if (i + 1 < parts.size()) {
+                    parts.set(i, currentPart + "," + parts.get(i + 1));
+                    parts.remove(i + 1);
+                }
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        String[] result = new String[parts.size()];
+        for(int i = 0; i < parts.size(); i++)
+        {
+            result[i] = parts.get(i);
+        }
+        return result;
     }
 }

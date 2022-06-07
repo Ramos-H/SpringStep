@@ -2,6 +2,8 @@ package com.Group7.SpringStep.data;
 
 import java.util.*;
 
+import com.Group7.SpringStep.Utils;
+
 public class User 
 {
     private String userName;
@@ -37,7 +39,8 @@ public class User
     public ArrayList<BoardDetails> getBoards() { return boards; }
     public String getAsCsv() 
     {
-        String output = String.format("%s,%s,%s,%d\n", userName, email, password, boards.size());
+        String output = String.format("%s,%s,%s,%d\n", Utils.getCsvFriendlyFormat(getUserName()),
+                Utils.getCsvFriendlyFormat(getEmail()), Utils.getCsvFriendlyFormat(getPassword()), boards.size());
         for (BoardDetails board : boards) { output += board.getAsCsv(); }
         return output;
     }
@@ -52,16 +55,17 @@ public class User
     {
         if (csvInput.size() < 1) { return null; }
 
-        String[] userData = csvInput.get(0).split(",");
-        User user = new User(userData[0], userData[1], userData[2]);
+        String[] userData = Utils.splitCsv(csvInput.get(0));
+        User user = new User(Utils.parseCsvFriendlyFormat(userData[0]), Utils.parseCsvFriendlyFormat(userData[1]),
+                Utils.parseCsvFriendlyFormat(userData[2]));
 
         int boardCount = Integer.parseInt(userData[3]);
         ArrayList<BoardDetails> newBoardList = new ArrayList<>();
         int readOffset = 1;
         for (int boardIndex = 0; boardIndex < boardCount; boardIndex++) 
         {
-            String[] currentBoardData = csvInput.get(readOffset).split(",");
-            BoardDetails newBoard = new BoardDetails(currentBoardData[0]);
+            String[] currentBoardData = Utils.splitCsv(csvInput.get(readOffset));
+            BoardDetails newBoard = new BoardDetails(Utils.parseCsvFriendlyFormat(currentBoardData[0]));
             readOffset++;
 
             int toDoCount = Integer.parseInt(currentBoardData[1]);

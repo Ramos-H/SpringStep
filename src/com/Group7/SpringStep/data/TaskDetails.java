@@ -81,10 +81,10 @@ public class TaskDetails
 
     public void parseCsv(String csv)
     {
-        String[] currentTaskData = csv.split(",");
+        String[] currentTaskData = Utils.splitCsv(csv);
 
         // Name
-        setName(currentTaskData[0]);
+        setName(Utils.parseCsvFriendlyFormat(currentTaskData[0]));
 
         // Description
         if (!currentTaskData[1].equals("NULL")) 

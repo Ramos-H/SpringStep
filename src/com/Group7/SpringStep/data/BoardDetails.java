@@ -2,6 +2,8 @@ package com.Group7.SpringStep.data;
 
 import java.util.*;
 
+import com.Group7.SpringStep.Utils;
+
 public class BoardDetails 
 {
     private String name;
@@ -23,7 +25,7 @@ public class BoardDetails
         int todoCount = todoList.size();
         int doneCount = doneList.size();
 
-        String boardOutput = String.format("%s,%d,%d\n", getName(), todoCount, doneCount);
+        String boardOutput = String.format("%s,%d,%d\n", Utils.getCsvFriendlyFormat(getName()), todoCount, doneCount);
         if(todoCount > 0)
         {
             for (TaskDetails taskDetails : todoList) { boardOutput += taskDetails.getAsCsv() + "\n"; }
