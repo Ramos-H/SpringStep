@@ -40,7 +40,7 @@ public class ListPanel extends JPanel
                     internalListContainer = new JPanel(new GridBagLayout());
                     internalListContainer.setBackground(new Color(0, 0, 0, 128));
 
-                    listScrollPanel = new ListScrollPane(internalListContainer);
+                    listScrollPanel = new JScrollPane(internalListContainer);
                     listScrollPanel.setOpaque(false);
                     listScrollPanel.getVerticalScrollBar().setUnitIncrement(10);
 
