@@ -14,7 +14,9 @@ import javax.swing.Timer;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
-public class MainWindow extends JFrame implements ActionListener, AWTEventListener, WindowListener, KeyListener, FocusListener, MouseListener
+public class MainWindow extends JFrame implements ActionListener, AWTEventListener,
+                                                    WindowListener, KeyListener,
+                                                    FocusListener, MouseListener
 {
     private ListPanel toDoPanel, doingPanel, donePanel;
     private JButton toDoAddTaskButton, doingAddTaskButton;
@@ -239,9 +241,7 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     public void doSystemTrayStuff()
     {
-        if (!SystemTray.isSupported()) {
-            return;
-        }
+        if (!SystemTray.isSupported()) { return; }
 
         trayMenu = new PopupMenu();
         openAppMenuItem = new MenuItem("Open");
@@ -257,22 +257,15 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         try 
         {
             trayIcon = new TrayIcon(ImageIO.read(App.resources.get("SpringStep_Logo.png")));
-        } catch (IOException e1) 
-        {
-            e1.printStackTrace();
-        }
+        } catch (IOException e1) { e1.printStackTrace(); }
+        
         trayIcon.setImageAutoSize(true);
         trayIcon.setPopupMenu(trayMenu);
         trayIcon.addMouseListener(this);
 
         tray = SystemTray.getSystemTray();
-        try 
-        {
-            tray.add(trayIcon);
-        } catch (AWTException e) 
-        {
-            e.printStackTrace();
-        }
+        try { tray.add(trayIcon); } 
+        catch (AWTException e) { e.printStackTrace(); }
     }
 
     // --------------------------------------------EVENT HANDLERS----------------------------------
@@ -280,154 +273,33 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == toDoAddTaskButton) {
-            taskEditorPopup.addTask(toDoPanel);
-        } else if (eventSource == doingAddTaskButton) {
-            taskEditorPopup.addTask(doingPanel);
-        }
+        if (eventSource == toDoAddTaskButton) { taskEditorPopup.addTask(toDoPanel); } 
+        else if (eventSource == doingAddTaskButton) { taskEditorPopup.addTask(doingPanel); }
 
-        if (eventSource == boardListButton) {
+        if (eventSource == boardListButton) 
+        {
             boardOptionsMenu.show(boardListButton.getParent(), boardListButton.getX() + boardListButton.getWidth(),
                     boardListButton.getY() + boardListButton.getHeight());
         }
 
-        if (eventSource == userButton) {
-            popupContainer.setPopup(profilePopup);
-        }
+        if (eventSource == userButton) { popupContainer.setPopup(profilePopup); }
 
-        if (eventSource == helpButton) {
-            new HelpWindow().setVisible(true);
-        }
+        if (eventSource == helpButton) { new HelpWindow().setVisible(true); }
 
-        if (eventSource == searchButton) {
-            searchBarTextField.requestFocus();
-        }
+        if (eventSource == searchButton) { searchBarTextField.requestFocus(); }
 
-        if (eventSource == openAppMenuItem) {
-            setVisible(true);
-        } else if (eventSource == exitAppMenuItem) {
+        if (eventSource == openAppMenuItem) { setVisible(true); } 
+        else if (eventSource == exitAppMenuItem) 
+        {
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to close SpringStep?",
                     "Close SpringStep?",
                     JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.YES_OPTION) {
-                close();
-            }
+            if (response == JOptionPane.YES_OPTION) { close(); }
         }
 
-        if (eventSource instanceof JMenuItem) {
-            if (eventSource == createBoardMenuItem) {
-                BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
-                boolean properlyResponded = false;
-                do {
-                    int response = namePrompter.showDialog("Please give a name for the new board", "New board",
-                            "New Board",
-                            null);
-                    if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) {
-                        boolean nameIsValid = true;
-                        String enteredName = namePrompter.getText();
-                        if (Utils.isTextEmpty(enteredName)) {
-                            JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
-                                    "Warning: Can't create a nameless board", JOptionPane.WARNING_MESSAGE);
-                            nameIsValid = false;
-                        }
+        if (eventSource instanceof JMenuItem) { handleBoardSettingsMenuEvent(eventSource); }
 
-                        ArrayList<BoardDetails> boards = currentUser.getBoards();
-
-                        for (BoardDetails boardDetails : boards) {
-                            if (boardDetails.getName().equals(enteredName)) {
-                                String warningTitle = "Warning: Board name already taken";
-                                String warningMessage = "That name is already taken. Please enter a different name";
-                                JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
-                                        JOptionPane.WARNING_MESSAGE);
-                                nameIsValid = false;
-                            }
-                        }
-
-                        if (nameIsValid) {
-                            properlyResponded = true;
-                            BoardDetails newBoard = new BoardDetails(enteredName);
-                            boards.add(newBoard);
-                            setCurrentBoard(newBoard);
-                            updateBoardList();
-                            JOptionPane.showMessageDialog(this, "The board has been successfully created.",
-                                    "New board created", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    } else {
-                        properlyResponded = true;
-                    }
-                } while (!properlyResponded);
-            } else if (eventSource == deleteBoardMenuItem) {
-                int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this board?",
-                        "Delete current board?", JOptionPane.YES_NO_OPTION);
-                if (response == JOptionPane.YES_OPTION) {
-                    ArrayList<BoardDetails> boards = currentUser.getBoards();
-                    boards.remove(currentBoard);
-                    updateBoardList();
-                    setCurrentBoard(boards.get(0));
-                }
-            } else if (eventSource == renameBoardMenuItem) {
-                BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
-                boolean properlyResponded = false;
-                do {
-                    int response = namePrompter.showDialog("Enter a new name for the board", "Rename board",
-                            currentBoard.getName(),
-                            null);
-                    if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) {
-                        boolean nameIsValid = true;
-                        String enteredName = namePrompter.getText();
-                        if (Utils.isTextEmpty(enteredName)) {
-                            JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
-                                    "Warning: Can't rename board", JOptionPane.WARNING_MESSAGE);
-                            nameIsValid = false;
-                        }
-
-                        ArrayList<BoardDetails> boards = currentUser.getBoards();
-                        for (BoardDetails boardDetails : boards) {
-                            if (boardDetails.getName().equals(enteredName)) {
-                                String warningTitle = "Warning: Board name already taken";
-                                String warningMessage = "That name is already taken. Please enter a different name";
-                                JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
-                                        JOptionPane.WARNING_MESSAGE);
-                                nameIsValid = false;
-                            }
-                        }
-
-                        if (nameIsValid) {
-                            properlyResponded = true;
-                            currentBoard.setName(enteredName);
-                            setCurrentBoard(currentBoard);
-                            updateBoardList();
-                            JOptionPane.showMessageDialog(this, "The board has been successfully renamed.",
-                                    "Current board was renamed", JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    } else {
-                        properlyResponded = true;
-                    }
-                } while (!properlyResponded);
-            } else {
-                JMenuItem selectedBoard = (JMenuItem) eventSource;
-                ArrayList<BoardDetails> boards = currentUser.getBoards();
-                for (BoardDetails boardDetails : boards) {
-                    if (selectedBoard.getText().equals(boardDetails.getName())) {
-                        setCurrentBoard(boardDetails);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (eventSource == autosaveTimer) {
-            saveUserData();
-        }
-    }
-
-    public void close()
-    {
-        getToolkit().removeAWTEventListener(this);
-        setVisible(false);
-        if (trayIcon != null) { tray.remove(trayIcon); }
-        dispose();
-        System.exit(0);
+        if (eventSource == autosaveTimer) { saveUserData(); }
     }
 
     @Override
@@ -437,24 +309,27 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         Point newMouseScreenPosition = MouseInfo.getPointerInfo().getLocation();
         ArrayList<TaskNode> taskNodes = new ArrayList<>();
         {
-            if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel)) {
+            if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, toDoPanel)) 
+            {
                 hoveredPanel = toDoPanel;
                 taskNodes.addAll(toDoPanel.getTaskNodes());
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) {
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, doingPanel)) 
+            {
                 hoveredPanel = doingPanel;
                 taskNodes.addAll(doingPanel.getTaskNodes());
-            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) {
+            } else if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, donePanel)) 
+            {
                 hoveredPanel = donePanel;
                 taskNodes.addAll(donePanel.getTaskNodes());
-            } else {
-                hoveredPanel = null;
-            }
+            } else { hoveredPanel = null; }
         }
 
         {
             hoveredTask = null;
-            for (TaskNode taskNode : taskNodes) {
-                if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) {
+            for (TaskNode taskNode : taskNodes) 
+            {
+                if (Utils.isMouseOverVisibleRect(newMouseScreenPosition, taskNode)) 
+                {
                     hoveredTask = taskNode;
                     break;
                 }
@@ -462,12 +337,12 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
 
         boolean eventIsntFromButton = !(caughtEvent.getSource() instanceof JButton);
-        if (eventIsntFromButton && !popupContainer.isVisible()) {
-            switch (eventId) {
+        if (eventIsntFromButton && !popupContainer.isVisible()) 
+        {
+            switch (eventId) 
+            {
                 case MouseEvent.MOUSE_PRESSED:
-                    if (hoveredTask == null) {
-                        break;
-                    }
+                    if (hoveredTask == null) { break; }
 
                     previousPanel = hoveredPanel;
                     heldTask = hoveredTask;
@@ -487,31 +362,30 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
                     heldTask.setBounds(heldTaskBounds);
                     break;
                 case MouseEvent.MOUSE_RELEASED:
-                    if (heldTask == null) {
-                        break;
-                    }
+                    if (heldTask == null) { break; }
 
                     getLayeredPane().remove(heldTask);
-                    if (hoveredPanel == null) {
-                        previousPanel.addTaskToList(heldTask);
-                    } else {
+                    if (hoveredPanel == null) { previousPanel.addTaskToList(heldTask); } 
+                    else 
+                    {
                         hoveredPanel.addTaskToList(heldTask);
                         updateTimerBasedOnDoingList();
                     }
                     previousPanel = null;
-
                     heldTask = null;
                     hoveredTask = null;
                     break;
             }
         }
 
-        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED) {
+        if (eventId == MouseEvent.MOUSE_PRESSED || eventId == MouseEvent.MOUSE_RELEASED) 
+        {
             revalidate();
             repaint();
         }
 
-        if (heldTask != null) {
+        if (heldTask != null) 
+        {
             Point currentLocation = heldTask.getLocation();
             heldTask.setLocation(new Point(currentLocation.x + mouseDelta.x, currentLocation.y + mouseDelta.y));
         }
@@ -524,18 +398,167 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         // updateDebugDetails();
     }
 
-    @Override
-    public void windowClosed(WindowEvent e) 
+    private void handleBoardSettingsMenuEvent(Object eventSource) 
     {
-        getToolkit().removeAWTEventListener(this);
+        if (eventSource == createBoardMenuItem) 
+        {
+            BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
+            boolean properlyResponded = false;
+            do 
+            {
+                int response = namePrompter.showDialog("Please give a name for the new board", "New board",
+                        "New Board",
+                        null);
+                if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) 
+                {
+                    boolean nameIsValid = true;
+                    String enteredName = namePrompter.getText();
+                    if (Utils.isTextEmpty(enteredName)) 
+                    {
+                        JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
+                                "Warning: Can't create a nameless board", JOptionPane.WARNING_MESSAGE);
+                        nameIsValid = false;
+                    }
+
+                    ArrayList<BoardDetails> boards = currentUser.getBoards();
+
+                    for (BoardDetails boardDetails : boards) 
+                    {
+                        if (boardDetails.getName().equals(enteredName)) 
+                        {
+                            String warningTitle = "Warning: Board name already taken";
+                            String warningMessage = "That name is already taken. Please enter a different name";
+                            JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
+                                    JOptionPane.WARNING_MESSAGE);
+                            nameIsValid = false;
+                        }
+                    }
+
+                    if (nameIsValid) 
+                    {
+                        properlyResponded = true;
+                        BoardDetails newBoard = new BoardDetails(enteredName);
+                        boards.add(newBoard);
+                        setCurrentBoard(newBoard);
+                        updateBoardList();
+                        JOptionPane.showMessageDialog(this, "The board has been successfully created.",
+                                "New board created", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+                else { properlyResponded = true; }
+            } while (!properlyResponded);
+        } 
+        else if (eventSource == deleteBoardMenuItem) 
+        {
+            int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this board?",
+                    "Delete current board?", JOptionPane.YES_NO_OPTION);
+            if (response == JOptionPane.YES_OPTION) 
+            {
+                ArrayList<BoardDetails> boards = currentUser.getBoards();
+                boards.remove(currentBoard);
+                updateBoardList();
+                setCurrentBoard(boards.get(0));
+            }
+        } else if (eventSource == renameBoardMenuItem) 
+        {
+            BoardNamePrompterDialog namePrompter = new BoardNamePrompterDialog();
+            boolean properlyResponded = false;
+            do {
+                int response = namePrompter.showDialog("Enter a new name for the board", "Rename board",
+                        currentBoard.getName(),
+                        null);
+                if (response == BoardNamePrompterDialog.RESPONSE_SUBMITTED) 
+                {
+                    boolean nameIsValid = true;
+                    String enteredName = namePrompter.getText();
+                    if (Utils.isTextEmpty(enteredName)) 
+                    {
+                        JOptionPane.showMessageDialog(this, "Please enter a name for the board.",
+                                "Warning: Can't rename board", JOptionPane.WARNING_MESSAGE);
+                        nameIsValid = false;
+                    }
+
+                    ArrayList<BoardDetails> boards = currentUser.getBoards();
+                    for (BoardDetails boardDetails : boards) 
+                    {
+                        if (boardDetails.getName().equals(enteredName)) 
+                        {
+                            String warningTitle = "Warning: Board name already taken";
+                            String warningMessage = "That name is already taken. Please enter a different name";
+                            JOptionPane.showMessageDialog(this, warningMessage, warningTitle,
+                                    JOptionPane.WARNING_MESSAGE);
+                            nameIsValid = false;
+                        }
+                    }
+
+                    if (nameIsValid) 
+                    {
+                        properlyResponded = true;
+                        currentBoard.setName(enteredName);
+                        setCurrentBoard(currentBoard);
+                        updateBoardList();
+                        JOptionPane.showMessageDialog(this, "The board has been successfully renamed.",
+                                "Current board was renamed", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } else { properlyResponded = true; }
+            } while (!properlyResponded);
+        } else 
+        {
+            JMenuItem selectedBoard = (JMenuItem) eventSource;
+            ArrayList<BoardDetails> boards = currentUser.getBoards();
+            for (BoardDetails boardDetails : boards) 
+            {
+                if (selectedBoard.getText().equals(boardDetails.getName())) 
+                {
+                    setCurrentBoard(boardDetails);
+                    break;
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void keyReleased(KeyEvent e) 
+    {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) { searchButton.requestFocus(); }
+        if (!popupContainer.isVisible()) { popupContainer.setPopup(searchResultsPanel); }
+        compileSearchResults();
     }
 
     @Override
-    public void windowClosing(WindowEvent e) 
+    public void focusGained(FocusEvent e) 
     {
-        getToolkit().removeAWTEventListener(this);
+        if(e.getSource() == searchBarTextField)
+        {
+            compileSearchResults();
+            popupContainer.setPopup(searchResultsPanel);
+        }
     }
     
+    @Override
+    public void focusLost(FocusEvent e) 
+    {
+        if(e.getSource() == searchBarTextField)
+        {
+            popupContainer.hidePopup();
+            searchBarTextField.setText("");
+        }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) 
+    {
+        if (e.getSource() == trayIcon && e.getClickCount() > 1) {
+            setVisible(true);
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) { getToolkit().removeAWTEventListener(this); }
+
+    @Override
+    public void windowClosing(WindowEvent e) { getToolkit().removeAWTEventListener(this); }
+
     @Override
     public void windowOpened(WindowEvent e) { }
 
@@ -550,6 +573,24 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
     
     @Override
     public void windowDeactivated(WindowEvent e) { }
+    
+    @Override
+    public void keyTyped(KeyEvent e) { }
+
+    @Override
+    public void keyPressed(KeyEvent e) { }
+
+    @Override
+    public void mousePressed(MouseEvent e) { }
+
+    @Override
+    public void mouseReleased(MouseEvent e) { }
+
+    @Override
+    public void mouseEntered(MouseEvent e) { }
+
+    @Override
+    public void mouseExited(MouseEvent e) { }
 
 
     // --------------------------------------------MAIN WINDOW FUNCTIONS----------------------------------
@@ -566,62 +607,6 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
     }
 
-    public void updateTimerBasedOnDoingList() 
-    {
-        boolean doingListHasNoTasks = doingPanel.getTaskNodes().size() == 0;
-        if (hoveredPanel == toDoPanel)
-        {
-            if(doingListHasNoTasks)
-            {
-                timerPanel.stopTimer();
-            }
-        }
-        else if(hoveredPanel == doingPanel)
-        {
-            timerPanel.startTimer();
-        }
-        else if(hoveredPanel == donePanel)
-        {
-            if(doingListHasNoTasks)
-            {
-                timerPanel.stopTimer();
-                timerPanel.resetTimer();
-            }
-        }
-    }
-
-    private void updateDebugDetails() 
-    {
-        // Title details
-        String currentHoveredPanel = "NONE";
-        if (hoveredPanel == toDoPanel) {
-            currentHoveredPanel = "To Do";
-        } else if (hoveredPanel == doingPanel) {
-            currentHoveredPanel = "Doing";
-        } else if (hoveredPanel == donePanel) {
-            currentHoveredPanel = "Done";
-        }
-        String currentPreviousPanel = "NONE";
-        if (previousPanel == toDoPanel) {
-            currentPreviousPanel = "To Do";
-        } else if (previousPanel == doingPanel) {
-            currentPreviousPanel = "Doing";
-        } else if (previousPanel == donePanel) {
-            currentPreviousPanel = "Done";
-        }
-        String currentHoveredNode = "NONE";
-        if (hoveredTask != null) {
-            currentHoveredNode = hoveredTask.getTaskNameArea().getText();
-        }
-        String currentHeldNode = "NONE";
-        if (heldTask != null) {
-            currentHeldNode = heldTask.getTaskNameArea().getText();
-        }
-        String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s, Screen Position: %s";
-        setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,
-                mouseDelta.toString(), getLocationOnScreen().toString()));
-    }
-    
     public void setUser(User newUser)
     {
         currentUser = newUser;
@@ -640,22 +625,15 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         resetMainWindow();
         boardName.setText(currentBoard.getName());
         ArrayList<TaskDetails> todoList = currentBoard.getTodoList();
-        for (TaskDetails task : todoList) {
-            toDoPanel.addTaskToList(new TaskNode(task, taskEditorPopup));
-        }
+        for (TaskDetails task : todoList) { toDoPanel.addTaskToList(new TaskNode(task, taskEditorPopup)); }
 
         ArrayList<TaskDetails> doneList = currentBoard.getDoneList();
-        for (TaskDetails task : doneList) {
-            donePanel.addTaskToList(new TaskNode(task, taskEditorPopup));
-        }
+        for (TaskDetails task : doneList) { donePanel.addTaskToList(new TaskNode(task, taskEditorPopup)); }
     }
     
     public void updateBoardList()
     {
-        if (boardOptionsMenu.getComponentCount() > 0)
-        {
-            boardOptionsMenu.removeAll();
-        }
+        if (boardOptionsMenu.getComponentCount() > 0) { boardOptionsMenu.removeAll(); }
 
         ArrayList<BoardDetails> boards = currentUser.getBoards();
         for (BoardDetails boardDetails : boards) 
@@ -683,78 +661,16 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         }
     }
 
-    public void saveTasksToBoard()
+    public void updateTimerBasedOnDoingList() 
     {
-        ArrayList<TaskNode> toDoNodes = toDoPanel.getTaskNodes();
-        ArrayList<TaskNode> doingNodes = doingPanel.getTaskNodes();
-        ArrayList<TaskNode> doneNodes = donePanel.getTaskNodes();
-        ArrayList<TaskDetails> todoListSave = new ArrayList<>();
-
-        // Store to do tasks
-        if (toDoNodes.size() > 0) {
-            for (TaskNode taskDisplay : toDoNodes) {
-                todoListSave.add(taskDisplay.getTaskDetails());
-            }
-        }
-
-        /* Store doing tasks. If the user closes the app while doing a task, it safe to assume
-           they aren't done with those tasks. Hence, why we store these incomplete tasks to "To Do" for later.
-        */
-        if (doingNodes.size() > 0) {
-            for (TaskNode taskDisplay : doingNodes) {
-                todoListSave.add(taskDisplay.getTaskDetails());
-            }
-        }
-
-        currentBoard.setTodoList(todoListSave);
-
-        // Store done tasks
-        ArrayList<TaskDetails> doneListSave = new ArrayList<>();
-        if (doneNodes.size() > 0) {
-            for (TaskNode taskDisplay : doneNodes) {
-                doneListSave.add(taskDisplay.getTaskDetails());
-            }
-        }
-        currentBoard.setDoneList(doneListSave);
-    }
-
-    public void saveUserData()
-    {
-        if (currentBoard == null)
+        boolean doingListHasNoTasks = doingPanel.getTaskNodes().size() == 0;
+        if (hoveredPanel == toDoPanel && doingListHasNoTasks) { timerPanel.stopTimer(); }
+        else if(hoveredPanel == doingPanel) { timerPanel.startTimer(); }
+        else if (hoveredPanel == donePanel && doingListHasNoTasks) 
         {
-            return;
+            timerPanel.stopTimer();
+            timerPanel.resetTimer();
         }
-
-        saveTasksToBoard();
-        DataManager dataManager = new DataManager();
-        try 
-        {
-            dataManager.saveUserData(currentUser, true);
-        } catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-        // System.out.println("Saved user data: " + LocalTime.now().toString());
-    }
-
-    public void logOut() 
-    {
-        getToolkit().removeAWTEventListener(this);
-        Utils.moveToNewWindow(this, new LoginWindow());
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) 
-    {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            searchButton.requestFocus();
-        }
-
-        if (!popupContainer.isVisible()) {
-            popupContainer.setPopup(searchResultsPanel);
-        }
-
-        compileSearchResults();
     }
 
     public void compileSearchResults()
@@ -763,20 +679,14 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
         ArrayList<BoardDetails> boards = currentUser.getBoards();
         for (BoardDetails board : boards) 
         {
-            if(board == currentBoard)
-            {
-                continue;
-            }
+            if(board == currentBoard) { continue; }
 
             ArrayList<TaskDetails> todoList = board.getTodoList();
             ArrayList<TaskDetails> doneList = board.getDoneList();
             ArrayList<TaskDetails> taskList = new ArrayList<>();
-            if (todoList.size() > 0) {
-                taskList.addAll(todoList);
-            }
-            if (doneList.size() > 0) {
-                taskList.addAll(doneList);
-            }
+
+            if (todoList.size() > 0) { taskList.addAll(todoList); }
+            if (doneList.size() > 0) { taskList.addAll(doneList); }
 
             String searchQuery = searchBarTextField.getText().toUpperCase();
             if (Utils.isTextEmpty(searchQuery))
@@ -787,8 +697,10 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
 
             if (taskList.size() > 0) 
             {
-                for (TaskDetails task : taskList) {
-                    if (task.getName().toUpperCase().contains(searchQuery) && !Utils.isTextEmpty(searchQuery)) {
+                for (TaskDetails task : taskList) 
+                {
+                    if (task.getName().toUpperCase().contains(searchQuery) && !Utils.isTextEmpty(searchQuery)) 
+                    {
                         SearchResult newResult = new SearchResult();
                         newResult.setName(task.getName());
                         newResult.setBoardSource(board);
@@ -807,70 +719,88 @@ public class MainWindow extends JFrame implements ActionListener, AWTEventListen
             }
             System.out.println();
         }
-        else
-        {
-            System.out.println("No results currently");
-        }
+        else { System.out.println("No results currently"); }
         searchResultsPanel.setResults(searchResults);
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) { }
-
-    @Override
-    public void keyPressed(KeyEvent e) { }
-
-
-    @Override
-    public void focusGained(FocusEvent e) 
+    public void saveUserData()
     {
-        if(e.getSource() == searchBarTextField)
-        {
-            compileSearchResults();
-            popupContainer.setPopup(searchResultsPanel);
-        }
+        if (currentBoard == null) { return; }
+
+        saveTasksToBoard();
+        DataManager dataManager = new DataManager();
+        try { dataManager.saveUserData(currentUser, true); } 
+        catch (Exception e) { e.printStackTrace(); }
+        // System.out.println("Saved user data: " + LocalTime.now().toString());
     }
     
-    @Override
-    public void focusLost(FocusEvent e) 
+    public void saveTasksToBoard()
     {
-        if(e.getSource() == searchBarTextField)
+        ArrayList<TaskNode> toDoNodes = toDoPanel.getTaskNodes();
+        ArrayList<TaskNode> doingNodes = doingPanel.getTaskNodes();
+        ArrayList<TaskNode> doneNodes = donePanel.getTaskNodes();
+        ArrayList<TaskDetails> todoListSave = new ArrayList<>();
+
+        // Store to do tasks
+        if (toDoNodes.size() > 0) 
         {
-            popupContainer.hidePopup();
-            searchBarTextField.setText("");
+            for (TaskNode taskDisplay : toDoNodes) { todoListSave.add(taskDisplay.getTaskDetails()); }
         }
+
+        /* Store doing tasks. If the user closes the app while doing a task, it safe to assume
+           they aren't done with those tasks. Hence, why we store these incomplete tasks to "To Do" for later.
+        */
+        if (doingNodes.size() > 0) 
+        {
+            for (TaskNode taskDisplay : doingNodes) { todoListSave.add(taskDisplay.getTaskDetails()); }
+        }
+
+        currentBoard.setTodoList(todoListSave);
+
+        // Store done tasks
+        ArrayList<TaskDetails> doneListSave = new ArrayList<>();
+        if (doneNodes.size() > 0) 
+        {
+            for (TaskNode taskDisplay : doneNodes) { doneListSave.add(taskDisplay.getTaskDetails()); }
+        }
+        currentBoard.setDoneList(doneListSave);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) 
+    public void logOut() 
     {
-        if(e.getSource() == trayIcon && e.getClickCount() > 1)
-        {
-            setVisible(true);
-        }
+        getToolkit().removeAWTEventListener(this);
+        Utils.moveToNewWindow(this, new LoginWindow());
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
+    public void close()
+    {
+        getToolkit().removeAWTEventListener(this);
+        setVisible(false);
+        if (trayIcon != null) { tray.remove(trayIcon); }
+        dispose();
+        System.exit(0);
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
+    private void updateDebugDetails() 
+    {
+        // Title details
+        String currentHoveredPanel = "NONE";
+        if (hoveredPanel == toDoPanel) { currentHoveredPanel = "To Do"; } 
+        else if (hoveredPanel == doingPanel) { currentHoveredPanel = "Doing"; } 
+        else if (hoveredPanel == donePanel) { currentHoveredPanel = "Done"; }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-        
-    }
+        String currentPreviousPanel = "NONE";
+        if (previousPanel == toDoPanel) { currentPreviousPanel = "To Do"; } 
+        else if (previousPanel == doingPanel) { currentPreviousPanel = "Doing"; } 
+        else if (previousPanel == donePanel) { currentPreviousPanel = "Done"; }
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
+        String currentHoveredNode = "NONE";
+        if (hoveredTask != null) { currentHoveredNode = hoveredTask.getTaskNameArea().getText(); }
         
+        String currentHeldNode = "NONE";
+        if (heldTask != null) { currentHeldNode = heldTask.getTaskNameArea().getText(); }
+        String format = "Hovered Panel: %s, Previous Panel: %s, Hovered Node: %s, Held Node: %s, Mouse Delta: %s, Screen Position: %s";
+        setTitle(String.format(format, currentHoveredPanel, currentPreviousPanel, currentHoveredNode, currentHeldNode,
+                mouseDelta.toString(), getLocationOnScreen().toString()));
     }
 }
