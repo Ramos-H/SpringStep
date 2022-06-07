@@ -180,19 +180,14 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         Object eventSource = e.getSource();
         if (eventSource == backButton) 
         {
-            if (!editMode) {
-                popupHandler.hidePopup();
-            }
+            if (!editMode) { popupHandler.hidePopup(); }
             setEditMode(false);
         }
         else if (eventSource == logOutButton) 
         {
             int response = JOptionPane.showConfirmDialog(this, "Are you really sure you want to log out?", "Log out?",
                     JOptionPane.YES_NO_OPTION);
-            if(response == JOptionPane.YES_OPTION)
-            {
-                mainWindow.logOut();
-            }
+            if(response == JOptionPane.YES_OPTION) { mainWindow.logOut(); }
         }
         else if (eventSource == editUsernameButton) 
         {
@@ -250,10 +245,7 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
             }
             else
             {
-                if(passVerified)
-                {
-                    setEditMode(true);
-                }
+                if(passVerified) { setEditMode(true); }
                 else
                 {
                     PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
@@ -287,10 +279,7 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
                                 setEditMode(true);
                             }
                         }
-                        else
-                        {
-                            properlyResponded = true;
-                        }
+                        else { properlyResponded = true; }
                     } while (!properlyResponded);
                 }
             }
