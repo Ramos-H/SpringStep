@@ -93,13 +93,13 @@ public class EditPasswordDialog extends JDialog implements ActionListener
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: No new password provided.";
-                noInputErrorMessage = "No new %s was entered. \nPlease enter the new %s and try again.";
+                noInputErrorMessage = "No new password was entered. \nPlease enter the new password and try again.";
             }
             else if (Utils.isTextEmpty(enteredConfirmValue))
             {
                 hasMissingInput = true;
                 noInputErrorTitle = "Error: Password not confirmed.";
-                noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your %s again in the \"Confirm password\" field and try again.";
+                noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your new password again in the \"Confirm password\" field and try again.";
             }
 
             if (hasMissingInput)
