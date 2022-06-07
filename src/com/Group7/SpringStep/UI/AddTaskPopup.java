@@ -46,10 +46,7 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
 
                     btnExit = new JButton();
                     Image btnExitImage = Utils.getScaledImage(App.resources.get("Close_Icon_256.png"), 0.125f);
-                    if (btnExitImage != null)
-                    {
-                        Utils.setButtonIcon(btnExit, new ImageIcon(btnExitImage));
-                    }
+                    if (btnExitImage != null) { Utils.setButtonIcon(btnExit, new ImageIcon(btnExitImage)); }
                     btnExit.addActionListener(this);
                     btnExit.setBackground(Color.WHITE);
 
@@ -68,7 +65,6 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
                         descriptionArea.setBorder(BorderFactory.createLineBorder(Color.black));
                         descriptionArea.setLineWrap(true);
                         descriptionArea.setWrapStyleWord(true);
-
                         descriptionScroller.setViewportView(descriptionArea);
                     }
 
@@ -150,8 +146,10 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == btnSave) {
-            if (taskTitleField.getText().trim().equals("")) {
+        if (eventSource == btnSave) 
+        {
+            if (taskTitleField.getText().trim().equals("")) 
+            {
                 JOptionPane.showMessageDialog(null, "Please add a name for the task", "Error: No name for task",
                         JOptionPane.ERROR_MESSAGE);
                 return;
@@ -159,19 +157,22 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
 
             insertChangesIntoNewTaskDetails();
 
-            if (editMode) {
-                if (!currentTaskDetails.equals(newTaskDetails)) {
+            if (editMode) 
+            {
+                if (!currentTaskDetails.equals(newTaskDetails)) 
+                {
                     int response = JOptionPane.showConfirmDialog(this,
                             "Are you sure you want to save your changes?",
                             "Save changes to task?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                    if (response == JOptionPane.NO_OPTION) {
-                        popupHandler.hidePopup();
-                    } else {
+                    if (response == JOptionPane.NO_OPTION) { popupHandler.hidePopup(); } 
+                    else 
+                    {
                         currentTaskNode.setTaskDetails(newTaskDetails);
                         popupHandler.hidePopup();
                     }
                 }
-            } else {
+            } else 
+            {
                 TaskNode newTaskNode = new TaskNode(newTaskDetails, this);
                 destinationPanel.addTaskToList(newTaskNode);
                 popupHandler.hidePopup();
@@ -188,17 +189,15 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
             }
             else
             {
-                if (!currentTaskDetails.equals(newTaskDetails)) {
+                if (!currentTaskDetails.equals(newTaskDetails)) 
+                {
                     response = JOptionPane.showConfirmDialog(this,
                             "Are you sure you want to discard your changes to this task?",
                             "Discard your edits?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 }
             }
             
-            if (response == JOptionPane.YES_OPTION)
-            {
-                popupHandler.hidePopup();
-            }
+            if (response == JOptionPane.YES_OPTION) { popupHandler.hidePopup(); }
         } else if (eventSource == btnDelete) 
         {
             int response = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this task?",
@@ -211,7 +210,28 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         }
     }
 
-    private void insertChangesIntoNewTaskDetails() {
+    public void clearPopupInput()
+    {
+        taskTitleField.setText("");
+        descriptionArea.setText("");
+        deadlinePicker.clear();
+        currentTaskDetails = null;
+        currentTaskNode = null;
+        newTaskDetails = null;
+    }
+
+    public void addTask(ListPanel destPanel)
+    {
+        clearPopupInput();
+        setEditMode(false);
+        newTaskDetails = new TaskDetails();
+        currentTaskDetails = newTaskDetails;
+        destinationPanel = destPanel;
+        popupHandler.setPopup(this);
+    }
+
+    private void insertChangesIntoNewTaskDetails() 
+    {
         newTaskDetails.setName(taskTitleField.getText().trim());
         newTaskDetails.setDescription(descriptionArea.getText().trim());
         newTaskDetails.setDeadline(deadlinePicker.getDate());
@@ -222,15 +242,12 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         editMode = newValue;
         btnDelete.setVisible(editMode);
     }
-    
-    public void addTask(ListPanel destPanel)
+
+    public void updatePopupInput()
     {
-        clearPopupInput();
-        setEditMode(false);
-        newTaskDetails = new TaskDetails();
-        currentTaskDetails = newTaskDetails;
-        destinationPanel = destPanel;
-        popupHandler.setPopup(this);
+        taskTitleField.setText(currentTaskDetails.getName());
+        descriptionArea.setText(currentTaskDetails.getDescription());
+        deadlinePicker.setDate(currentTaskDetails.getDeadline());
     }
     
     public void editTask(TaskNode taskToEdit)
@@ -241,22 +258,5 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         newTaskDetails = new TaskDetails(currentTaskDetails);
         updatePopupInput();
         popupHandler.setPopup(this);
-    }
-
-    public void updatePopupInput()
-    {
-        taskTitleField.setText(currentTaskDetails.getName());
-        descriptionArea.setText(currentTaskDetails.getDescription());
-        deadlinePicker.setDate(currentTaskDetails.getDeadline());
-    }
-    
-    public void clearPopupInput()
-    {
-        taskTitleField.setText("");
-        descriptionArea.setText("");
-        deadlinePicker.clear();
-        currentTaskDetails = null;
-        currentTaskNode = null;
-        newTaskDetails = null;
     }
 }
