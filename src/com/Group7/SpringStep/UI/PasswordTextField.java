@@ -19,17 +19,10 @@ public class PasswordTextField extends JPanel implements ActionListener
     {
         setOpaque(false);
         Image passwordHiddenSourceImage = Utils.getScaledImage(App.resources.get("Closed_Eye_Icon_256.png"), 0.10f);
+        if (passwordHiddenSourceImage != null) { passwordHiddenIcon = new ImageIcon(passwordHiddenSourceImage); }
+        
         Image passwordShownSourceImage = Utils.getScaledImage(App.resources.get("Opened_Eye_Icon_256.png"), 0.10f);
-
-        if (passwordHiddenSourceImage != null)
-        {
-            passwordHiddenIcon = new ImageIcon(passwordHiddenSourceImage);
-        }
-
-        if (passwordShownSourceImage != null)
-        {
-            passwordShownIcon = new ImageIcon(passwordShownSourceImage);
-        }
+        if (passwordShownSourceImage != null) { passwordShownIcon = new ImageIcon(passwordShownSourceImage); }
 
         setLayout(new BorderLayout());
         {
@@ -46,46 +39,26 @@ public class PasswordTextField extends JPanel implements ActionListener
         }
     }
 
+    public String getText() { return new String(passwordField.getPassword()); }
+    public boolean getEditable() { return passwordField.isEditable(); }
+    public boolean getPassShowButtonVisibility() { return passwordVisibilityButton.isVisible(); }
+    
+    public void setText(String text) { passwordField.setText(text); }
+    public void setEditable(boolean editable) { passwordField.setEditable(editable); }
+    public void setPassShowButtonVisibility(boolean visible) { passwordVisibilityButton.setVisible(visible); }
+
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-        if (!passwordIsVisible) {
+        if (!passwordIsVisible) 
+        {
             passwordField.setEchoChar((char) 0);
             passwordVisibilityButton.setIcon(passwordShownIcon);
-        } else {
+        } else 
+        {
             passwordField.setEchoChar('*');
             passwordVisibilityButton.setIcon(passwordHiddenIcon);
         }
         passwordIsVisible = !passwordIsVisible;
-    }
-
-    public void setEditable(boolean editable)
-    {
-        passwordField.setEditable(editable);
-    }
-
-    public boolean getEditable()
-    {
-        return passwordField.isEditable();
-    }
-    
-    public void setPassShowButtonVisibility(boolean visible)
-    {
-        passwordVisibilityButton.setVisible(visible);
-    }
-
-    public boolean getPassShowButtonVisibility()
-    {
-        return passwordVisibilityButton.isVisible();
-    }
-    
-    public void setText(String text)
-    {
-        passwordField.setText(text);
-    }
-
-    public String getText()
-    {
-        return new String(passwordField.getPassword());
     }
 }
