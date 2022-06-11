@@ -1,35 +1,30 @@
 package com.Group7.SpringStep.data;
 
+/** Class that contains data for a search result */
 public class SearchResult 
 {
+    /** Name of the task */
     private String name;
+    /** The board that contains the task */
     private BoardDetails boardSource;
 
     /**
-     * @return the name
+     * @return The name of the task
      */
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
     /**
-     * @return the boardSource
+     * @return The board containing the task
      */
-    public BoardDetails getBoardSource() {
-        return boardSource;
-    }
+    public BoardDetails getBoardSource() { return boardSource; }
 
     /**
-     * @param name the name to set
+     * @param name The name of the task
      */
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     /**
-     * @param boardSource the boardSource to set
+     * @param boardSource The board containing the task
      */
-    public void setBoardSource(BoardDetails boardSource) {
-        this.boardSource = boardSource;
-    }
+    public void setBoardSource(BoardDetails boardSource) { this.boardSource = boardSource; }
 }
