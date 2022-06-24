@@ -10,6 +10,7 @@ import java.beans.Visibility;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
+/** Represents the user profile panel */
 public class ProfilePopup extends RoundedPanel implements ActionListener 
 {
     private RoundedButton editProfileButton;
@@ -35,6 +36,7 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
     private String oldPassword;
     private User currentUser;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public ProfilePopup(PopupContainer popupContainer, MainWindow window) 
     {
         mainWindow = window;
@@ -59,25 +61,24 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
             editUsernameButton.addActionListener(this);
             editUsernameButton.setVisible(false);
             editUsernameButton.setBackground(Color.WHITE);
-            
+
             editEmailButton = new JButton();
             editEmailButton.addActionListener(this);
             editEmailButton.setVisible(false);
             editEmailButton.setBackground(Color.WHITE);
-            
+
             editPasswordButton = new JButton();
             editPasswordButton.addActionListener(this);
             editPasswordButton.setVisible(false);
             editPasswordButton.setBackground(Color.WHITE);
-            
+
             Image editButtonImage = Utils.getScaledImage(App.resources.get("Edit_Button_(Pencil)_256.png"), 0.05f);
-            if(editButtonImage != null)
-            {
+            if (editButtonImage != null) {
                 editUsernameButton.setIcon(new ImageIcon(editButtonImage));
                 editUsernameButton.setContentAreaFilled(false);
                 editUsernameButton.setBorderPainted(false);
                 editUsernameButton.setMargin(new Insets(0, 0, 0, 0));
-                
+
                 editEmailButton.setIcon(new ImageIcon(editButtonImage));
                 editEmailButton.setContentAreaFilled(false);
                 editEmailButton.setBorderPainted(false);
@@ -88,7 +89,7 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
                 editPasswordButton.setBorderPainted(false);
                 editPasswordButton.setMargin(new Insets(0, 0, 0, 0));
             }
-            
+
             JPanel buttonPanel = new JPanel(new GridBagLayout()); // pinasok buttons here
             Utils.padJComponent(buttonPanel, 0, 5, 0, 5);
             {
@@ -174,11 +175,13 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if (eventSource == backButton) {
+        if (eventSource == backButton) 
+        {
             if (!editMode) { popupHandler.hidePopup(); }
             setEditMode(false);
         } else if (eventSource == logOutButton) 
@@ -209,6 +212,11 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         }
     }
     
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /**
+     * Updates the panel to display the given user's information and preps it for editing
+     * @param newUser The given user information to display and prep for editing
+     */
     public void setUser(User newUser)
     {
         this.currentUser = newUser;
@@ -225,6 +233,9 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         oldPassword = password;
     }
 
+    /** Prompts the user for the password before allowing them edit the current user's information, depending
+     *  on whether the password provided is correct
+     */
     private void promptPasswordBeforeEditMode() 
     {
         PasswordSecurityPrompterDialog passwordPrompter = new PasswordSecurityPrompterDialog();
@@ -263,7 +274,8 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
     }
     
     /**
-     * @param newMode the editMode to set
+     * Shows/hides certain controls and updates text labels depending on whether the user wants to edit their profile
+     * @param newMode Whether the user wants to edit their information or not
      */
     public void setEditMode(boolean newMode) 
     {
@@ -280,6 +292,10 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         }
     }
     
+    /**
+     * Sets the visibility of the buttons associated with editing certain user information properties
+     * @param isVisible Whether these buttons should be shown or hidden
+     */
     private void setButtonVisibility(boolean isVisible) 
     {
         editUsernameButton.setVisible(isVisible);
@@ -288,14 +304,17 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
         logOutButton.setVisible(!isVisible);
     }
 
+    /** Saves the changes to the current user's data to file */
     private void saveProfileEdit()
     {
         String currentUsername = usernameField.getText();
         String currentEmail = emailField.getText();
         String currentPassword = passwordField.getText();
 
+        // If either of the username, email, or password of the user is modified
         if(!currentUsername.equals(oldUsername) || !currentEmail.equals(oldEmail) || !currentPassword.equals(oldPassword))
         {
+            // Ask the user whether they are sure of these edits
             int response = JOptionPane.showConfirmDialog(this,
                     "Are you really sure you want to save these changes?", "Save profile edits?",
                     JOptionPane.YES_NO_OPTION);
@@ -314,7 +333,8 @@ public class ProfilePopup extends RoundedPanel implements ActionListener
                             JOptionPane.INFORMATION_MESSAGE);
                     setEditMode(false);
                     mainWindow.setUser(editedUser);
-                } catch (Exception e1) 
+                } 
+                catch (Exception e1) 
                 {
                     String fileSaveErrorMessage = "An error has occured: File can't be accessed or can't be found.\nPlease try again";
                     JOptionPane.showMessageDialog(null, fileSaveErrorMessage, "Save Record Unsuccessful",

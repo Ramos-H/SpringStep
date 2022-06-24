@@ -7,6 +7,8 @@ import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 
+/** Holds particular panels like the AddTaskPopup, ProfilePopup, and SearchResultsPanel and handles their size 
+ * and position relative to the MainWindow */
 public class PopupContainer extends JPanel implements ComponentListener, MouseListener
 {
     private Container contentPane;
@@ -14,6 +16,7 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
     private Rectangle exclusionZone;
     private JComponent searchBar;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public PopupContainer(Container contentPane)
     {
         this.contentPane = contentPane;
@@ -24,7 +27,13 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         addMouseListener(this);
     }
 
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
     public void setSearchBar(JComponent searchBar) { this.searchBar = searchBar; }
+
+    /**
+     * Sets the popup panel to be displayed and displays it
+     * @param panel The popup panel to be displayed
+     */
     public void setPopup(JPanel panel)
     {
         boolean visible = isVisible();
@@ -38,12 +47,16 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         setVisible(true);
     }
     
+    ///////////////////////////////////////////////// OVERRIDES /////////////////////////////////////////////////
     @Override
     protected void paintComponent(Graphics g) 
     {
+        // Darken the whole main window
         g.setColor(getBackground());
         Rectangle clipBounds = g.getClipBounds();
         g.fillRect(clipBounds.x, clipBounds.y, clipBounds.width, clipBounds.height);
+
+        // If the search bar is present, lighten the area of the search bar on the main window
         if (currentPopup instanceof SearchResultsPanel && searchBar != null)
         {
             Point searchBarOnScreen = searchBar.getLocationOnScreen();
@@ -55,6 +68,7 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         }
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void componentResized(ComponentEvent e) 
     {
@@ -129,6 +143,9 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         }
     }
 
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /** Resizes the currently held popup panel (except the SearchResultsPanel) to occupy 40% of the width and 
+     * 80% of the height of the main window */
     private void resizeCurrentPopup() 
     {
         if(currentPopup != null)
@@ -147,6 +164,7 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         }
     }
     
+    /** Centers the currently held popup panel (except the SearchResultsPanel) to the MainWindow */
     private void positionCurrentPopup() 
     {
         if(currentPopup != null)
@@ -165,8 +183,13 @@ public class PopupContainer extends JPanel implements ComponentListener, MouseLi
         }
     }
 
+    /** Hides the currently held popup */
     public void hidePopup() { setVisible(false); }
     
+    /**
+     * Redispatches the mouse event to the component both under the mouse *and* this popup container
+     * @param e The mouse event to be redispatched
+     */
     private void redispatchMouseEvent(MouseEvent e) 
     {
         Point glassPanePoint = e.getPoint();

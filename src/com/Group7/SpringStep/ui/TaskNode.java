@@ -9,6 +9,7 @@ import java.awt.event.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
+/** A UI Component that represents a task */
 public class TaskNode extends RoundedPanel implements ActionListener 
 {
     private JTextArea taskNameArea;
@@ -17,6 +18,7 @@ public class TaskNode extends RoundedPanel implements ActionListener
     private AddTaskPopup taskEditor;
     private JButton editButton;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public TaskNode(TaskDetails newDetails, AddTaskPopup editor)
     {
         taskEditor = editor;
@@ -44,7 +46,9 @@ public class TaskNode extends RoundedPanel implements ActionListener
                 editButton = new JButton();
                 editButton.addActionListener(this);
                 Image editButtonImage = Utils.getScaledImage(App.resources.get("Edit_Button_(Dots)_256.png"), 0.125);
-                if (editButtonImage != null) { Utils.setButtonIcon(editButton, new ImageIcon(editButtonImage)); }
+                if (editButtonImage != null) {
+                    Utils.setButtonIcon(editButton, new ImageIcon(editButtonImage));
+                }
 
                 GridBagConstraints innerPanelConstraints = new GridBagConstraints();
                 innerPanelConstraints.gridx = 0;
@@ -73,15 +77,15 @@ public class TaskNode extends RoundedPanel implements ActionListener
         setTaskDetails(newDetails);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) 
-    {
-        if(e.getSource() == editButton) { taskEditor.editTask(this); }
-    }
-
+    ///////////////////////////////////////////////// GETTERS /////////////////////////////////////////////////
     public JTextArea getTaskNameArea() { return taskNameArea; }
     public TaskDetails getTaskDetails() { return taskDetails; }
 
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
+    /**
+     * Updates the task node to display the information held inside the given task details
+     * @param newTaskDetails The task details to pull information from
+     */
     public void setTaskDetails(TaskDetails newTaskDetails) 
     {
         taskDetails = newTaskDetails;
@@ -97,7 +101,23 @@ public class TaskNode extends RoundedPanel implements ActionListener
         revalidate();
         repaint();
     }
-    
+
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
+    @Override
+    public void actionPerformed(ActionEvent e) 
+    {
+        if(e.getSource() == editButton) { taskEditor.editTask(this); }
+    }
+
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /**
+     * <p>Creates a tag to be displayed on the task node with the given text label and background color.</p>
+     * <p>Was originally made for custom tags, before the tag system itself was scrapped during development. Now
+     * used for just the deadline of the task.</p>
+     * @param text The text on the tag's label
+     * @param bgColor The background color of the tag
+     * @return A tag that can be added to the tag panel for display purposes.
+     */
     public JPanel createTagDisplay(String text, Color bgColor)
     {
         JPanel newTagDisplay = new RoundedPanel(new FlowLayout());

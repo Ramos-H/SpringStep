@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 
+/** A custom text field for getting passwords. Basically a JPasswordField bundled with a show/hide password button */
 public class PasswordTextField extends JPanel implements ActionListener
 {
     private boolean passwordIsVisible = false;
@@ -15,6 +16,7 @@ public class PasswordTextField extends JPanel implements ActionListener
     private ImageIcon passwordHiddenIcon;
     private ImageIcon passwordShownIcon;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public PasswordTextField()
     {
         setOpaque(false);
@@ -27,7 +29,7 @@ public class PasswordTextField extends JPanel implements ActionListener
         setLayout(new BorderLayout());
         {
             passwordField = new JPasswordField();
-            passwordField.setEchoChar('*');
+            passwordField.setEchoChar('*'); // Hide the text by default
             passwordVisibilityButton = new JButton();
             Utils.setButtonIcon(passwordVisibilityButton, passwordHiddenIcon);
             passwordVisibilityButton.setMargin(new Insets(0, 0, 0, 0));
@@ -39,24 +41,37 @@ public class PasswordTextField extends JPanel implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// GETTERS /////////////////////////////////////////////////
     public String getText() { return new String(passwordField.getPassword()); }
     public boolean getEditable() { return passwordField.isEditable(); }
+
+    /**
+     * Checks if the password show/hide button is currently visible
+     * @return {@code true} if the password show/hide button is visible. {@code false} if otherwise
+     */
     public boolean getPassShowButtonVisibility() { return passwordVisibilityButton.isVisible(); }
     
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
     public void setText(String text) { passwordField.setText(text); }
     public void setEditable(boolean editable) { passwordField.setEditable(editable); }
+
+    /**
+     * Determines whether the password show/hide button is visible
+     * @param visible Whether the button should be visible
+     */
     public void setPassShowButtonVisibility(boolean visible) { passwordVisibilityButton.setVisible(visible); }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
         if (!passwordIsVisible) 
         {
-            passwordField.setEchoChar((char) 0);
+            passwordField.setEchoChar((char) 0); // Show the text
             passwordVisibilityButton.setIcon(passwordShownIcon);
         } else 
         {
-            passwordField.setEchoChar('*');
+            passwordField.setEchoChar('*'); // Hide the text
             passwordVisibilityButton.setIcon(passwordHiddenIcon);
         }
         passwordIsVisible = !passwordIsVisible;

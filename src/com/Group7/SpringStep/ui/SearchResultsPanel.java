@@ -9,6 +9,7 @@ import javax.swing.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
+/** Represents the search results panel that contains the search results entries that the user can click on */
 public class SearchResultsPanel extends JPanel implements MouseListener
 {
     private static final String NO_QUERY_TEXT = "Type in the search bar to search tasks from other boards.";
@@ -22,6 +23,7 @@ public class SearchResultsPanel extends JPanel implements MouseListener
     private MainWindow mainWindow;
     private ArrayList<SearchResult> currentResults;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public SearchResultsPanel(PopupContainer popupContainer, MainWindow window)
     {
         popupHandler = popupContainer;
@@ -61,12 +63,22 @@ public class SearchResultsPanel extends JPanel implements MouseListener
         }
     }
 
+    ///////////////////////////////////////////////// GETTERS /////////////////////////////////////////////////
+    /** Gets the supposed size of the search bar results panel's stretch container. 
+     * @return A {@code Dimension} whose size is the width of the search bar and the height is from the search 
+     * bar's bottom edge down to the button edge of the screen
+     * @exception NullReferenceException When the search bar isn't assigned using {@code setSearchBar()}
+    */
     @Override
     public Dimension getPreferredSize() 
     {
         return new Dimension(searchBar.getWidth(), popupHandler.getHeight());
     }
 
+    /** Gets the supposed location of the search bar results panel's stretch container. 
+     * @return A {@code Point} right under the search bar's bottom-left corner
+     * @exception NullReferenceException When the search bar isn't assigned using {@code setSearchBar()}
+    */
     public Point getPreferredLocation()
     {
         Point searchBarOnScreen = searchBar.getLocationOnScreen();
@@ -77,26 +89,23 @@ public class SearchResultsPanel extends JPanel implements MouseListener
         return newLocation;
     }
 
-    public void setSearchBar(JComponent newSearchBar)
-    {
-        this.searchBar = newSearchBar;
-    }
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
+    /**
+     * Sets the search bar to be used by the results panel for its positioning and sizing calculations
+     * @param newSearchBar The search bar to be used by the results panel for its layout calculations
+     */
+    public void setSearchBar(JComponent newSearchBar) { this.searchBar = newSearchBar; }
 
-    public void setText(String text)
-    {
-        textMessage.setText(text);
-    }
+    /**
+     * Sets the value of the text displayed in the search bar (Like "No results found")
+     * @param text The text to be displayed
+     */
+    public void setText(String text) { textMessage.setText(text); }
 
-    public void clearResults()
-    {
-        innerCountainer.removeAll();
-        innerContainerConstraints.gridy = 0;
-        innerCountainer.add(textMessage, innerContainerConstraints);
-        textMessage.setVisible(true);
-        if(currentResults != null && currentResults.size() > 0)
-            currentResults.clear();
-    }
-
+    /**
+     * Sets the current search results entry that the results panel holds and displays it
+     * @param results The list of search results to display
+     */
     public void setResults(ArrayList<SearchResult> results)
     {
         clearResults();
@@ -128,6 +137,19 @@ public class SearchResultsPanel extends JPanel implements MouseListener
         }
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
+    @Override
+    public void mouseClicked(MouseEvent e) { }
+
+    @Override
+    public void mouseReleased(MouseEvent e) { }
+
+    @Override
+    public void mouseEntered(MouseEvent e) { }
+
+    @Override
+    public void mouseExited(MouseEvent e) { }
+    
     @Override
     public void mousePressed(MouseEvent e) 
     {
@@ -142,15 +164,15 @@ public class SearchResultsPanel extends JPanel implements MouseListener
         }
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) { }
-
-    @Override
-    public void mouseReleased(MouseEvent e) { }
-
-    @Override
-    public void mouseEntered(MouseEvent e) { }
-
-    @Override
-    public void mouseExited(MouseEvent e) { }
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /** Resets the search results panel to its default state */
+    public void clearResults()
+    {
+        innerCountainer.removeAll();
+        innerContainerConstraints.gridy = 0;
+        innerCountainer.add(textMessage, innerContainerConstraints);
+        textMessage.setVisible(true);
+        if(currentResults != null && currentResults.size() > 0)
+            currentResults.clear();
+    }
 }

@@ -11,6 +11,7 @@ import java.awt.TrayIcon.*;
 
 import com.Group7.SpringStep.*;
 
+/** Represents the Timer in the Main Window and its controls */
 public class TimerPanel extends JPanel implements ActionListener
 {
     private JLabel timerLabel;
@@ -32,6 +33,7 @@ public class TimerPanel extends JPanel implements ActionListener
     private ImageIcon workTimeIcon;
     private ImageIcon breakTimeIcon;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public TimerPanel(TrayIcon icon)
     {
         trayIcon = icon;
@@ -96,8 +98,14 @@ public class TimerPanel extends JPanel implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// GETTERS /////////////////////////////////////////////////
     public boolean getWorkMode() { return workMode; }
 
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
+    /**
+     * Determines whether the panel should behave in "Work" mode or in "Break" mode
+     * @param newWorkMode
+     */
     public void setWorkMode(boolean newWorkMode) 
     {
         workMode = newWorkMode;
@@ -115,6 +123,7 @@ public class TimerPanel extends JPanel implements ActionListener
         timerLabel.setText(Utils.formatTime(remainingTime));
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -138,26 +147,31 @@ public class TimerPanel extends JPanel implements ActionListener
             else  { startTimer(); }
         } else if(eventSource == resetTimerButton) { resetTimer(); }
     }
-    
+
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /** Starts the timer of the TimerPanel */
     public void startTimer()
     {
         timer.start();
         startStopTimerButton.setText("Stop");
     }
-
+    
+    /** Stops the timer of the TimerPanel */
     public void stopTimer()
     {
         timer.stop();
         startStopTimerButton.setText("Start");
     }
-
+    
+    /** Resets the timer of the TimerPanel while being aware of its "Work Mode" state */
     public void resetTimer()
     {
         if(workMode) { remainingTime = DEFAULT_WORK_DURATION; }
         else { remainingTime = DEFAULT_BREAK_DURATION; }
         timerLabel.setText(Utils.formatTime(remainingTime));
     }
-
+    
+    /** Displays a native OS notification with a message that changes depending on the "Work Mode" state */
     private void displayNotifMessage()
     {
         if (trayIcon != null)

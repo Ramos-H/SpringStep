@@ -10,6 +10,7 @@ import com.Group7.SpringStep.data.*;
 
 import com.github.lgooddatepicker.components.*;
 
+/** Represents the task creation and editing panel */
 public class AddTaskPopup extends RoundedPanel implements ActionListener 
 {
     private JButton btnExit;
@@ -29,6 +30,7 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
     private PopupContainer popupHandler;
     private MainWindow mainWindow;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public AddTaskPopup(PopupContainer popupContainer, MainWindow window)
     {
         popupHandler = popupContainer;
@@ -142,6 +144,18 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// SETTERS /////////////////////////////////////////////////
+    /**
+     * Sets whether this panel shows controls only available when editing existing tasks
+     * @param newValue {@code true} if edit-mode controls are desired, {@code false} if those controls should be hidden
+     */
+    public void setEditMode(boolean newValue)
+    {
+        editMode = newValue;
+        btnDelete.setVisible(editMode);
+    }
+
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -210,6 +224,16 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /** Save the changes that the user made into an intermediate task detail object for easier comparison and processing */
+    private void insertChangesIntoNewTaskDetails() 
+    {
+        newTaskDetails.setName(taskTitleField.getText().trim());
+        newTaskDetails.setDescription(descriptionArea.getText().trim());
+        newTaskDetails.setDeadline(deadlinePicker.getDate());
+    }
+
+    /** Resets the panel to its default state */
     public void clearPopupInput()
     {
         taskTitleField.setText("");
@@ -219,7 +243,19 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         currentTaskNode = null;
         newTaskDetails = null;
     }
+    
+    /** Updates the panel's fields to show the information contained in the task currently by the panel */
+    public void updatePopupInput()
+    {
+        taskTitleField.setText(currentTaskDetails.getName());
+        descriptionArea.setText(currentTaskDetails.getDescription());
+        deadlinePicker.setDate(currentTaskDetails.getDeadline());
+    }
 
+    /**
+     * Shows this panel in "Create New Task" Mode
+     * @param destPanel The ListPanel to add the task to after submission
+     */
     public void addTask(ListPanel destPanel)
     {
         clearPopupInput();
@@ -229,27 +265,11 @@ public class AddTaskPopup extends RoundedPanel implements ActionListener
         destinationPanel = destPanel;
         popupHandler.setPopup(this);
     }
-
-    private void insertChangesIntoNewTaskDetails() 
-    {
-        newTaskDetails.setName(taskTitleField.getText().trim());
-        newTaskDetails.setDescription(descriptionArea.getText().trim());
-        newTaskDetails.setDeadline(deadlinePicker.getDate());
-    }
     
-    public void setEditMode(boolean newValue)
-    {
-        editMode = newValue;
-        btnDelete.setVisible(editMode);
-    }
-
-    public void updatePopupInput()
-    {
-        taskTitleField.setText(currentTaskDetails.getName());
-        descriptionArea.setText(currentTaskDetails.getDescription());
-        deadlinePicker.setDate(currentTaskDetails.getDeadline());
-    }
-    
+    /**
+     * Shows this panel in "Edit Existing Task" Mode
+     * @param taskToEdit The task to edit
+     */
     public void editTask(TaskNode taskToEdit)
     {
         setEditMode(true);

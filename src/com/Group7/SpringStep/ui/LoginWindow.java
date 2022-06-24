@@ -10,6 +10,7 @@ import java.awt.event.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
+/** Represents the Sign Up Window */
 public class LoginWindow extends JFrame implements ActionListener
 {
     private JTextField userNameField;
@@ -17,6 +18,7 @@ public class LoginWindow extends JFrame implements ActionListener
     private RoundedButton signUpButton;
     private RoundedButton logInButton;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public LoginWindow()
     {
         // Set window parameters first
@@ -109,6 +111,7 @@ public class LoginWindow extends JFrame implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -150,6 +153,12 @@ public class LoginWindow extends JFrame implements ActionListener
             {
                 boolean fileExists = Files.exists(filePath);
                 boolean fileDoesntExist = Files.notExists(filePath);
+                /* The whole "fileUnverifiable" variable was made due to this: 
+                 * https://docs.oracle.com/javase/tutorial/essential/io/check.html
+                 * 
+                 * I haven't made the logic for handling that particular situation when I was working on this project though
+                 * so it's currently useless
+                */
                 boolean fileUnverifiable = !fileExists && !fileDoesntExist;
                 boolean fileSurelyDoesntExists = !fileExists && fileDoesntExist;
                 if(fileSurelyDoesntExists)

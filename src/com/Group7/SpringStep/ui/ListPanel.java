@@ -8,6 +8,7 @@ import javax.swing.*;
 
 import com.Group7.SpringStep.*;
 
+/** A custom panel that holds task nodes */
 public class ListPanel extends JPanel
 {
     private JPanel internalListContainer;
@@ -15,6 +16,7 @@ public class ListPanel extends JPanel
     private RoundedButton addTaskButton;
     private JPanel innerPanel;
     
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public ListPanel(String title, String addButtonMessage, Color color)
     {
         setLayout(new GridBagLayout());
@@ -97,9 +99,20 @@ public class ListPanel extends JPanel
         }
     }
 
+    ///////////////////////////////////////////////// GETTERS /////////////////////////////////////////////////
+    public JButton getAddTaskButton() { return addTaskButton; }
+
+    /**
+     * Gets visible rectangle of the ListPanel's inner container
+     * @return The visible rectangle of the ListPanel's inner container
+     */
     @Override
     public Rectangle getVisibleRect() { return innerPanel.getVisibleRect(); }
-    public JButton getAddTaskButton() { return addTaskButton; }
+
+    /**
+     * Gets all the task nodes inside the ListPanel
+     * @return The list of task nodes inside the ListPanel
+     */
     public ArrayList<TaskNode> getTaskNodes()
     {
         int taskNodeCount = internalListContainer.getComponentCount();
@@ -115,6 +128,11 @@ public class ListPanel extends JPanel
         return taskNodes;
     }
     
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /**
+     * Adds the given task node to the ListPanel
+     * @param newTaskNode The task node to be added
+     */
     public void addTaskToList(JPanel newTaskNode)
     {
         GridBagConstraints taskListConstraints = new GridBagConstraints();
@@ -142,5 +160,6 @@ public class ListPanel extends JPanel
         revalidate();
     }
     
+    /** Clears all task nodes inside the ListPanel */
     public void clear() { internalListContainer.removeAll(); }
 }

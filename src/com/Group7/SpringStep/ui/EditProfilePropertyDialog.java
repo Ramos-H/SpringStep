@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 
+/** Dialog window specifically made for editing the either the user's email or username */
 public class EditProfilePropertyDialog extends JDialog implements ActionListener
 {
     private JLabel currentPropertyLabel;
@@ -20,6 +21,7 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
     private JTextField confirmPropertyField;
     private String currentProperty;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public EditProfilePropertyDialog(String property, JTextField textField)
     {
         this(property, textField, null);
@@ -93,38 +95,24 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
         }
     }
     
-    public void setPropertyBeingChanged(String property)
-    {
-        currentProperty = property;
-        currentPropertyLabel.setText("Current " + property + ": " + currentPropertyValue);
-        newPropertyLabel.setText("New " + property + ": ");
-        confirmPropertyLabel.setText("Confirm new " + property + ": ");
-        setTitle("Enter new " + property);
-
-        if(currentPropertyValue == null)
-            currentPropertyLabel.setVisible(false);
-    }
-
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
         Object eventSource = e.getSource();
-        if(eventSource == doneButton)
-        {
+        if (eventSource == doneButton) {
             String enteredPropertyValue = newPropertyField.getText();
             String enteredConfirmValue = confirmPropertyField.getText();
             boolean hasMissingInput = false;
             String noInputErrorTitle = "Error: No Input";
             String noInputErrorMessage = "One of the fields in this window isn't filled!";
 
-            if (Utils.isTextEmpty(enteredPropertyValue)) 
-            {
+            if (Utils.isTextEmpty(enteredPropertyValue)) {
                 hasMissingInput = true;
                 noInputErrorMessage = "Error: No new " + currentProperty + " provided.";
-                noInputErrorMessage = String.format("No new %s was set. \nPlease enter the new %s and try again.", currentProperty, currentProperty);
-            }
-            else if (Utils.isTextEmpty(enteredConfirmValue))
-            {
+                noInputErrorMessage = String.format("No new %s was set. \nPlease enter the new %s and try again.",
+                        currentProperty, currentProperty);
+            } else if (Utils.isTextEmpty(enteredConfirmValue)) {
                 hasMissingInput = true;
                 noInputErrorMessage = "Error: " + currentProperty + " not confirmed.";
                 noInputErrorMessage = String.format(
@@ -132,14 +120,12 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
                         currentProperty, currentProperty, currentProperty);
             }
 
-            if (hasMissingInput)
-            {
+            if (hasMissingInput) {
                 JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            if (!enteredPropertyValue.equals(enteredConfirmValue))
-            {
+            if (!enteredPropertyValue.equals(enteredConfirmValue)) {
                 hasMissingInput = true;
                 String message = String.format(
                         "The text you entered in the \"Confirm %s\" field doesn't match what you entered for your %s. \nPlease enter your %s again in the confirm %s field and try again.",
@@ -153,5 +139,22 @@ public class EditProfilePropertyDialog extends JDialog implements ActionListener
         }
         setVisible(false);
         dispose();
+    }
+    
+    ///////////////////////////////////////////////// INSTANCE METHODS /////////////////////////////////////////////////
+    /**
+     * Update the dialog's text display to show the user which property is being modified
+     * @param property The property that is being modifed, like "username" or "email"
+     */
+    public void setPropertyBeingChanged(String property)
+    {
+        currentProperty = property;
+        currentPropertyLabel.setText("Current " + property + ": " + currentPropertyValue);
+        newPropertyLabel.setText("New " + property + ": ");
+        confirmPropertyLabel.setText("Confirm new " + property + ": ");
+        setTitle("Enter new " + property);
+
+        if(currentPropertyValue == null)
+            currentPropertyLabel.setVisible(false);
     }
 }

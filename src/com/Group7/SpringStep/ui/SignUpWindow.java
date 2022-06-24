@@ -8,6 +8,7 @@ import java.awt.event.*;
 import com.Group7.SpringStep.*;
 import com.Group7.SpringStep.data.*;
 
+/** Represents the Sign Up Window */
 public class SignUpWindow extends JFrame implements ActionListener 
 {
     private JTextField userNameField;
@@ -17,6 +18,7 @@ public class SignUpWindow extends JFrame implements ActionListener
     private RoundedButton backButton;
     private RoundedButton signUpButton;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public SignUpWindow() 
     {
         // Set window parameters first
@@ -128,6 +130,7 @@ public class SignUpWindow extends JFrame implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -186,7 +189,6 @@ public class SignUpWindow extends JFrame implements ActionListener
             }
             
             User newUser = new User(enteredUsername, enteredEmail, enteredPassword);
-
             DataManager dataWriter = new DataManager();
             try 
             {

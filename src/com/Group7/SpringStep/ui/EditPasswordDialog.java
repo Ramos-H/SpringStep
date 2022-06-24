@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import com.Group7.SpringStep.*;
 
+/** Dialog window specifically made for editing the user's password */
 public class EditPasswordDialog extends JDialog implements ActionListener
 {
     private JLabel newPasswordLabel;
@@ -17,12 +18,15 @@ public class EditPasswordDialog extends JDialog implements ActionListener
     private PasswordTextField newPasswordField;
     private PasswordTextField confirmPasswordField;
 
+    ///////////////////////////////////////////////// CONSTRUCTORS /////////////////////////////////////////////////
     public EditPasswordDialog(PasswordTextField textField)
     {
         fieldToModify = textField;
         setModal(true);
         setTitle("Enter new password");
         setIconImage(App.springStepImage);
+
+        // Scale the dialog to 30 percent of the width and height of the screen
         Rectangle screenSize = getGraphicsConfiguration().getBounds();
         float widthScale = 30f;
         float heightScale = 30f;
@@ -30,9 +34,11 @@ public class EditPasswordDialog extends JDialog implements ActionListener
         int height = Math.round(screenSize.height * (heightScale / 100f));
         setSize(width, height);
 
+        // Center the dialog's location on the screen
         int x = Math.round(screenSize.width / 2 - getWidth() / 2);
         int y = Math.round(screenSize.height / 2 - getHeight() / 2);
         setLocation(x, y);
+
         setLayout(new GridLayout(1, 1));
         {
             JPanel padPanel = new JPanel();
@@ -77,6 +83,7 @@ public class EditPasswordDialog extends JDialog implements ActionListener
         }
     }
 
+    ///////////////////////////////////////////////// EVENT HANDLERS /////////////////////////////////////////////////
     @Override
     public void actionPerformed(ActionEvent e) 
     {
@@ -85,7 +92,9 @@ public class EditPasswordDialog extends JDialog implements ActionListener
         {
             String enteredPasswordValue = newPasswordField.getText();
             String enteredConfirmValue = confirmPasswordField.getText();
-            boolean hasMissingInput = false;
+            boolean hasMissingInput = false; // Determines whether to show the error message or not
+
+            // Default values just in case I forgot to set them
             String noInputErrorTitle = "Error: No Input";
             String noInputErrorMessage = "One of the fields in this window isn't filled!";
 
@@ -102,6 +111,7 @@ public class EditPasswordDialog extends JDialog implements ActionListener
                 noInputErrorMessage = "You haven't confirmed your password. \nPlease enter your new password again in the \"Confirm password\" field and try again.";
             }
 
+            // If the dialog has *any* missing input, show the error message
             if (hasMissingInput)
             {
                 JOptionPane.showMessageDialog(this, noInputErrorMessage, noInputErrorTitle, JOptionPane.ERROR_MESSAGE);
